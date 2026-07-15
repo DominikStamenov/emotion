@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import styles from "./button.module.css";
+
 type ButtonVariant = "primary" | "secondary" | "ghost";
 
 type ButtonProps = {
@@ -18,11 +20,13 @@ export function Button({
   external = false,
   className = "",
 }: ButtonProps) {
-  const classes = [
-    "button",
-    `button--${variant}`,
-    className,
-  ]
+  const variantClass = {
+    primary: styles.primary,
+    secondary: styles.secondary,
+    ghost: styles.ghost,
+  }[variant];
+
+  const classes = [styles.button, variantClass, className]
     .filter(Boolean)
     .join(" ");
 
