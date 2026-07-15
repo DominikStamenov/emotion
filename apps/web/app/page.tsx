@@ -4,6 +4,8 @@ import { LogoCloud } from "../components/logo-clouds";
 import { ServicesSection } from "../components/sections/services-section";
 import { ProcessSection } from "../components/sections/process-section";
 import { ProjectsSection } from "../components/sections/projects-section";
+import { TestimonialsSection } from "../components/sections/testimonials-section";
+
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
         <ServicesSection />
         <ProcessSection />
         <ProjectsSection />
+        <TestimonialsSection />
+     
       </main>
     </>
   );
