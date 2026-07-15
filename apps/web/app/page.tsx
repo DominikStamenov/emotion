@@ -6,6 +6,7 @@ import { ProcessSection } from "../components/sections/process-section";
 import { ProjectsSection } from "../components/sections/projects-section";
 import { TestimonialsSection } from "../components/sections/testimonials-section";
 import { CtaSection } from "../components/sections/cta-section";
+import { Footer } from "../components/footer";
 
 
 export default function Home() {
@@ -21,6 +22,9 @@ export default function Home() {
         <ProjectsSection />
         <TestimonialsSection />
         <CtaSection />
+        <Footer /> 
+
+        
       </main>
     </>
   );
