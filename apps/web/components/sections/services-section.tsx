@@ -1,3 +1,4 @@
+import { ServiceCard } from "../service-card";
 export function ServicesSection() {
     return (
       <section className="py-24">
@@ -16,7 +17,26 @@ export function ServicesSection() {
               design into one digital ecosystem that helps ambitious businesses
               grow.
             </p>
-          </div>
+          </div> 
+          <div className="mt-16 grid gap-10 md:grid-cols-3">
+  <ServiceCard
+    number="01"
+    title="Brand Strategy"
+    description="We define positioning, messaging, visual direction and the strategic foundation your brand needs to grow."
+  />
+
+  <ServiceCard
+    number="02"
+    title="Web Design"
+    description="We design modern, conversion-focused digital experiences that feel clear, premium and easy to use."
+  />
+
+  <ServiceCard
+    number="03"
+    title="Development"
+    description="We build fast, scalable and production-ready websites using modern technologies and clean architecture."
+  />
+</div>
         </div>
       </section>
     );
