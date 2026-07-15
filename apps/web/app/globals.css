@@ -166,4 +166,106 @@ svg {
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
+} 
+ 
+.siteHeader {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  padding-top: 24px;
+}
+
+.siteHeaderContainer {
+  display: flex;
+  min-height: 72px;
+  padding: 0 20px 0 24px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: rgba(8, 8, 10, 0.66);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(24px);
+}
+
+.siteNavigation {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.siteNavigation a {
+  position: relative;
+  padding: 10px 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  transition: color var(--transition-fast);
+}
+
+.siteNavigation a::after {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: var(--gradient-brand);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-default);
+}
+
+.siteNavigation a:hover {
+  color: var(--color-text);
+}
+
+.siteNavigation a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.headerAction {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: var(--radius-pill);
+  color: #08080a;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  transition: transform var(--transition-default);
+}
+
+.headerAction:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 800px) {
+  .siteNavigation {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .siteHeader {
+    padding-top: 14px;
+  }
+
+  .siteHeaderContainer {
+    min-height: 64px;
+    padding: 0 12px 0 16px;
+  }
+
+  .brandCopy small {
+    display: none;
+  }
+
+  .headerAction {
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 11px;
+  }
 }
