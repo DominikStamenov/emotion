@@ -6,8 +6,14 @@ import styles from "./hero.module.css";
 export function Hero() {
   return (
     <section className={styles.hero}>
-      <div className={styles.heroGlowPrimary} aria-hidden="true" />
-      <div className={styles.heroGlowSecondary} aria-hidden="true" />
+      <div
+  className={`${styles.heroGlow} ${styles.heroGlowPrimary}`}
+  aria-hidden="true"
+/>
+<div
+  className={`${styles.heroGlow} ${styles.heroGlowSecondary}`}
+  aria-hidden="true"
+/>
       <div className={styles.heroGrid} aria-hidden="true" />
 
       <Container className={styles.heroContainer}>
@@ -60,12 +66,11 @@ export function Hero() {
 
           <div className={styles.heroVisual} aria-hidden="true">
             <div className={styles.heroVisualHalo} />
-
-            <div className={styles.heroOrbitOuter}>
+            <div className={`${styles.heroOrbit} ${styles.heroOrbitOuter}`}>
               <span />
             </div>
 
-            <div className={styles.heroOrbitInner}>
+            <div className={`${styles.heroOrbit} ${styles.heroOrbitInner}`}>
               <span />
             </div>
 
@@ -87,12 +92,12 @@ export function Hero() {
               </svg>
             </div>
 
-            <div className={styles.heroCardTop}>
+            <div className={`${styles.heroCard} ${styles.heroCardTop}`}>
               <small>Emotion</small>
               <strong>Ideas that connect.</strong>
             </div>
 
-            <div className={styles.heroCardBottom}>
+            <div className={`${styles.heroCard} ${styles.heroCardBottom}`}>
               <small>Motion</small>
               <strong>Design that moves.</strong>
             </div>
