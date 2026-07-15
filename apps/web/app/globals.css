@@ -170,36 +170,32 @@ svg {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 13px;
+  flex-shrink: 0;
   text-decoration: none;
 }
 
 .brandMark {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   object-fit: contain;
 }
 
 .brandCopy {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   line-height: 1;
 }
 
 .brandCopy strong {
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  color: white;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 650;
+  letter-spacing: -0.055em;
 }
 
-.brandCopy small {
-  margin-top: 4px;
-  font-size: 0.72rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.55);
-}
+
 .siteHeader {
   position: sticky;
   top: 0;
@@ -283,10 +279,6 @@ svg {
   .siteHeaderContainer {
     min-height: 64px;
     padding: 0 12px 0 16px;
-  }
-
-  .brandCopy small {
-    display: none;
   }
 
   .headerAction {

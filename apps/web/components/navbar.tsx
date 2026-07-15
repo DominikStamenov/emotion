@@ -14,9 +14,9 @@ export function Navbar() {
   return (
     <header className="siteHeader">
       <Container className="siteHeaderContainer">
-        <Link href="/" aria-label="eMotion homepage">
+        
           <Logo />
-        </Link>
+        
 
         <nav className="siteNavigation" aria-label="Primary navigation">
           {navigation.map((item) => (
