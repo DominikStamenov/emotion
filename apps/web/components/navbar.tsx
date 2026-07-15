@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "./button";
 import { Container } from "./container";
 import { Logo } from "./logo";
+import styles from "./navbar.module.css";
 
 const navigation = [
   { label: "Services", href: "#services" },
@@ -12,13 +13,14 @@ const navigation = [
 
 export function Navbar() {
   return (
-    <header className="siteHeader">
-      <Container className="siteHeaderContainer">
-        
-          <Logo />
-        
+    <header className={styles.siteHeader}>
+      <Container className={styles.siteHeaderContainer}>
+        <Logo />
 
-        <nav className="siteNavigation" aria-label="Primary navigation">
+        <nav
+          className={styles.siteNavigation}
+          aria-label="Primary navigation"
+        >
           {navigation.map((item) => (
             <Link key={item.href} href={item.href}>
               {item.label}
@@ -26,10 +28,10 @@ export function Navbar() {
           ))}
         </nav>
 
-        <Button href="#contact" className="headerAction">
-  Start a project
-  <span aria-hidden="true">↗</span>
-</Button>
+        <Button href="#contact" className={styles.headerAction}>
+          Start a project
+          <span aria-hidden="true">↗</span>
+        </Button>
       </Container>
     </header>
   );
