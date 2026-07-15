@@ -1,34 +1,35 @@
 
 import { Button } from "./button";
-import { Container } from "./container";
+import { Container } from "./container"; 
+import styles from "./hero.module.css";
 
 export function Hero() {
   return (
-    <section className="hero">
-      <div className="heroGlow heroGlowPrimary" aria-hidden="true" />
-      <div className="heroGlow heroGlowSecondary" aria-hidden="true" />
-      <div className="heroGrid" aria-hidden="true" />
+    <section className={styles.hero}>
+      <div className={styles.heroGlowPrimary} aria-hidden="true" />
+      <div className={styles.heroGlowSecondary} aria-hidden="true" />
+      <div className={styles.heroGrid} aria-hidden="true" />
 
-      <Container className="heroContainer">
-        <div className="heroContent">
-          <div className="heroCopy">
-            <p className="heroEyebrow">
+      <Container className={styles.heroContainer}>
+        <div className={styles.heroContent}>
+          <div className={styles.heroCopy}>
+            <p className={styles.heroEyebrow}>
               <span aria-hidden="true" />
               Strategy · Branding · Design · Development
             </p>
 
-            <h1 className="heroTitle">
+            <h1 className={styles.heroTitle}>
               Emotion
               <span>becomes</span>
               <strong>motion.</strong>
             </h1>
 
-            <p className="heroDescription">
+            <p className={styles.heroDescription}>
               We create memorable brands and premium digital experiences for
               ambitious companies that want to move forward.
             </p>
 
-            <div className="heroActions">
+            <div className={styles.heroActions}>
             <Button href="#contact">
   Start a project
   <span aria-hidden="true">↗</span>
@@ -39,7 +40,7 @@ export function Hero() {
   </Button>
 </div>
 
-            <div className="heroMeta">
+            <div className={styles.heroMeta}>
               <div>
                 <strong>Branding</strong>
                 <span>Identity systems</span>
@@ -57,18 +58,18 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="heroVisual" aria-hidden="true">
-            <div className="heroVisualHalo" />
+          <div className={styles.heroVisual} aria-hidden="true">
+            <div className={styles.heroVisualHalo} />
 
-            <div className="heroOrbit heroOrbitOuter">
+            <div className={styles.heroOrbitOuter}>
               <span />
             </div>
 
-            <div className="heroOrbit heroOrbitInner">
+            <div className={styles.heroOrbitInner}>
               <span />
             </div>
 
-            <div className="heroCore">
+            <div className={styles.heroCore}>
               <svg viewBox="0 0 64 64">
                 <path
                   d="M14 14C25 18 35 24 49 32C35 40 25 46 14 50C21 42 27 36 27 32C27 28 21 22 14 14Z"
@@ -86,19 +87,19 @@ export function Hero() {
               </svg>
             </div>
 
-            <div className="heroCard heroCardTop">
+            <div className={styles.heroCardTop}>
               <small>Emotion</small>
               <strong>Ideas that connect.</strong>
             </div>
 
-            <div className="heroCard heroCardBottom">
+            <div className={styles.heroCardBottom}>
               <small>Motion</small>
               <strong>Design that moves.</strong>
             </div>
           </div>
         </div>
 
-        <div className="heroScroll">
+        <div className={styles.heroScroll}>
           <span>Scroll to explore</span>
           <i />
         </div>
