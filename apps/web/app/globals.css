@@ -724,4 +724,40 @@ svg {
   .heroScroll {
     display: none;
   }
+} 
+.logoCloud {
+  overflow: hidden;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.logoCloudTrack {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: logoCloudMove 24s linear infinite;
+}
+
+.logoCloudTrack span {
+  padding: 28px 48px;
+  color: rgba(255, 255, 255, 0.22);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@keyframes logoCloudMove {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 700px) {
+  .logoCloudTrack span {
+    padding: 22px 32px;
+    font-size: 12px;
+  }
 }
