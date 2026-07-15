@@ -123,4 +123,47 @@ svg {
     var(--container-width)
   );
   margin-inline: auto;
+} 
+ 
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandMark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #ffffff;
+  background: var(--gradient-brand);
+  box-shadow: 0 0 34px rgba(139, 92, 246, 0.32);
+}
+
+.brandMark svg {
+  width: 26px;
+  height: 26px;
+}
+
+.brandCopy {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandCopy strong {
+  font-size: 17px;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.brandCopy small {
+  margin-top: 5px;
+  color: var(--color-text-subtle);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
 }
