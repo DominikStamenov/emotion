@@ -1,3 +1,4 @@
+import { Button } from "../button";
 export function CtaSection() {
     return (
       <section className="py-24">
@@ -19,13 +20,10 @@ export function CtaSection() {
                 </p>
               </div>
   
-              <a
-                href="/contact"
-                className="inline-flex w-fit items-center gap-3 border border-white px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-black"
-              >
-                Start a conversation
-                <span aria-hidden="true">↗</span>
-              </a>
+              <Button href="/contact">
+  Start a conversation
+  <span aria-hidden="true">↗</span>
+</Button>
             </div>
           </div>
         </div>
