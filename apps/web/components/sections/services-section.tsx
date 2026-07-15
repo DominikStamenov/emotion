@@ -1,4 +1,5 @@
 import { ServiceCard } from "../service-card";
+import { services } from "../../data/services";
 export function ServicesSection() {
     return (
       <section className="py-24">
@@ -19,40 +20,15 @@ export function ServicesSection() {
             </p>
           </div> 
           <div className="mt-16 grid gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((service) => (
   <ServiceCard
-    number="01"
-    title="Brand Strategy"
-    description="We define positioning, messaging, visual direction and the strategic foundation your brand needs to grow."
+    key={service.number}
+    number={service.number}
+    title={service.title}
+    description={service.description}
   />
-
-  <ServiceCard
-    number="02"
-    title="Web Design"
-    description="We design modern, conversion-focused digital experiences that feel clear, premium and easy to use."
-  />
-
-  <ServiceCard
-    number="03"
-    title="Development"
-    description="We build fast, scalable and production-ready websites using modern technologies and clean architecture."
-  /> 
-  <ServiceCard
-  number="04"
-  title="Motion Design"
-  description="We create motion systems, transitions and visual storytelling that make digital products feel alive."
-/>
-
-<ServiceCard
-  number="05"
-  title="AI Solutions"
-  description="We integrate practical AI workflows, assistants and automation that improve operations and customer experience."
-/>
-
-<ServiceCard
-  number="06"
-  title="Digital Growth"
-  description="We connect strategy, analytics and experimentation to help digital platforms improve after launch."
-/>
+))}
+   
 </div> 
 
         </div>
