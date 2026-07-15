@@ -21,7 +21,21 @@
     var(--color-cyan)
   );
 
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans:
+  Inter,
+  ui-sans-serif,
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  sans-serif;
+
+--font-display: var(--font-sans);
+
+--font-size-body: 1rem;
+--line-height-body: 1.7;
+
+--letter-spacing-tight: -0.04em;
+--letter-spacing-display: -0.065em;
 
   --radius-small: 12px;
   --radius-medium: 20px;
@@ -67,8 +81,30 @@ body {
     var(--color-background);
   color: var(--color-text);
   font-family: var(--font-sans);
+  font-size: var(--font-size-body);
+line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+} 
+ 
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 a {
@@ -128,51 +164,47 @@ svg {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  text-decoration: none;
 }
 
 .brandMark {
-  display: grid;
   width: 42px;
   height: 42px;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 50%;
-  color: #ffffff;
-  background: var(--gradient-brand);
-  box-shadow: 0 0 34px rgba(139, 92, 246, 0.32);
-}
-
-.brandMark svg {
-  width: 26px;
-  height: 26px;
+  object-fit: contain;
 }
 
 .brandCopy {
   display: flex;
   flex-direction: column;
+  line-height: 1;
 }
 
 .brandCopy strong {
-  font-size: 17px;
-  line-height: 1;
-  letter-spacing: -0.045em;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: white;
 }
 
 .brandCopy small {
-  margin-top: 5px;
-  color: var(--color-text-subtle);
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: 0.3em;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-} 
- 
+  color: rgba(255,255,255,.55);
+}
 .siteHeader {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 50;
-  padding-top: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  background: rgba(8, 8, 10, 0.72);
+
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
 .siteHeaderContainer {
