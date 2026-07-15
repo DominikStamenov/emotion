@@ -116,4 +116,11 @@ svg {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+} 
+.container {
+  width: min(
+    calc(100% - (var(--page-padding) * 2)),
+    var(--container-width)
+  );
+  margin-inline: auto;
 }
