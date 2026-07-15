@@ -167,34 +167,6 @@ svg {
   margin-inline: auto;
 } 
  
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 13px;
-  flex-shrink: 0;
-  text-decoration: none;
-}
-
-.brandMark {
-  width: 46px;
-  height: 46px;
-  object-fit: contain;
-}
-
-.brandCopy {
-  display: flex;
-  align-items: center;
-  line-height: 1;
-}
-
-.brandCopy strong {
-  color: var(--color-text);
-  font-family: var(--font-display);
-  font-size: 1.45rem;
-  font-weight: 650;
-  letter-spacing: -0.055em;
-}
-
 
 .siteHeader {
   position: sticky;

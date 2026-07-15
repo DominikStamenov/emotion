@@ -1,19 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import styles from "./logo.module.css";
+
 export function Logo() {
   return (
-    <Link href="/" className="brand" aria-label="eMotion homepage">
+    <Link href="/" className={styles.brand} aria-label="eMotion homepage">
       <Image
         src="/logo.png"
         alt=""
         width={46}
         height={46}
         priority
-        className="brandMark"
+        className={styles.brandMark}
       />
 
-      <span className="brandCopy">
+      <span className={styles.brandCopy}>
         <strong>eMotion</strong>
       </span>
     </Link>
