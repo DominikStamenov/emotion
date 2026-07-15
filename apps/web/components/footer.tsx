@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Logo } from "./logo";
 
 const footerLinks = [
@@ -44,12 +45,12 @@ export function Footer() {
               <ul className="mt-5 space-y-3">
                 {group.links.map((link) => (
                   <li key={link.label}>
-                    <a
+                    <Link
                       href={link.href}
                       className="text-white/70 transition-opacity hover:opacity-50"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -61,13 +62,13 @@ export function Footer() {
           <p>© {new Date().getFullYear()} eMotion. All rights reserved.</p>
 
           <div className="flex gap-6">
-            <a href="/privacy" className="transition-opacity hover:opacity-50">
+            <Link href="/privacy" className="transition-opacity hover:opacity-50">
               Privacy
-            </a>
+            </Link>
 
-            <a href="/terms" className="transition-opacity hover:opacity-50">
+            <Link href="/terms" className="transition-opacity hover:opacity-50">
               Terms
-            </a>
+            </Link>
           </div>
         </div>
       </div>
