@@ -1,5 +1,5 @@
-import Link from "next/link";
 
+import { Button } from "./button";
 import { Container } from "./container";
 
 export function Hero() {
@@ -29,15 +29,15 @@ export function Hero() {
             </p>
 
             <div className="heroActions">
-              <Link className="heroPrimaryAction" href="#contact">
-                Start your project
-                <span aria-hidden="true">↗</span>
-              </Link>
+            <Button href="#contact">
+  Start a project
+  <span aria-hidden="true">↗</span>
+</Button>
 
-              <Link className="heroSecondaryAction" href="#work">
-                Explore our work
-              </Link>
-            </div>
+  <Button href="#work" variant="secondary">
+    View our work
+  </Button>
+</div>
 
             <div className="heroMeta">
               <div>
