@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import { Button } from "./button";
 import { Container } from "./container";
 import { Logo } from "./logo";
 
@@ -26,10 +26,10 @@ export function Navbar() {
           ))}
         </nav>
 
-        <Link className="headerAction" href="#contact">
-          Start a project
-          <span aria-hidden="true">↗</span>
-        </Link>
+        <Button href="#contact" className="headerAction">
+  Start a project
+  <span aria-hidden="true">↗</span>
+</Button>
       </Container>
     </header>
   );

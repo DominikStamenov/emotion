@@ -263,23 +263,11 @@ svg {
 }
 
 .headerAction {
-  display: inline-flex;
   min-height: 44px;
-  padding: 0 18px;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  border-radius: var(--radius-pill);
-  color: #08080a;
-  background: #ffffff;
+  padding-inline: 18px;
   font-size: 12px;
-  font-weight: 700;
-  transition: transform var(--transition-default);
 }
 
-.headerAction:hover {
-  transform: translateY(-2px);
-}
 
 @media (max-width: 800px) {
   .siteNavigation {
