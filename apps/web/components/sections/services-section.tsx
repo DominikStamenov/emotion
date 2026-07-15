@@ -18,7 +18,7 @@ export function ServicesSection() {
               grow.
             </p>
           </div> 
-          <div className="mt-16 grid gap-10 md:grid-cols-3">
+          <div className="mt-16 grid gap-x-10 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
   <ServiceCard
     number="01"
     title="Brand Strategy"
@@ -35,8 +35,26 @@ export function ServicesSection() {
     number="03"
     title="Development"
     description="We build fast, scalable and production-ready websites using modern technologies and clean architecture."
-  />
-</div>
+  /> 
+  <ServiceCard
+  number="04"
+  title="Motion Design"
+  description="We create motion systems, transitions and visual storytelling that make digital products feel alive."
+/>
+
+<ServiceCard
+  number="05"
+  title="AI Solutions"
+  description="We integrate practical AI workflows, assistants and automation that improve operations and customer experience."
+/>
+
+<ServiceCard
+  number="06"
+  title="Digital Growth"
+  description="We connect strategy, analytics and experimentation to help digital platforms improve after launch."
+/>
+</div> 
+
         </div>
       </section>
     );
