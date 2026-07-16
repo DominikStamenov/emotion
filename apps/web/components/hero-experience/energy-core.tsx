@@ -12,7 +12,8 @@ import {
 
 import { getHeroTimeline } from "./engine/hero-timeline";
 
-const CORE_PARTICLE_COUNT = 120;
+const FULL_CORE_PARTICLE_COUNT = 120;
+const COMPACT_CORE_PARTICLE_COUNT = 72;
 
 const PINK_LIGHT_INTENSITY = 2.2;
 const VIOLET_LIGHT_INTENSITY = 2.8;
@@ -28,7 +29,17 @@ function createRandom(seed: number) {
   };
 }
 
-export function EnergyCore() {
+type EnergyCoreProps = {
+  compact?: boolean;
+};
+
+export function EnergyCore({
+  compact = false,
+}: EnergyCoreProps) {
+  const particleCount = compact
+    ? COMPACT_CORE_PARTICLE_COUNT
+    : FULL_CORE_PARTICLE_COUNT;
+
   const groupRef = useRef<Group>(null);
 
   const materialRef =
@@ -48,12 +59,12 @@ export function EnergyCore() {
 
     const values =
       new Float32Array(
-        CORE_PARTICLE_COUNT * 3,
+        particleCount * 3,
       );
 
     for (
       let index = 0;
-      index < CORE_PARTICLE_COUNT;
+      index < particleCount;
       index += 1
     ) {
       const offset = index * 3;
@@ -75,7 +86,7 @@ export function EnergyCore() {
     }
 
     return values;
-  }, []);
+  }, [particleCount]);
 
   useFrame((state, delta) => {
     const group = groupRef.current;

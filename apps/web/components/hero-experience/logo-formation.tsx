@@ -21,12 +21,23 @@ import {
   type LogoSolver,
 } from "./engine/logo-solver";
 
-const LOGO_PARTICLE_COUNT = 2100;
+const FULL_LOGO_PARTICLE_COUNT = 2100;
+const COMPACT_LOGO_PARTICLE_COUNT = 1300;
 
 const LOGO_SOURCE_URL =
   "/brand/emotion-mark.svg";
 
-export function LogoFormation() {
+type LogoFormationProps = {
+  compact?: boolean;
+};
+
+export function LogoFormation({
+  compact = false,
+}: LogoFormationProps) {
+  const particleCount = compact
+    ? COMPACT_LOGO_PARTICLE_COUNT
+    : FULL_LOGO_PARTICLE_COUNT;
+
   const formationGroupRef =
     useRef<Group>(null);
 
@@ -53,7 +64,7 @@ export function LogoFormation() {
         const mask =
           await loadLogoMaskTargets({
             src: LOGO_SOURCE_URL,
-            count: LOGO_PARTICLE_COUNT,
+            count: particleCount,
             seed: 126,
             resolution: 512,
             alphaThreshold: 12,
@@ -86,7 +97,7 @@ export function LogoFormation() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [particleCount]);
 
   useFrame((state, delta) => {
     if (!solver) {

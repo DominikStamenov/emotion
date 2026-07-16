@@ -439,6 +439,10 @@
     .hero {
       padding: 124px 0 64px;
     }
+
+    .heroContent {
+      gap: 24px;
+    }
   
     .heroTitle {
         font-size: clamp(3.8rem, 20vw, 6rem);
@@ -455,7 +459,7 @@
     }
   
     .heroVisual {
-      min-height: 460px;
+      min-height: 430px;
     }
   
     .heroOrbitOuter {
@@ -486,6 +490,16 @@
       display: none;
     }
   }  
+
+  @media (prefers-reduced-motion: reduce) {
+    .heroVisual > :first-child {
+      display: none;
+    }
+
+    .heroFallback {
+      opacity: 1;
+    }
+  }
   @keyframes heroCoreShine {
     0%,
     35% {

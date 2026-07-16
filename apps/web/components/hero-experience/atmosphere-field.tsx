@@ -270,12 +270,18 @@ function AtmosphereLayer({
   );
 }
 
-export function AtmosphereField() {
+type AtmosphereFieldProps = {
+  compact?: boolean;
+};
+
+export function AtmosphereField({
+  compact = false,
+}: AtmosphereFieldProps) {
   return (
     <>
       {/* Deep violet atmosphere remains subtly visible */}
       <AtmosphereLayer
-        count={1400}
+        count={compact ? 650 : 1400}
         seed={203}
         spread={[7.8, 5.7, 5.4]}
         size={0.008}
@@ -292,7 +298,7 @@ export function AtmosphereField() {
 
       {/* Mid white atmosphere clears around the mark */}
       <AtmosphereLayer
-        count={780}
+        count={compact ? 360 : 780}
         seed={407}
         spread={[7.2, 5.1, 3.8]}
         size={0.013}
@@ -309,7 +315,7 @@ export function AtmosphereField() {
 
       {/* Foreground cyan sparks retreat most strongly */}
       <AtmosphereLayer
-        count={170}
+        count={compact ? 90 : 170}
         seed={809}
         spread={[6.5, 4.7, 2.2]}
         size={0.026}

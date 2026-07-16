@@ -26,9 +26,8 @@ type LivingRibbonProps = {
   spread: number;
   phase: number;
   opacity: number;
+  pointsPerStrand: number;
 };
-
-const POINTS_PER_STRAND = 112;
 
 const REVEAL_OPACITY = 0.2;
 const REVEAL_HORIZONTAL_OFFSET = 0.3;
@@ -45,6 +44,7 @@ function LivingRibbon({
   spread,
   phase,
   opacity,
+  pointsPerStrand,
 }: LivingRibbonProps) {
   const groupRef = useRef<Group>(null);
 
@@ -52,7 +52,7 @@ function LivingRibbon({
     () =>
       createRibbonEngine({
         strandCount,
-        pointsPerStrand: POINTS_PER_STRAND,
+        pointsPerStrand,
         seed,
         direction,
         angle,
@@ -67,6 +67,7 @@ function LivingRibbon({
       direction,
       length,
       phase,
+      pointsPerStrand,
       seed,
       spread,
       strandCount,
@@ -122,10 +123,8 @@ function LivingRibbon({
   useFrame((state, delta) => {
     const time = state.clock.elapsedTime;
 
-    const {
-      formationAmount,
-      revealAmount,
-    } = getHeroTimeline(time);
+    const { revealAmount } =
+      getHeroTimeline(time);
 
     /**
      * Ribbon interaction becomes quieter while the
@@ -270,7 +269,15 @@ function LivingRibbon({
   );
 }
 
-export function RibbonSystem() {
+type RibbonSystemProps = {
+  compact?: boolean;
+};
+
+export function RibbonSystem({
+  compact = false,
+}: RibbonSystemProps) {
+  const pointsPerStrand = compact ? 72 : 112;
+
   return (
     <group>
       {/* Pink energy — upper left and lower right */}
@@ -280,11 +287,12 @@ export function RibbonSystem() {
         direction={-1}
         angle={0.28}
         length={3.15}
-        strandCount={16}
+        strandCount={compact ? 10 : 16}
         amplitude={0.52}
         spread={0.022}
         phase={0}
         opacity={0.42}
+        pointsPerStrand={pointsPerStrand}
       />
 
       <LivingRibbon
@@ -293,11 +301,12 @@ export function RibbonSystem() {
         direction={1}
         angle={0.42}
         length={2.65}
-        strandCount={11}
+        strandCount={compact ? 7 : 11}
         amplitude={0.42}
         spread={0.024}
         phase={Math.PI * 0.8}
         opacity={0.25}
+        pointsPerStrand={pointsPerStrand}
       />
 
       {/* Violet energy — dominant central flow */}
@@ -307,11 +316,12 @@ export function RibbonSystem() {
         direction={-1}
         angle={-0.12}
         length={2.75}
-        strandCount={18}
+        strandCount={compact ? 11 : 18}
         amplitude={0.6}
         spread={0.021}
         phase={Math.PI * 0.62}
         opacity={0.45}
+        pointsPerStrand={pointsPerStrand}
       />
 
       <LivingRibbon
@@ -320,11 +330,12 @@ export function RibbonSystem() {
         direction={1}
         angle={-0.18}
         length={3.05}
-        strandCount={18}
+        strandCount={compact ? 11 : 18}
         amplitude={0.58}
         spread={0.021}
         phase={Math.PI * 1.18}
         opacity={0.4}
+        pointsPerStrand={pointsPerStrand}
       />
 
       {/* Cyan energy — lower depth layer */}
@@ -334,11 +345,12 @@ export function RibbonSystem() {
         direction={-1}
         angle={-0.52}
         length={2.5}
-        strandCount={10}
+        strandCount={compact ? 6 : 10}
         amplitude={0.4}
         spread={0.025}
         phase={Math.PI * 1.4}
         opacity={0.27}
+        pointsPerStrand={pointsPerStrand}
       />
 
       <LivingRibbon
@@ -347,11 +359,12 @@ export function RibbonSystem() {
         direction={1}
         angle={-0.36}
         length={3.2}
-        strandCount={14}
+        strandCount={compact ? 9 : 14}
         amplitude={0.48}
         spread={0.023}
         phase={Math.PI * 1.72}
         opacity={0.35}
+        pointsPerStrand={pointsPerStrand}
       />
     </group>
   );

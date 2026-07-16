@@ -13,7 +13,13 @@ import {
 import { getHeroTimeline } from "./engine/hero-timeline";
 import { useParticleEngine } from "./hooks/use-particle-engine";
 
-export function ParticleField() {
+type ParticleFieldProps = {
+  compact?: boolean;
+};
+
+export function ParticleField({
+  compact = false,
+}: ParticleFieldProps) {
   const groupRef = useRef<Group>(null);
 
   const basePointsRef = useRef<Points>(null);
@@ -29,7 +35,7 @@ export function ParticleField() {
     useRef<PointsMaterial>(null);
 
   const baseEngine = useParticleEngine({
-    count: 860,
+    count: compact ? 480 : 860,
     seed: 42,
     radiusMin: 0.2,
     radiusMax: 3.55,
@@ -39,7 +45,7 @@ export function ParticleField() {
   });
 
   const heroEngine = useParticleEngine({
-    count: 46,
+    count: compact ? 28 : 46,
     seed: 84,
     radiusMin: 0.1,
     radiusMax: 2.75,
