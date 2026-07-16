@@ -136,8 +136,7 @@
     pointer-events: none;
   }
 
-  .heroVisual:has([data-hero-unavailable="true"]) .heroFallback,
-  .heroVisual:has([data-hero-webgl-fallback="true"]) .heroFallback {
+  .heroVisual:has([data-hero-unavailable="true"]) .heroFallback {
     opacity: 1;
   }
   
@@ -218,7 +217,7 @@
     animation: heroCoreShine 7s ease-in-out infinite;
   }
   
-  .heroCore svg { 
+  .heroCore img {
     position: relative;
     z-index: 1;
     width: 98px;
@@ -482,7 +481,7 @@
       height: 170px;
     }
   
-    .heroCore svg {
+    .heroCore img {
       width: 76px;
       height: 76px;
     }

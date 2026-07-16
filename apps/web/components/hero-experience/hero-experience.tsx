@@ -21,6 +21,23 @@ export function HeroExperience() {
   const [contextLost, setContextLost] =
     useState(false);
 
+  const [initializationFailed, setInitializationFailed] =
+    useState(false);
+
+  useEffect(() => {
+    if (reducedMotion || canvasElement) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setInitializationFailed(true);
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [canvasElement, reducedMotion]);
+
   useEffect(() => {
     if (!canvasElement) {
       return;
@@ -63,7 +80,10 @@ export function HeroExperience() {
   }
 
   const compact = profile === "compact";
-  const renderActive = isActive && !contextLost;
+  const unavailable =
+    contextLost || initializationFailed;
+
+  const renderActive = isActive && !unavailable;
 
   return (
     <div
@@ -73,7 +93,7 @@ export function HeroExperience() {
         renderActive ? "active" : "paused"
       }
       data-hero-unavailable={
-        contextLost ? "true" : undefined
+        unavailable ? "true" : undefined
       }
       aria-hidden="true"
     >
@@ -92,11 +112,10 @@ export function HeroExperience() {
         frameloop={
           renderActive ? "always" : "demand"
         }
-        fallback={
-          <span data-hero-webgl-fallback="true" />
-        }
+        fallback={null}
         onCreated={({ gl }) => {
           setCanvasElement(gl.domElement);
+          setInitializationFailed(false);
         }}
       >
         <HeroExperienceScene profile={profile} />
