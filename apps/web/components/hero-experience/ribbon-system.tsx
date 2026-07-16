@@ -11,36 +11,72 @@ import {
 import { Line } from "@react-three/drei";
 
 type RibbonDefinition = {
-  color: string;
-  width: number;
-  phase: number;
-  amplitude: number;
-  verticalOffset: number;
-};
-
-const RIBBONS: RibbonDefinition[] = [
-  {
-    color: "#f43f8d",
-    width: 2.5,
-    phase: 0,
-    amplitude: 0.7,
-    verticalOffset: 0.55,
-  },
-  {
-    color: "#8b5cf6",
-    width: 3,
-    phase: Math.PI * 0.66,
-    amplitude: 0.9,
-    verticalOffset: 0,
-  },
-  {
-    color: "#22d3ee",
-    width: 2.2,
-    phase: Math.PI * 1.25,
-    amplitude: 0.72,
-    verticalOffset: -0.5,
-  },
-];
+    color: string;
+    width: number;
+    phase: number;
+    amplitude: number;
+    verticalOffset: number;
+    strandCount: number;
+    strandSpread: number;
+  };
+  const RIBBONS: RibbonDefinition[] = [
+    {
+      color: "#f43f8d",
+      width: 1.8,
+      phase: 0,
+      amplitude: 0.7,
+      verticalOffset: 0.55,
+      strandCount: 7,
+      strandSpread: 0.16,
+    },
+    {
+      color: "#8b5cf6",
+      width: 2.1,
+      phase: Math.PI * 0.66,
+      amplitude: 0.9,
+      verticalOffset: 0,
+      strandCount: 9,
+      strandSpread: 0.2,
+    },
+    {
+      color: "#22d3ee",
+      width: 1.6,
+      phase: Math.PI * 1.25,
+      amplitude: 0.72,
+      verticalOffset: -0.5,
+      strandCount: 6,
+      strandSpread: 0.14,
+    },
+  ]; 
+   
+  function createRibbonStrands(ribbon: RibbonDefinition) {
+    return Array.from(
+      { length: ribbon.strandCount },
+      (_, strandIndex) => {
+        const center = (ribbon.strandCount - 1) / 2;
+        const strandOffset =
+          (strandIndex - center) * ribbon.strandSpread;
+  
+        return {
+          id: `${ribbon.color}-${strandIndex}`,
+          width:
+            ribbon.width *
+            (1 - Math.abs(strandIndex - center) * 0.08),
+          opacity:
+            0.16 +
+            (1 -
+              Math.abs(strandIndex - center) /
+                Math.max(center, 1)) *
+              0.34,
+          points: createRibbonPoints(
+            ribbon.phase + strandIndex * 0.045,
+            ribbon.amplitude + strandOffset * 0.32,
+            ribbon.verticalOffset + strandOffset,
+          ),
+        };
+      },
+    );
+  }
 
 function createRibbonPoints(
   phase: number,
@@ -85,11 +121,7 @@ export function RibbonSystem() {
     () =>
       RIBBONS.map((ribbon) => ({
         ...ribbon,
-        points: createRibbonPoints(
-          ribbon.phase,
-          ribbon.amplitude,
-          ribbon.verticalOffset,
-        ),
+        strands: createRibbonStrands(ribbon),
       })),
     [],
   );
@@ -119,17 +151,19 @@ export function RibbonSystem() {
 
   return (
     <group ref={groupRef}>
-      {ribbons.map((ribbon) => (
-        <Line
-          key={ribbon.color}
-          points={ribbon.points}
-          color={ribbon.color}
-          lineWidth={ribbon.width}
-          transparent
-          opacity={0.62}
-          depthWrite={false}
-        />
-      ))}
+      {ribbons.flatMap((ribbon) =>
+  ribbon.strands.map((strand) => (
+    <Line
+      key={strand.id}
+      points={strand.points}
+      color={ribbon.color}
+      lineWidth={strand.width}
+      transparent
+      opacity={strand.opacity}
+      depthWrite={false}
+    />
+  )),
+)}
     </group>
   );
 }
