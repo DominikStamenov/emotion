@@ -2,60 +2,144 @@
 
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import type { BufferAttribute, Points } from "three";
+import type {
+  BufferAttribute,
+  Group,
+  Points,
+} from "three";
 
 import { useParticleEngine } from "./hooks/use-particle-engine";
 
-const PARTICLE_COUNT = 900;
-
 export function ParticleField() {
-  const pointsRef = useRef<Points>(null);
-  const positionAttributeRef = useRef<BufferAttribute>(null);
+  const groupRef = useRef<Group>(null);
 
-  const { positions, colors, update } =
-    useParticleEngine(PARTICLE_COUNT);
+  const basePointsRef = useRef<Points>(null);
+  const basePositionAttributeRef =
+    useRef<BufferAttribute>(null);
+
+  const heroPointsRef = useRef<Points>(null);
+  const heroPositionAttributeRef =
+    useRef<BufferAttribute>(null);
+
+  const baseEngine = useParticleEngine({
+    count: 860,
+    seed: 42,
+    radiusMin: 0.2,
+    radiusMax: 3.55,
+    depth: 3.2,
+    clusterPower: 2.15,
+    interactionStrength: 7.2,
+  });
+
+  const heroEngine = useParticleEngine({
+    count: 46,
+    seed: 84,
+    radiusMin: 0.1,
+    radiusMax: 2.75,
+    depth: 2.3,
+    clusterPower: 1.75,
+    interactionStrength: 8.5,
+  });
 
   useFrame((state, delta) => {
-    update(
+    const safeDelta = Math.min(delta, 0.033);
+    const elapsedTime = state.clock.elapsedTime;
+
+    baseEngine.update(
       state.pointer.x,
       state.pointer.y,
-      Math.min(delta, 0.033),
-      state.clock.elapsedTime,
+      safeDelta,
+      elapsedTime,
     );
 
-    if (positionAttributeRef.current) {
-      positionAttributeRef.current.needsUpdate = true;
+    heroEngine.update(
+      state.pointer.x,
+      state.pointer.y,
+      safeDelta,
+      elapsedTime,
+    );
+
+    if (basePositionAttributeRef.current) {
+      basePositionAttributeRef.current.needsUpdate = true;
     }
 
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y =
-        Math.sin(state.clock.elapsedTime * 0.08) * 0.035;
+    if (heroPositionAttributeRef.current) {
+      heroPositionAttributeRef.current.needsUpdate = true;
+    }
+
+    if (groupRef.current) {
+      const breathing =
+        1 + Math.sin(elapsedTime * 0.68) * 0.028;
+
+      groupRef.current.scale.setScalar(breathing);
+
+      groupRef.current.rotation.y =
+        Math.sin(elapsedTime * 0.09) * 0.04;
+
+      groupRef.current.rotation.x =
+        Math.cos(elapsedTime * 0.075) * 0.018;
+    }
+
+    if (basePointsRef.current) {
+      basePointsRef.current.rotation.z =
+        Math.sin(elapsedTime * 0.065) * 0.025;
+    }
+
+    if (heroPointsRef.current) {
+      heroPointsRef.current.rotation.z =
+        Math.cos(elapsedTime * 0.08) * 0.035;
     }
   });
 
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          ref={positionAttributeRef}
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
+    <group ref={groupRef}>
+      <points ref={basePointsRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            ref={basePositionAttributeRef}
+            attach="attributes-position"
+            args={[baseEngine.positions, 3]}
+          />
 
-        <bufferAttribute
-          attach="attributes-color"
-          args={[colors, 3]}
-        />
-      </bufferGeometry>
+          <bufferAttribute
+            attach="attributes-color"
+            args={[baseEngine.colors, 3]}
+          />
+        </bufferGeometry>
 
-      <pointsMaterial
-        vertexColors
-        size={0.024}
-        sizeAttenuation
-        transparent
-        opacity={0.72}
-        depthWrite={false}
-      />
-    </points>
+        <pointsMaterial
+          vertexColors
+          size={0.021}
+          sizeAttenuation
+          transparent
+          opacity={0.68}
+          depthWrite={false}
+        />
+      </points>
+
+      <points ref={heroPointsRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            ref={heroPositionAttributeRef}
+            attach="attributes-position"
+            args={[heroEngine.positions, 3]}
+          />
+
+          <bufferAttribute
+            attach="attributes-color"
+            args={[heroEngine.colors, 3]}
+          />
+        </bufferGeometry>
+
+        <pointsMaterial
+          vertexColors
+          size={0.052}
+          sizeAttenuation
+          transparent
+          opacity={0.88}
+          depthWrite={false}
+        />
+      </points>
+    </group>
   );
 }
