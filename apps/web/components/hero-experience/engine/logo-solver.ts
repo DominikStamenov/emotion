@@ -1,4 +1,7 @@
-import { MathUtils } from "three";
+import { MathUtils } from "three";  
+import {
+  getLogoFormationAmount,
+} from "./hero-timeline";
 
 import type { LogoMaskTargets } from "./logo-mask";
 
@@ -19,7 +22,7 @@ export type LogoSolver = {
   ) => number;
 };
 
-const LOGO_CYCLE_DURATION = 12;
+
 
 function createRandom(seed: number) {
   let value = seed;
@@ -30,7 +33,6 @@ function createRandom(seed: number) {
     return value - Math.floor(value);
   };
 }
-
 function smoothRange(
   value: number,
   start: number,
@@ -40,32 +42,6 @@ function smoothRange(
     value,
     start,
     end,
-  );
-}
-
-export function getLogoFormationAmount(
-  elapsedTime: number,
-) {
-  const cycleProgress =
-    (elapsedTime % LOGO_CYCLE_DURATION) /
-    LOGO_CYCLE_DURATION;
-
-  const gather = smoothRange(
-    cycleProgress,
-    0.24,
-    0.49,
-  );
-
-  const dissolve = smoothRange(
-    cycleProgress,
-    0.74,
-    0.95,
-  );
-
-  return MathUtils.clamp(
-    gather * (1 - dissolve),
-    0,
-    1,
   );
 }
 

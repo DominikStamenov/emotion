@@ -10,7 +10,7 @@ import {
   type PointsMaterial,
 } from "three";
 
-import { getLogoFormationAmount } from "./engine/logo-solver";
+import { getHeroTimeline } from "./engine/hero-timeline";
 
 const CORE_PARTICLE_COUNT = 120;
 
@@ -87,15 +87,8 @@ export function EnergyCore() {
     const time =
       state.clock.elapsedTime;
 
-    const formationAmount =
-      getLogoFormationAmount(time);
-
-    const revealAmount =
-      MathUtils.smoothstep(
-        formationAmount,
-        0.3,
-        0.9,
-      );
+    const { revealAmount } =
+      getHeroTimeline(time);
 
     const interactionAmount =
       1 - revealAmount * 0.94;

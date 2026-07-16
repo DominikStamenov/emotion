@@ -12,7 +12,7 @@ import {
   type Group,
 } from "three";
 
-import { getLogoFormationAmount } from "./engine/logo-solver";
+import { getHeroTimeline } from "./engine/hero-timeline";
 import { createRibbonEngine } from "./engine/ribbon-engine";
 
 type LivingRibbonProps = {
@@ -122,14 +122,10 @@ function LivingRibbon({
   useFrame((state, delta) => {
     const time = state.clock.elapsedTime;
 
-    const formationAmount =
-      getLogoFormationAmount(time);
-
-    const revealAmount = MathUtils.smoothstep(
+    const {
       formationAmount,
-      0.32,
-      0.9,
-    );
+      revealAmount,
+    } = getHeroTimeline(time);
 
     /**
      * Ribbon interaction becomes quieter while the
