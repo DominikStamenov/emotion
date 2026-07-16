@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { MathUtils, type Mesh } from "three"; 
-import { MeshDistortMaterial } from "@react-three/drei";
+import { MeshDistortMaterial, Sparkles } from "@react-three/drei";
 
 import styles from "./hero-experience.module.css";
 
@@ -62,6 +62,38 @@ function EmotionCore() {
 />
     </mesh>
   );
+} 
+function EmotionParticles() {
+  return (
+    <group>
+      <Sparkles
+        count={46}
+        scale={[5.8, 4.2, 3]}
+        size={2.2}
+        speed={0.28}
+        opacity={0.42}
+        color="#f7f5fb"
+      />
+
+      <Sparkles
+        count={18}
+        scale={[4.6, 3.4, 2.4]}
+        size={3.2}
+        speed={0.18}
+        opacity={0.55}
+        color="#f43f8d"
+      />
+
+      <Sparkles
+        count={14}
+        scale={[4.8, 3.6, 2.6]}
+        size={2.8}
+        speed={0.22}
+        opacity={0.5}
+        color="#22d3ee"
+      />
+    </group>
+  );
 }
 
 function ExperienceScene() {
@@ -85,8 +117,9 @@ function ExperienceScene() {
         position={[3, 1, 2]}
         intensity={12}
         color="#22d3ee"
-      />
-
+      /> 
+      
+      <EmotionParticles />
       <EmotionCore />
     </>
   );
