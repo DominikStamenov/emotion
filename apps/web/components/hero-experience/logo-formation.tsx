@@ -20,7 +20,7 @@ import {
 } from "./engine/logo-solver";
 import { loadLogoMaskTargets } from "./engine/logo-mask";
 
-const LOGO_PARTICLE_COUNT = 1400;
+const LOGO_PARTICLE_COUNT = 2100;
 const LOGO_SOURCE_URL =
   "/brand/emotion-mark.svg";
 
@@ -48,7 +48,7 @@ export function LogoFormation() {
             seed: 126,
             resolution: 512,
             alphaThreshold: 12,
-            edgeParticleShare: 0.38,
+            edgeParticleShare: 0.46,
           });
 
         if (cancelled) {
@@ -59,7 +59,7 @@ export function LogoFormation() {
           createLogoSolver({
             mask,
             seed: 126,
-            scale: 1.05,
+            scale: 1.12,
             depth: 1.4,
           }),
         );
@@ -98,14 +98,14 @@ export function LogoFormation() {
       materialRef.current.opacity =
         MathUtils.lerp(
           0.06,
-          0.94,
+          0.96,
           formationAmount,
         );
 
       materialRef.current.size =
         MathUtils.lerp(
-          0.011,
-          0.029,
+          0.009,
+          0.022,
           formationAmount,
         );
     }
@@ -138,9 +138,9 @@ export function LogoFormation() {
     const pulse =
       1 +
       Math.sin(
-        state.clock.elapsedTime * 1.4,
+        state.clock.elapsedTime * 1.25,
       ) *
-        0.008 *
+        0.004 *
         formationAmount;
 
     points.scale.setScalar(pulse);
@@ -172,10 +172,10 @@ export function LogoFormation() {
       <pointsMaterial
         ref={materialRef}
         vertexColors
-        size={0.011}
+        size={0.009}
         sizeAttenuation
         transparent
-        opacity={0.06}
+        opacity={0.05}
         depthWrite={false}
         blending={AdditiveBlending}
         toneMapped={false}
