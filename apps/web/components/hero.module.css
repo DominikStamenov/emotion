@@ -135,6 +135,11 @@
     opacity: 0;
     pointer-events: none;
   }
+
+  .heroVisual:has([data-hero-unavailable="true"]) .heroFallback,
+  .heroVisual:has([data-hero-webgl-fallback="true"]) .heroFallback {
+    opacity: 1;
+  }
   
   .heroVisual > :first-child {
     z-index: 2;

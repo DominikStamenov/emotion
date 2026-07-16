@@ -1,6 +1,10 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useFrame } from "@react-three/fiber";
 import {
   AdditiveBlending,
@@ -118,6 +122,16 @@ function LivingRibbon({
       opacity,
       strandCount,
     ],
+  );
+
+  useEffect(
+    () => () => {
+      lines.forEach((line) => {
+        line.geometry.dispose();
+        line.material.dispose();
+      });
+    },
+    [lines],
   );
 
   useFrame((state, delta) => {
