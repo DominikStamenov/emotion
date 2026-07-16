@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { MathUtils, type Mesh } from "three"; 
+import { MathUtils, type Group, type Mesh } from "three";
 import { MeshDistortMaterial, Sparkles } from "@react-three/drei";
 
 import styles from "./hero-experience.module.css";
@@ -97,14 +97,32 @@ function EmotionParticles() {
 } 
  
 function EmotionRings() {
+  const groupRef = useRef<Group>(null);
+
+  useFrame((state, delta) => {
+    const group = groupRef.current;
+
+    if (!group) return;
+
+    const time = state.clock.elapsedTime;
+
+    group.rotation.x += delta * 0.025;
+    group.rotation.y += delta * 0.04;
+    group.rotation.z = Math.sin(time * 0.18) * 0.08;
+
+    const scale = 1 + Math.sin(time * 0.35) * 0.018;
+    group.scale.setScalar(scale);
+  });
+
   return (
-    <group rotation={[0.35, 0.2, -0.15]}>
+    <group ref={groupRef} rotation={[0.35, 0.2, -0.15]}>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.85, 0.012, 16, 180]} />
         <meshBasicMaterial
           color="#8b5cf6"
           transparent
           opacity={0.42}
+          depthWrite={false}
         />
       </mesh>
 
@@ -114,6 +132,7 @@ function EmotionRings() {
           color="#22d3ee"
           transparent
           opacity={0.24}
+          depthWrite={false}
         />
       </mesh>
 
@@ -123,6 +142,7 @@ function EmotionRings() {
           color="#f43f8d"
           transparent
           opacity={0.18}
+          depthWrite={false}
         />
       </mesh>
     </group>
