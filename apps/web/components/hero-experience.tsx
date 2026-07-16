@@ -94,6 +94,39 @@ function EmotionParticles() {
       />
     </group>
   );
+} 
+ 
+function EmotionRings() {
+  return (
+    <group rotation={[0.35, 0.2, -0.15]}>
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.85, 0.012, 16, 180]} />
+        <meshBasicMaterial
+          color="#8b5cf6"
+          transparent
+          opacity={0.42}
+        />
+      </mesh>
+
+      <mesh rotation={[1.15, 0.4, 0.5]}>
+        <torusGeometry args={[2.25, 0.008, 16, 180]} />
+        <meshBasicMaterial
+          color="#22d3ee"
+          transparent
+          opacity={0.24}
+        />
+      </mesh>
+
+      <mesh rotation={[0.45, 1.2, 0.2]}>
+        <torusGeometry args={[2.65, 0.006, 16, 180]} />
+        <meshBasicMaterial
+          color="#f43f8d"
+          transparent
+          opacity={0.18}
+        />
+      </mesh>
+    </group>
+  );
 }
 
 function ExperienceScene() {
@@ -118,8 +151,9 @@ function ExperienceScene() {
         intensity={12}
         color="#22d3ee"
       /> 
-      
-      <EmotionParticles />
+
+      <EmotionParticles /> 
+      <EmotionRings />
       <EmotionCore />
     </>
   );
