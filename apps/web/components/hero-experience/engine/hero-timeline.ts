@@ -1,12 +1,13 @@
 import { MathUtils } from "three";
 
-export const HERO_CYCLE_DURATION = 12;
+export const HERO_CYCLE_DURATION = 14;
 
 export type HeroTimeline = {
   cycleProgress: number;
   gatherAmount: number;
   formationAmount: number;
   revealAmount: number;
+  holdAmount: number;
   dissolveAmount: number;
   freedomAmount: number;
 };
@@ -35,21 +36,21 @@ export function getHeroTimeline(
     normalizedTime / HERO_CYCLE_DURATION;
 
   /**
-   * 00–24%  Stillness / awakening
-   * 24–49%  Gathering
-   * 49–74%  Formation and reveal
-   * 74–95%  Dissolve
+   * 00–20%  Stillness / awakening
+   * 20–45%  Gathering
+   * 45–75%  Full reveal and extended hold
+   * 75–95%  Dissolve
    * 95–100% Freedom
    */
   const gatherAmount = smoothRange(
     cycleProgress,
-    0.24,
-    0.49,
+    0.2,
+    0.45,
   );
 
   const dissolveAmount = smoothRange(
     cycleProgress,
-    0.74,
+    0.75,
     0.95,
   );
 
@@ -65,6 +66,18 @@ export function getHeroTimeline(
     0.9,
   );
 
+  /**
+   * A stable plateau used for subtle material polish.
+   * It reaches one only after the mark is fully formed
+   * and fades before the dissolve becomes noticeable.
+   */
+  const holdAmount = MathUtils.clamp(
+    smoothRange(cycleProgress, 0.45, 0.51) *
+      (1 - smoothRange(cycleProgress, 0.69, 0.75)),
+    0,
+    1,
+  );
+
   const freedomAmount = smoothRange(
     cycleProgress,
     0.92,
@@ -76,6 +89,7 @@ export function getHeroTimeline(
     gatherAmount,
     formationAmount,
     revealAmount,
+    holdAmount,
     dissolveAmount,
     freedomAmount,
   };

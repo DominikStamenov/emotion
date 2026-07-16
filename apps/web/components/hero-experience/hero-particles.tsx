@@ -342,15 +342,15 @@ export function HeroParticles() {
        */
       materialRef.current.opacity =
         MathUtils.lerp(
-          0.68,
-          0.86,
+          0.58,
+          0.38,
           revealAmount,
         );
 
       materialRef.current.size =
         MathUtils.lerp(
-          0.085,
-          0.064,
+          0.072,
+          0.046,
           revealAmount,
         );
     }
@@ -375,10 +375,10 @@ export function HeroParticles() {
       <pointsMaterial
         ref={materialRef}
         color="#ffffff"
-        size={0.085}
+        size={0.072}
         sizeAttenuation
         transparent
-        opacity={0.68}
+        opacity={0.58}
         depthWrite={false}
         blending={AdditiveBlending}
         toneMapped={false}

@@ -10,27 +10,36 @@ import {
   AdditiveBlending,
   MathUtils,
   type BufferAttribute,
-  type Points,
+  type Group,
   type PointsMaterial,
 } from "three";
 
+import { loadLogoMaskTargets } from "./engine/logo-mask";
+import { getHeroTimeline } from "./engine/hero-timeline";
 import {
   createLogoSolver,
   type LogoSolver,
 } from "./engine/logo-solver";
-import { loadLogoMaskTargets } from "./engine/logo-mask";
 
 const LOGO_PARTICLE_COUNT = 2100;
+
 const LOGO_SOURCE_URL =
   "/brand/emotion-mark.svg";
 
 export function LogoFormation() {
-  const pointsRef = useRef<Points>(null);
+  const formationGroupRef =
+    useRef<Group>(null);
 
   const positionAttributeRef =
     useRef<BufferAttribute>(null);
 
+  const glowPositionAttributeRef =
+    useRef<BufferAttribute>(null);
+
   const materialRef =
+    useRef<PointsMaterial>(null);
+
+  const glowMaterialRef =
     useRef<PointsMaterial>(null);
 
   const [solver, setSolver] =
@@ -55,14 +64,15 @@ export function LogoFormation() {
           return;
         }
 
-        setSolver(
+        const nextSolver =
           createLogoSolver({
             mask,
             seed: 126,
             scale: 1.12,
             depth: 1.4,
-          }),
-        );
+          });
+
+        setSolver(nextSolver);
       } catch (error) {
         console.error(
           "Failed to initialize eMotion logo formation.",
@@ -83,24 +93,39 @@ export function LogoFormation() {
       return;
     }
 
-    const formationAmount = solver.update(
-      state.clock.elapsedTime,
-      state.pointer.x,
-      state.pointer.y,
-    );
+    const formationAmount =
+      solver.update(
+        state.clock.elapsedTime,
+        state.pointer.x,
+        state.pointer.y,
+      );
 
+    const { holdAmount } =
+      getHeroTimeline(state.clock.elapsedTime);
+
+    /**
+     * Both particle geometries use the same position
+     * array, but each BufferAttribute has its own GPU
+     * buffer and therefore needs to be invalidated.
+     */
     if (positionAttributeRef.current) {
       positionAttributeRef.current.needsUpdate =
+        true;
+    }
+
+    if (glowPositionAttributeRef.current) {
+      glowPositionAttributeRef.current.needsUpdate =
         true;
     }
 
     if (materialRef.current) {
       materialRef.current.opacity =
         MathUtils.lerp(
-          0.06,
-          0.96,
+          0.05,
+          0.94,
           formationAmount,
-        );
+        ) +
+        holdAmount * 0.02;
 
       materialRef.current.size =
         MathUtils.lerp(
@@ -110,30 +135,66 @@ export function LogoFormation() {
         );
     }
 
-    const points = pointsRef.current;
+    if (glowMaterialRef.current) {
+      glowMaterialRef.current.opacity =
+        MathUtils.lerp(
+          0,
+          0.085,
+          formationAmount,
+        ) *
+        MathUtils.lerp(
+          1,
+          0.82,
+          holdAmount,
+        );
 
-    if (!points) {
+      glowMaterialRef.current.size =
+        MathUtils.lerp(
+          0.02,
+          0.052,
+          formationAmount,
+        ) *
+        MathUtils.lerp(
+          1,
+          0.9,
+          holdAmount,
+        );
+    }
+
+    const formationGroup =
+      formationGroupRef.current;
+
+    if (!formationGroup) {
       return;
     }
 
+    const safeDelta =
+      Math.min(delta, 0.033);
+
     const easing =
-      1 - Math.exp(-delta * 1.8);
+      1 - Math.exp(-safeDelta * 1.8);
 
-    points.rotation.y = MathUtils.lerp(
-      points.rotation.y,
-      state.pointer.x *
-        0.025 *
-        (1 - formationAmount),
-      easing,
-    );
+    /**
+     * The whole formation rotates as one object so the
+     * sharp layer and the glow layer remain aligned.
+     */
+    formationGroup.rotation.y =
+      MathUtils.lerp(
+        formationGroup.rotation.y,
+        state.pointer.x *
+          0.025 *
+          (1 - formationAmount),
+        easing,
+      );
 
-    points.rotation.x = MathUtils.lerp(
-      points.rotation.x,
-      -state.pointer.y *
-        0.018 *
-        (1 - formationAmount),
-      easing,
-    );
+    formationGroup.rotation.x =
+      MathUtils.lerp(
+        formationGroup.rotation.x,
+        -state.pointer.y *
+          0.018 *
+          (1 - formationAmount),
+        easing,
+      );
 
     const pulse =
       1 +
@@ -141,9 +202,23 @@ export function LogoFormation() {
         state.clock.elapsedTime * 1.25,
       ) *
         0.004 *
-        formationAmount;
+        formationAmount *
+        MathUtils.lerp(
+          1,
+          0.45,
+          holdAmount,
+        );
 
-    points.scale.setScalar(pulse);
+    const nextScale =
+      MathUtils.lerp(
+        formationGroup.scale.x,
+        pulse,
+        easing,
+      );
+
+    formationGroup.scale.setScalar(
+      nextScale,
+    );
   });
 
   if (!solver) {
@@ -151,35 +226,66 @@ export function LogoFormation() {
   }
 
   return (
-    <points
-      ref={pointsRef}
+    <group
+      ref={formationGroupRef}
       position={[0, 0, 0.55]}
-      frustumCulled={false}
     >
-      <bufferGeometry>
-        <bufferAttribute
-          ref={positionAttributeRef}
-          attach="attributes-position"
-          args={[solver.positions, 3]}
-        />
+      {/* Sharp identity layer */}
+      <points frustumCulled={false}>
+        <bufferGeometry>
+          <bufferAttribute
+            ref={positionAttributeRef}
+            attach="attributes-position"
+            args={[solver.positions, 3]}
+          />
 
-        <bufferAttribute
-          attach="attributes-color"
-          args={[solver.colors, 3]}
-        />
-      </bufferGeometry>
+          <bufferAttribute
+            attach="attributes-color"
+            args={[solver.colors, 3]}
+          />
+        </bufferGeometry>
 
-      <pointsMaterial
-        ref={materialRef}
-        vertexColors
-        size={0.009}
-        sizeAttenuation
-        transparent
-        opacity={0.05}
-        depthWrite={false}
-        blending={AdditiveBlending}
-        toneMapped={false}
-      />
-    </points>
+        <pointsMaterial
+          ref={materialRef}
+          vertexColors
+          size={0.009}
+          sizeAttenuation
+          transparent
+          opacity={0.05}
+          depthWrite={false}
+          blending={AdditiveBlending}
+          toneMapped={false}
+        />
+      </points>
+
+      {/* Soft energetic glow layer */}
+      <points frustumCulled={false}>
+        <bufferGeometry>
+          <bufferAttribute
+            ref={glowPositionAttributeRef}
+            attach="attributes-position"
+            args={[solver.positions, 3]}
+          />
+
+          <bufferAttribute
+            attach="attributes-color"
+            args={[solver.colors, 3]}
+          />
+        </bufferGeometry>
+
+        <pointsMaterial
+          ref={glowMaterialRef}
+          vertexColors
+          size={0.02}
+          sizeAttenuation
+          transparent
+          opacity={0}
+          depthWrite={false}
+          depthTest
+          blending={AdditiveBlending}
+          toneMapped={false}
+        />
+      </points>
+    </group>
   );
 }
