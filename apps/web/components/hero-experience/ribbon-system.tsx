@@ -3,167 +3,162 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import {
-  CatmullRomCurve3,
-  MathUtils,
-  Vector3,
+  AdditiveBlending,
+  BufferAttribute,
+  BufferGeometry,
+  Line,
+  LineBasicMaterial,
   type Group,
 } from "three";
-import { Line } from "@react-three/drei";
 
-type RibbonDefinition = {
-    color: string;
-    width: number;
-    phase: number;
-    amplitude: number;
-    verticalOffset: number;
-    strandCount: number;
-    strandSpread: number;
-  };
-  const RIBBONS: RibbonDefinition[] = [
-    {
-      color: "#f43f8d",
-      width: 1.8,
-      phase: 0,
-      amplitude: 0.7,
-      verticalOffset: 0.55,
-      strandCount: 7,
-      strandSpread: 0.16,
-    },
-    {
-      color: "#8b5cf6",
-      width: 2.1,
-      phase: Math.PI * 0.66,
-      amplitude: 0.9,
-      verticalOffset: 0,
-      strandCount: 9,
-      strandSpread: 0.2,
-    },
-    {
-      color: "#22d3ee",
-      width: 1.6,
-      phase: Math.PI * 1.25,
-      amplitude: 0.72,
-      verticalOffset: -0.5,
-      strandCount: 6,
-      strandSpread: 0.14,
-    },
-  ]; 
-   
-  function createRibbonStrands(ribbon: RibbonDefinition) {
-    return Array.from(
-      { length: ribbon.strandCount },
-      (_, strandIndex) => {
-        const center = (ribbon.strandCount - 1) / 2;
-        const strandOffset =
-          (strandIndex - center) * ribbon.strandSpread;
-  
-        return {
-          id: `${ribbon.color}-${strandIndex}`,
-          width:
-            ribbon.width *
-            (1 - Math.abs(strandIndex - center) * 0.08),
-          opacity:
-            0.16 +
-            (1 -
-              Math.abs(strandIndex - center) /
-                Math.max(center, 1)) *
-              0.34,
-          points: createRibbonPoints(
-            ribbon.phase + strandIndex * 0.045,
-            ribbon.amplitude + strandOffset * 0.32,
-            ribbon.verticalOffset + strandOffset,
-          ),
-        };
-      },
-    );
-  }
+import { createRibbonEngine } from "./engine/ribbon-engine";
 
-function createRibbonPoints(
-  phase: number,
-  amplitude: number,
-  verticalOffset: number,
-) {
-  const controlPoints: Vector3[] = [];
+type LivingRibbonProps = {
+  color: string;
+  seed: number;
+  strandCount: number;
+  verticalOffset: number;
+  amplitude: number;
+  spread: number;
+  phase: number;
+  opacity: number;
+};
 
-  for (let index = 0; index < 8; index += 1) {
-    const progress = index / 7;
-    const x = MathUtils.lerp(-3.4, 3.4, progress);
+const POINTS_PER_STRAND = 96;
 
-    const wave =
-      Math.sin(progress * Math.PI * 2.2 + phase) * amplitude;
-
-    const secondaryWave =
-      Math.cos(progress * Math.PI * 3.4 + phase * 0.7) * 0.22;
-
-    controlPoints.push(
-      new Vector3(
-        x,
-        wave + secondaryWave + verticalOffset,
-        Math.sin(progress * Math.PI * 1.8 + phase) * 0.65,
-      ),
-    );
-  }
-
-  const curve = new CatmullRomCurve3(
-    controlPoints,
-    false,
-    "catmullrom",
-    0.45,
-  );
-
-  return curve.getPoints(120);
-}
-
-export function RibbonSystem() {
+function LivingRibbon({
+  color,
+  seed,
+  strandCount,
+  verticalOffset,
+  amplitude,
+  spread,
+  phase,
+  opacity,
+}: LivingRibbonProps) {
   const groupRef = useRef<Group>(null);
 
-  const ribbons = useMemo(
+  const engine = useMemo(
     () =>
-      RIBBONS.map((ribbon) => ({
-        ...ribbon,
-        strands: createRibbonStrands(ribbon),
-      })),
-    [],
+      createRibbonEngine({
+        strandCount,
+        pointsPerStrand: POINTS_PER_STRAND,
+        seed,
+        verticalOffset,
+        amplitude,
+        spread,
+        phase,
+      }),
+    [
+      amplitude,
+      phase,
+      seed,
+      spread,
+      strandCount,
+      verticalOffset,
+    ],
+  );
+
+  const lines = useMemo(
+    () =>
+      engine.positions.map((positions, index) => {
+        const geometry = new BufferGeometry();
+
+        geometry.setAttribute(
+          "position",
+          new BufferAttribute(positions, 3),
+        );
+
+        const center = (strandCount - 1) / 2;
+        const distanceFromCenter = Math.abs(index - center);
+        const normalizedDistance =
+          distanceFromCenter / Math.max(center, 1);
+
+        const material = new LineBasicMaterial({
+          color,
+          transparent: true,
+          opacity: opacity * (1 - normalizedDistance * 0.68),
+          blending: AdditiveBlending,
+          depthWrite: false,
+        });
+
+        return new Line(geometry, material);
+      }),
+    [color, engine.positions, opacity, strandCount],
   );
 
   useFrame((state, delta) => {
-    const group = groupRef.current;
-
-    if (!group) return;
-
-    const time = state.clock.elapsedTime;
-
-    group.rotation.y = MathUtils.lerp(
-      group.rotation.y,
-      state.pointer.x * 0.08,
-      1 - Math.exp(-delta * 1.8),
+    engine.update(
+      state.pointer.x,
+      state.pointer.y,
+      state.clock.elapsedTime,
+      delta,
     );
 
-    group.rotation.x = MathUtils.lerp(
-      group.rotation.x,
-      -state.pointer.y * 0.045,
-      1 - Math.exp(-delta * 1.8),
-    );
+    lines.forEach((line) => {
+      const positionAttribute =
+        line.geometry.getAttribute("position");
 
-    group.position.y = Math.sin(time * 0.32) * 0.08;
-    group.rotation.z = Math.sin(time * 0.16) * 0.035;
+      positionAttribute.needsUpdate = true;
+      line.geometry.computeBoundingSphere();
+    });
+
+    if (groupRef.current) {
+      groupRef.current.rotation.y =
+        state.pointer.x * 0.025;
+
+      groupRef.current.rotation.x =
+        -state.pointer.y * 0.015;
+    }
   });
 
   return (
     <group ref={groupRef}>
-      {ribbons.flatMap((ribbon) =>
-  ribbon.strands.map((strand) => (
-    <Line
-      key={strand.id}
-      points={strand.points}
-      color={ribbon.color}
-      lineWidth={strand.width}
-      transparent
-      opacity={strand.opacity}
-      depthWrite={false}
-    />
-  )),
-)}
+      {lines.map((line, index) => (
+        <primitive
+          key={`${color}-${index}`}
+          object={line}
+        />
+      ))}
+    </group>
+  );
+}
+
+export function RibbonSystem() {
+  return (
+    <group>
+      <LivingRibbon
+        color="#f43f8d"
+        seed={21}
+        strandCount={15}
+        verticalOffset={0.55}
+        amplitude={0.72}
+        spread={0.026}
+        phase={0}
+        opacity={0.36}
+      />
+
+      <LivingRibbon
+        color="#8b5cf6"
+        seed={42}
+        strandCount={19}
+        verticalOffset={0}
+        amplitude={0.88}
+        spread={0.025}
+        phase={Math.PI * 0.66}
+        opacity={0.4}
+      />
+
+      <LivingRibbon
+        color="#22d3ee"
+        seed={84}
+        strandCount={13}
+        verticalOffset={-0.55}
+        amplitude={0.68}
+        spread={0.028}
+        phase={Math.PI * 1.24}
+        opacity={0.34}
+      />
     </group>
   );
 }
