@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { MathUtils, type Mesh } from "three";
+import { MathUtils, type Mesh } from "three"; 
+import { MeshDistortMaterial } from "@react-three/drei";
 
 import styles from "./hero-experience.module.css";
 
@@ -50,13 +51,15 @@ function EmotionCore() {
 
   return (
     <mesh ref={meshRef}>
-      <icosahedronGeometry args={[1.25, 5]} />
+      <icosahedronGeometry args={[1.25, 6]} />
 
-      <meshStandardMaterial
-        color="#8b5cf6"
-        roughness={0.28}
-        metalness={0.12}
-      />
+      <MeshDistortMaterial
+  color="#8b5cf6"
+  roughness={0.22}
+  metalness={0.16}
+  distort={0.34}
+  speed={1.4}
+/>
     </mesh>
   );
 }
