@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import type { Mesh } from "three";
+import { MathUtils, type Mesh } from "three";
 
 import styles from "./hero-experience.module.css";
 
@@ -10,17 +10,42 @@ function EmotionCore() {
   const meshRef = useRef<Mesh>(null);
 
   useFrame((state, delta) => {
-    if (!meshRef.current) return;
+    const mesh = meshRef.current;
 
-    meshRef.current.rotation.x += delta * 0.08;
-    meshRef.current.rotation.y += delta * 0.12;
+    if (!mesh) return;
 
     const time = state.clock.elapsedTime;
+    const easing = 1 - Math.exp(-delta * 3);
 
-    meshRef.current.position.y = Math.sin(time * 0.7) * 0.12;
+    const targetRotationX = state.pointer.y * 0.28;
+    const targetRotationY = state.pointer.x * 0.42;
+
+    mesh.rotation.x = MathUtils.lerp(
+      mesh.rotation.x,
+      targetRotationX + time * 0.08,
+      easing,
+    );
+
+    mesh.rotation.y = MathUtils.lerp(
+      mesh.rotation.y,
+      targetRotationY + time * 0.12,
+      easing,
+    );
+
+    mesh.position.x = MathUtils.lerp(
+      mesh.position.x,
+      state.pointer.x * 0.18,
+      easing,
+    );
+
+    mesh.position.y = MathUtils.lerp(
+      mesh.position.y,
+      state.pointer.y * 0.14 + Math.sin(time * 0.7) * 0.1,
+      easing,
+    );
 
     const scale = 1 + Math.sin(time * 0.9) * 0.035;
-    meshRef.current.scale.setScalar(scale);
+    mesh.scale.setScalar(scale);
   });
 
   return (
