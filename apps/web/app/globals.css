@@ -18,7 +18,11 @@
     110deg,
     var(--color-pink),
     var(--color-violet) 52%,
-    var(--color-cyan)
+    var(--color-cyan) 
+     
+    --color-brand-pink-rgb: 244, 63, 141;
+    --color-brand-violet-rgb: 139, 92, 246;
+    --color-brand-cyan-rgb: 34, 211, 238;
   );
 
   --font-sans:
@@ -68,30 +72,67 @@ html {
   color-scheme: dark;
 }
 
-body {
+body { 
+   
+  position: relative;
+  isolation: isolate;
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: hidden; 
+
   background:
-    radial-gradient(
-      circle at 80% 12%,
-      rgba(139, 92, 246, 0.15),
-      transparent 32%
-    ),
-    radial-gradient(
-      circle at 12% 85%,
-      rgba(34, 211, 238, 0.08),
-      transparent 32%
-    ),
-    var(--color-background);
+  radial-gradient(
+    circle at 12% 8%,
+    rgba(var(--color-brand-pink-rgb), 0.1),
+    transparent 30%
+  ),
+  radial-gradient(
+    circle at 78% 16%,
+    rgba(var(--color-brand-violet-rgb), 0.16),
+    transparent 34%
+  ),
+  radial-gradient(
+    circle at 88% 72%,
+    rgba(var(--color-brand-cyan-rgb), 0.08),
+    transparent 32%
+  ),
+  linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.015),
+    transparent 24%
+  ),
+  var(--color-background); 
+  background-attachment: fixed; 
+
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--font-size-body);
-line-height: var(--line-height-body);
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-} 
+}  
+ 
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.16),
+      transparent 18%,
+      transparent 82%,
+      rgba(0, 0, 0, 0.2)
+    ),
+    linear-gradient(
+      180deg,
+      transparent 58%,
+      rgba(0, 0, 0, 0.22)
+    );
+}
  
 h1,
 h2,
