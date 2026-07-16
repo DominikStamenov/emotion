@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import {
   AdditiveBlending,
@@ -8,8 +8,26 @@ import {
   type Group,
 } from "three";
 
+const CORE_PARTICLE_COUNT = 120;
+
 export function EnergyCore() {
   const groupRef = useRef<Group>(null);
+
+  const positions = useMemo(() => {
+    const values = new Float32Array(CORE_PARTICLE_COUNT * 3);
+
+    for (let index = 0; index < CORE_PARTICLE_COUNT; index += 1) {
+      const offset = index * 3;
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.pow(Math.random(), 2.4) * 0.72;
+
+      values[offset] = Math.cos(angle) * radius;
+      values[offset + 1] = Math.sin(angle) * radius;
+      values[offset + 2] = (Math.random() - 0.5) * 0.5;
+    }
+
+    return values;
+  }, []);
 
   useFrame((state, delta) => {
     const group = groupRef.current;
@@ -17,81 +35,74 @@ export function EnergyCore() {
     if (!group) return;
 
     const time = state.clock.elapsedTime;
-    const easing = 1 - Math.exp(-delta * 2.4);
+    const easing = 1 - Math.exp(-delta * 2.2);
 
     group.position.x = MathUtils.lerp(
       group.position.x,
-      state.pointer.x * 0.08,
+      state.pointer.x * 0.06,
       easing,
     );
 
     group.position.y = MathUtils.lerp(
       group.position.y,
-      state.pointer.y * 0.06,
+      state.pointer.y * 0.045,
       easing,
     );
 
-    group.rotation.z = time * 0.035;
+    group.rotation.z = time * 0.055;
+    group.rotation.y = Math.sin(time * 0.18) * 0.16;
 
     const pulse =
       1 +
-      Math.sin(time * 0.72) * 0.045 +
-      Math.sin(time * 0.21) * 0.025;
+      Math.sin(time * 0.68) * 0.08 +
+      Math.sin(time * 0.21) * 0.035;
 
     group.scale.setScalar(pulse);
   });
 
   return (
     <group ref={groupRef}>
-      <mesh>
-        <circleGeometry args={[0.48, 64]} />
+      <points>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+          />
+        </bufferGeometry>
 
-        <meshBasicMaterial
-          color="#8b5cf6"
-          transparent
-          opacity={0.055}
-          depthWrite={false}
-          blending={AdditiveBlending}
-        />
-      </mesh>
-
-      <mesh position={[0, 0, 0.02]}>
-        <ringGeometry args={[0.18, 0.38, 64]} />
-
-        <meshBasicMaterial
-          color="#f43f8d"
-          transparent
-          opacity={0.085}
-          depthWrite={false}
-          blending={AdditiveBlending}
-        />
-      </mesh>
-
-      <mesh position={[0, 0, 0.04]}>
-        <circleGeometry args={[0.085, 48]} />
-
-        <meshBasicMaterial
+        <pointsMaterial
           color="#ffffff"
+          size={0.028}
+          sizeAttenuation
           transparent
-          opacity={0.55}
+          opacity={0.48}
           depthWrite={false}
           blending={AdditiveBlending}
         />
-      </mesh>
+      </points>
 
       <pointLight
         color="#f43f8d"
-        intensity={3.5}
-        distance={4.8}
+        intensity={2.2}
+        distance={4.2}
         decay={2}
+        position={[-0.16, 0.08, 0.35]}
+      />
+
+      <pointLight
+        color="#8b5cf6"
+        intensity={2.8}
+        distance={4.6}
+        decay={2}
+        position={[0, 0, 0.25]}
       />
 
       <pointLight
         color="#22d3ee"
-        intensity={2.4}
-        distance={4.2}
+        intensity={1.8}
+        distance={4}
         decay={2}
-        position={[0.16, -0.08, 0.35]}
+        position={[0.18, -0.1, 0.4]}
       />
     </group>
   );

@@ -97,10 +97,30 @@ type RibbonEngineOptions = {
           const envelope = Math.sin(progress * Math.PI);
   
           const radialDistance = opening * length * direction;
-  
-          const baseX = Math.cos(angle) * radialDistance;
-          const baseY = Math.sin(angle) * radialDistance;
-  
+
+/*
+ * Kod centra vrpca jače kruži, a prema van se postupno
+ * vraća u svoj osnovni smjer.
+ */
+const swirlStrength =
+  (1 - progress) *
+  (1 - progress) *
+  1.45 *
+  direction;
+
+const animatedAngle =
+  angle +
+  swirlStrength +
+  Math.sin(
+    elapsedTime * 0.22 +
+      strandPhase +
+      progress * Math.PI * 1.6,
+  ) *
+    0.12 *
+    envelope;
+
+const baseX = Math.cos(animatedAngle) * radialDistance;
+const baseY = Math.sin(animatedAngle) * radialDistance;
           const flow =
             Math.sin(
               progress * Math.PI * 2.7 -
@@ -122,8 +142,8 @@ type RibbonEngineOptions = {
           /*
            * Vektor okomit na osnovni smjer ribbona.
            */
-          const normalX = -Math.sin(angle);
-          const normalY = Math.cos(angle);
+          const normalX = -Math.sin(animatedAngle);
+          const normalY = Math.cos(animatedAngle);
   
           let x =
             baseX +
@@ -148,9 +168,9 @@ type RibbonEngineOptions = {
            */
           const corePull = (1 - progress) * 0.16;
   
-          x -= Math.cos(angle) * corePull * direction;
-          y -= Math.sin(angle) * corePull * direction;
-  
+          x -= Math.cos(animatedAngle) * corePull * direction;
+          y -= Math.sin(animatedAngle) * corePull * direction;
+          
           const distanceX = x - cursorX;
           const distanceY = y - cursorY;
           const distanceSquared =
