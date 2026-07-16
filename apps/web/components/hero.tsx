@@ -2,6 +2,7 @@
 import { Button } from "./button";
 import { Container } from "./container"; 
 import styles from "./hero.module.css";
+import { HeroExperience } from "./hero-experience";
 
 export function Hero() {
   return (
@@ -65,43 +66,50 @@ export function Hero() {
           </div>
 
           <div className={styles.heroVisual} aria-hidden="true">
-            <div className={styles.heroVisualHalo} />
-            <div className={`${styles.heroOrbit} ${styles.heroOrbitOuter}`}>
-              <span />
-            </div>
+  <HeroExperience />
 
-            <div className={`${styles.heroOrbit} ${styles.heroOrbitInner}`}>
-              <span />
-            </div>
+  <div className={styles.heroFallback}>
+    <div className={styles.heroVisualHalo} />
 
-            <div className={styles.heroCore}>
-              <svg viewBox="0 0 64 64">
-                <path
-                  d="M14 14C25 18 35 24 49 32C35 40 25 46 14 50C21 42 27 36 27 32C27 28 21 22 14 14Z"
-                  fill="currentColor"
-                />
+    <div className={`${styles.heroOrbit} ${styles.heroOrbitOuter}`}>
+      <span />
+    </div>
 
-                <path
-                  d="M19 25L35 32L19 39"
-                  fill="none"
-                  stroke="#08080a"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="4"
-                />
-              </svg>
-            </div>
+    <div className={`${styles.heroOrbit} ${styles.heroOrbitInner}`}>
+      <span />
+    </div>
 
-            <div className={`${styles.heroCard} ${styles.heroCardTop}`}>
-              <small>Emotion</small>
-              <strong>Ideas that connect.</strong>
-            </div>
+    <div className={styles.heroCore}>
+      <svg viewBox="0 0 64 64">
+        <path
+          d="M14 14C25 18 35 24 49 32C35 40 25 46 14 50C21 42 27 36 27 32C27 28 21 22 14 14Z"
+          fill="currentColor"
+        />
 
-            <div className={`${styles.heroCard} ${styles.heroCardBottom}`}>
-              <small>Motion</small>
-              <strong>Design that moves.</strong>
-            </div>
-          </div>
+        <path
+          d="M19 25L35 32L19 39"
+          fill="none"
+          stroke="#08080a"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="4"
+        />
+      </svg>
+    </div>
+
+    <div className={`${styles.heroCard} ${styles.heroCardTop}`}>
+      <small>Emotion</small>
+      <strong>Ideas that connect.</strong>
+    </div>
+
+    <div className={`${styles.heroCard} ${styles.heroCardBottom}`}>
+      <small>Motion</small>
+      <strong>Design that moves.</strong>
+    </div>
+  </div>
+</div>
+
+
         </div>
 
         <div className={styles.heroScroll}>
