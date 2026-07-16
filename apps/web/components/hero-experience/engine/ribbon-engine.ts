@@ -2,7 +2,9 @@ type RibbonEngineOptions = {
     strandCount: number;
     pointsPerStrand: number;
     seed: number;
-    verticalOffset: number;
+    direction: -1 | 1;
+    angle: number;
+    length: number;
     amplitude: number;
     spread: number;
     phase: number;
@@ -31,7 +33,9 @@ type RibbonEngineOptions = {
     strandCount,
     pointsPerStrand,
     seed,
-    verticalOffset,
+    direction,
+    angle,
+    length,
     amplitude,
     spread,
     phase,
@@ -45,12 +49,12 @@ type RibbonEngineOptions = {
   
     const strandPhases = Array.from(
       { length: strandCount },
-      () => phase + (random() - 0.5) * 0.45,
+      () => phase + (random() - 0.5) * 0.38,
     );
   
     const strandSpeeds = Array.from(
       { length: strandCount },
-      () => 0.72 + random() * 0.42,
+      () => 0.82 + random() * 0.34,
     );
   
     const strandOffsets = Array.from(
@@ -68,9 +72,9 @@ type RibbonEngineOptions = {
       elapsedTime: number,
       delta: number,
     ) {
-      const cursorX = pointerX * 3.15;
-      const cursorY = pointerY * 2.25;
       const safeDelta = Math.min(delta, 0.033);
+      const cursorX = pointerX * 2.9;
+      const cursorY = pointerY * 2.05;
   
       positions.forEach((strandPositions, strandIndex) => {
         const strandPhase = strandPhases[strandIndex] ?? phase;
@@ -85,67 +89,99 @@ type RibbonEngineOptions = {
           const progress = pointIndex / (pointsPerStrand - 1);
           const offset = pointIndex * 3;
   
-          const x = -3.55 + progress * 7.1;
+          /*
+           * Vrpca je najgušća kod centra i postupno se otvara
+           * prema vanjskom dijelu.
+           */
+          const opening = Math.pow(progress, 0.82);
+          const envelope = Math.sin(progress * Math.PI);
   
-          const primaryWave =
+          const radialDistance = opening * length * direction;
+  
+          const baseX = Math.cos(angle) * radialDistance;
+          const baseY = Math.sin(angle) * radialDistance;
+  
+          const flow =
             Math.sin(
-              progress * Math.PI * 2.15 +
-                elapsedTime * 0.42 * strandSpeed +
-                strandPhase,
-            ) * amplitude;
-  
-          const secondaryWave =
-            Math.sin(
-              progress * Math.PI * 4.6 -
-                elapsedTime * 0.27 +
-                strandPhase * 1.4,
-            ) * 0.18;
-  
-          const breathing =
-            Math.sin(elapsedTime * 0.31 + progress * Math.PI) *
-            0.1;
-  
-          let y =
-            verticalOffset +
-            strandOffset +
-            primaryWave +
-            secondaryWave +
-            breathing;
-  
-          let z =
-            Math.cos(
-              progress * Math.PI * 2.4 +
-                elapsedTime * 0.24 +
+              progress * Math.PI * 2.7 -
+                elapsedTime * 0.48 * strandSpeed +
                 strandPhase,
             ) *
-            (0.36 + Math.abs(strandOffset) * 0.42);
+            amplitude *
+            envelope;
+  
+          const secondaryFlow =
+            Math.sin(
+              progress * Math.PI * 5.1 +
+                elapsedTime * 0.27 +
+                strandPhase * 1.4,
+            ) *
+            0.13 *
+            envelope;
+  
+          /*
+           * Vektor okomit na osnovni smjer ribbona.
+           */
+          const normalX = -Math.sin(angle);
+          const normalY = Math.cos(angle);
+  
+          let x =
+            baseX +
+            normalX * (flow + secondaryFlow + strandOffset);
+  
+          let y =
+            baseY +
+            normalY * (flow + secondaryFlow + strandOffset);
+  
+          let z =
+            Math.sin(
+              progress * Math.PI * 2.2 +
+                elapsedTime * 0.31 +
+                strandPhase,
+            ) *
+            0.42 *
+            envelope;
+  
+          /*
+           * Suptilno uvlačenje prema centru stvara osjećaj
+           * gravitacijskog polja.
+           */
+          const corePull = (1 - progress) * 0.16;
+  
+          x -= Math.cos(angle) * corePull * direction;
+          y -= Math.sin(angle) * corePull * direction;
   
           const distanceX = x - cursorX;
           const distanceY = y - cursorY;
           const distanceSquared =
             distanceX * distanceX + distanceY * distanceY;
   
-          const interactionRadius = 1.2;
+          const interactionRadius = 1.1;
+          const interactionRadiusSquared =
+            interactionRadius * interactionRadius;
   
           if (
             distanceSquared > 0.0001 &&
-            distanceSquared < interactionRadius * interactionRadius
+            distanceSquared < interactionRadiusSquared
           ) {
             const distance = Math.sqrt(distanceSquared);
-            const influence = 1 - distance / interactionRadius;
-            const disturbance =
-              influence * influence * (0.42 + safeDelta * 2);
+            const influence =
+              1 - distance / interactionRadius;
   
-            y += (distanceY / distance) * disturbance;
+            const repulsion =
+              influence * influence * (0.32 + safeDelta * 1.8);
+  
+            x += (distanceX / distance) * repulsion;
+            y += (distanceY / distance) * repulsion;
   
             z +=
               Math.sin(
-                elapsedTime * 6 -
-                  distance * 5 +
+                elapsedTime * 5.2 -
+                  distance * 5.4 +
                   progress * Math.PI * 3,
               ) *
               influence *
-              0.34;
+              0.28;
           }
   
           strandPositions[offset] = x;

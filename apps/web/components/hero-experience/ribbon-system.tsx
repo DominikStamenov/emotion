@@ -8,6 +8,7 @@ import {
   BufferGeometry,
   Line,
   LineBasicMaterial,
+  MathUtils,
   type Group,
 } from "three";
 
@@ -16,21 +17,25 @@ import { createRibbonEngine } from "./engine/ribbon-engine";
 type LivingRibbonProps = {
   color: string;
   seed: number;
+  direction: -1 | 1;
+  angle: number;
+  length: number;
   strandCount: number;
-  verticalOffset: number;
   amplitude: number;
   spread: number;
   phase: number;
   opacity: number;
 };
 
-const POINTS_PER_STRAND = 96;
+const POINTS_PER_STRAND = 112;
 
 function LivingRibbon({
   color,
   seed,
+  direction,
+  angle,
+  length,
   strandCount,
-  verticalOffset,
   amplitude,
   spread,
   phase,
@@ -44,18 +49,22 @@ function LivingRibbon({
         strandCount,
         pointsPerStrand: POINTS_PER_STRAND,
         seed,
-        verticalOffset,
+        direction,
+        angle,
+        length,
         amplitude,
         spread,
         phase,
       }),
     [
       amplitude,
+      angle,
+      direction,
+      length,
       phase,
       seed,
       spread,
       strandCount,
-      verticalOffset,
     ],
   );
 
@@ -77,9 +86,10 @@ function LivingRibbon({
         const material = new LineBasicMaterial({
           color,
           transparent: true,
-          opacity: opacity * (1 - normalizedDistance * 0.68),
+          opacity: opacity * (1 - normalizedDistance * 0.72),
           blending: AdditiveBlending,
           depthWrite: false,
+          depthTest: true,
         });
 
         return new Line(geometry, material);
@@ -88,10 +98,12 @@ function LivingRibbon({
   );
 
   useFrame((state, delta) => {
+    const time = state.clock.elapsedTime;
+
     engine.update(
       state.pointer.x,
       state.pointer.y,
-      state.clock.elapsedTime,
+      time,
       delta,
     );
 
@@ -100,23 +112,35 @@ function LivingRibbon({
         line.geometry.getAttribute("position");
 
       positionAttribute.needsUpdate = true;
-      line.geometry.computeBoundingSphere();
     });
 
-    if (groupRef.current) {
-      groupRef.current.rotation.y =
-        state.pointer.x * 0.025;
+    const group = groupRef.current;
 
-      groupRef.current.rotation.x =
-        -state.pointer.y * 0.015;
-    }
+    if (!group) return;
+
+    const easing = 1 - Math.exp(-delta * 1.7);
+
+    group.rotation.y = MathUtils.lerp(
+      group.rotation.y,
+      state.pointer.x * 0.035,
+      easing,
+    );
+
+    group.rotation.x = MathUtils.lerp(
+      group.rotation.x,
+      -state.pointer.y * 0.022,
+      easing,
+    );
+
+    group.rotation.z =
+      Math.sin(time * 0.12 + phase) * 0.025;
   });
 
   return (
     <group ref={groupRef}>
       {lines.map((line, index) => (
         <primitive
-          key={`${color}-${index}`}
+          key={`${color}-${direction}-${index}`}
           object={line}
         />
       ))}
@@ -127,37 +151,85 @@ function LivingRibbon({
 export function RibbonSystem() {
   return (
     <group>
+      {/* Pink energy — upper left and lower right */}
       <LivingRibbon
         color="#f43f8d"
         seed={21}
-        strandCount={15}
-        verticalOffset={0.55}
-        amplitude={0.72}
-        spread={0.026}
+        direction={-1}
+        angle={0.28}
+        length={3.15}
+        strandCount={16}
+        amplitude={0.52}
+        spread={0.022}
         phase={0}
-        opacity={0.36}
+        opacity={0.42}
+      />
+
+      <LivingRibbon
+        color="#f43f8d"
+        seed={22}
+        direction={1}
+        angle={0.42}
+        length={2.65}
+        strandCount={11}
+        amplitude={0.42}
+        spread={0.024}
+        phase={Math.PI * 0.8}
+        opacity={0.25}
+      />
+
+      {/* Violet energy — dominant central flow */}
+      <LivingRibbon
+        color="#8b5cf6"
+        seed={42}
+        direction={-1}
+        angle={-0.12}
+        length={2.75}
+        strandCount={18}
+        amplitude={0.6}
+        spread={0.021}
+        phase={Math.PI * 0.62}
+        opacity={0.45}
       />
 
       <LivingRibbon
         color="#8b5cf6"
-        seed={42}
-        strandCount={19}
-        verticalOffset={0}
-        amplitude={0.88}
-        spread={0.025}
-        phase={Math.PI * 0.66}
+        seed={43}
+        direction={1}
+        angle={-0.18}
+        length={3.05}
+        strandCount={18}
+        amplitude={0.58}
+        spread={0.021}
+        phase={Math.PI * 1.18}
         opacity={0.4}
+      />
+
+      {/* Cyan energy — lower depth layer */}
+      <LivingRibbon
+        color="#22d3ee"
+        seed={84}
+        direction={-1}
+        angle={-0.52}
+        length={2.5}
+        strandCount={10}
+        amplitude={0.4}
+        spread={0.025}
+        phase={Math.PI * 1.4}
+        opacity={0.27}
       />
 
       <LivingRibbon
         color="#22d3ee"
-        seed={84}
-        strandCount={13}
-        verticalOffset={-0.55}
-        amplitude={0.68}
-        spread={0.028}
-        phase={Math.PI * 1.24}
-        opacity={0.34}
+        seed={85}
+        direction={1}
+        angle={-0.36}
+        length={3.2}
+        strandCount={14}
+        amplitude={0.48}
+        spread={0.023}
+        phase={Math.PI * 1.72}
+        opacity={0.35}
       />
     </group>
   );
