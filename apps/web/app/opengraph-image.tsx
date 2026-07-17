@@ -23,7 +23,7 @@ export default function OpenGraphImage() {
       <div
         style={{
           background:
-            "radial-gradient(circle, rgba(139,92,246,.7), rgba(244,63,141,.2) 38%, transparent 68%)",
+            "radial-gradient(circle, rgba(255,23,68,.68), rgba(237,0,116,.2) 38%, transparent 68%)",
           borderRadius: "50%",
           display: "flex",
           height: 720,
@@ -45,7 +45,7 @@ export default function OpenGraphImage() {
         <div
           style={{
             alignItems: "center",
-            background: "linear-gradient(135deg, #f43f8d, #8b5cf6, #22d3ee)",
+            background: "linear-gradient(135deg, #ed0074, #ff1744, #ff6a00)",
             borderRadius: "50%",
             color: "#08080a",
             display: "flex",

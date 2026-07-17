@@ -7,14 +7,16 @@
   --emotion-color-text-subtle: rgba(247, 245, 251, 0.36);
   --emotion-color-border: rgba(255, 255, 255, 0.1);
   --emotion-color-border-strong: rgba(255, 255, 255, 0.2);
-  --emotion-color-pink: #f43f8d;
-  --emotion-color-violet: #8b5cf6;
-  --emotion-color-cyan: #22d3ee;
+  --emotion-color-pink: #ed0074;
+  --emotion-color-violet: #ff1744;
+  --emotion-color-cyan: #ff6a00;
+  --emotion-color-red: #ff1744;
+  --emotion-color-orange: #ff6a00;
   --emotion-gradient-brand: linear-gradient(
-    110deg,
+    112deg,
     var(--emotion-color-pink),
-    var(--emotion-color-violet) 52%,
-    var(--emotion-color-cyan)
+    var(--emotion-color-red) 52%,
+    var(--emotion-color-orange)
   );
   --emotion-font-sans:
     ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

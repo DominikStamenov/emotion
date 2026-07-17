@@ -8,7 +8,11 @@ function createSecurityHeaders(production) {
     "img-src 'self' data: blob: https://*.supabase.co https://api.emotion.com",
     "font-src 'self' data:",
     "media-src 'self' blob: https://*.supabase.co https://api.emotion.com",
-    "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.emotion.com wss://api.emotion.com",
+    `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.emotion.com wss://api.emotion.com${
+      production
+        ? ""
+        : " http://localhost:* ws://localhost:* http://127.0.0.1:* ws://127.0.0.1:*"
+    }`,
     "worker-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",
@@ -47,6 +51,10 @@ export default function nextConfig(phase) {
   );
 
   return {
+    allowedDevOrigins:
+      phase === PHASE_DEVELOPMENT_SERVER
+        ? ["127.0.0.1", "localhost"]
+        : undefined,
     async headers() {
       return [{ headers: securityHeaders, source: "/(.*)" }];
     },

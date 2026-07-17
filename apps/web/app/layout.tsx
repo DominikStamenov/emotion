@@ -21,7 +21,7 @@ const organizationStructuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
   email: "info@emotion.com",
-  logo: "https://emotion.com/brand/emotion-mark.svg",
+  logo: "https://emotion.com/brand/emotion-mark-transparent-1024.png",
   name: "eMotion",
   url: "https://emotion.com",
 };
@@ -89,7 +89,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <script
           type="application/ld+json"

@@ -17,7 +17,7 @@ import { createLogoSolver, type LogoSolver } from "./engine/logo-solver";
 const FULL_LOGO_PARTICLE_COUNT = 2100;
 const COMPACT_LOGO_PARTICLE_COUNT = 1300;
 
-const LOGO_SOURCE_URL = "/brand/emotion-mark.svg";
+const LOGO_SOURCE_URL = "/brand/emotion-mark-transparent-1024.png";
 
 type LogoFormationProps = {
   compact?: boolean;

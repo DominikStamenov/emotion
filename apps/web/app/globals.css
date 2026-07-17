@@ -12,28 +12,32 @@
   --color-border: rgba(255, 255, 255, 0.1);
   --color-border-strong: rgba(255, 255, 255, 0.18);
 
-  --color-pink: #f43f8d;
-  --color-violet: #8b5cf6;
-  --color-cyan: #22d3ee;
+  --color-pink: #ed0074;
+  --color-violet: #ff1744;
+  --color-cyan: #ff6a00;
+  --color-red: #ff1744;
+  --color-orange: #ff6a00;
 
   --gradient-brand: linear-gradient(
-    110deg,
+    112deg,
     var(--color-pink),
-    var(--color-violet) 52%,
-    var(--color-cyan)
+    var(--color-red) 52%,
+    var(--color-orange)
   );
 
-  --color-brand-pink-rgb: 244, 63, 141;
-  --color-brand-violet-rgb: 139, 92, 246;
-  --color-brand-cyan-rgb: 34, 211, 238;
+  --color-brand-pink-rgb: 237, 0, 116;
+  --color-brand-red-rgb: 255, 23, 68;
+  --color-brand-orange-rgb: 255, 106, 0;
+  --color-brand-violet-rgb: var(--color-brand-red-rgb);
+  --color-brand-cyan-rgb: var(--color-brand-orange-rgb);
 
   --font-sans:
-    var(--font-geist-sans), ui-sans-serif, -apple-system, BlinkMacSystemFont,
+    var(--font-geist-sans, ui-sans-serif), -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
 
-  --font-mono: var(--font-geist-mono), "SFMono-Regular", Consolas, monospace;
+  --font-mono: var(--font-geist-mono, "SFMono-Regular"), Consolas, monospace;
 
-  --font-display: var(--font-sans);
+  --font-display: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
 
   --font-size-body: 1rem;
   --line-height-body: 1.7;
@@ -76,21 +80,22 @@ body {
 
   background:
     radial-gradient(
-      circle at 12% 8%,
-      rgba(var(--color-brand-pink-rgb), 0.1),
-      transparent 30%
+      ellipse 76% 48% at 76% -8%,
+      rgba(var(--color-brand-pink-rgb), 0.052),
+      transparent 70%
     ),
     radial-gradient(
-      circle at 78% 16%,
-      rgba(var(--color-brand-violet-rgb), 0.16),
-      transparent 34%
+      ellipse 58% 46% at 92% 34%,
+      rgba(var(--color-brand-orange-rgb), 0.032),
+      rgba(var(--color-brand-red-rgb), 0.022) 42%,
+      transparent 74%
     ),
     radial-gradient(
-      circle at 88% 72%,
-      rgba(var(--color-brand-cyan-rgb), 0.08),
-      transparent 32%
+      ellipse 54% 42% at 4% 82%,
+      rgba(var(--color-brand-pink-rgb), 0.022),
+      transparent 76%
     ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 26%),
     var(--color-background);
   background-attachment: fixed;
 
@@ -180,7 +185,7 @@ svg {
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.45);
+  background: rgba(var(--color-brand-red-rgb), 0.42);
   color: #ffffff;
 }
 

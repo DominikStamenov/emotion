@@ -7,11 +7,13 @@ export function Logo() {
   return (
     <Link href="/" className={styles.brand} aria-label="eMotion homepage">
       <Image
-        src="/brand/emotion-mark.svg"
+        src="/brand/emotion-mark-transparent-1024.png"
         alt=""
-        width={46}
-        height={46}
+        width={1024}
+        height={1024}
+        sizes="46px"
         priority
+        unoptimized
         className={styles.brandMark}
       />
 

@@ -10,6 +10,7 @@
   width: 46px;
   height: 46px;
   object-fit: contain;
+  transform: translateY(-4px);
 }
 
 .brandCopy {
