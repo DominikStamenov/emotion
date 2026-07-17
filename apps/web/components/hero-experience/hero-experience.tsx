@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+import { BRAND_FIELD_PULSE_EVENT } from "../living-brand-field-events";
 import styles from "./hero-experience.module.css";
 
 const LOGO_SOURCE = "/brand/emotion-mark-transparent-1024.png";
@@ -343,6 +344,7 @@ export function HeroExperience() {
 
   const replay = () => {
     replayRef.current?.();
+    window.dispatchEvent(new Event(BRAND_FIELD_PULSE_EVENT));
     setReplayCount((count) => count + 1);
   };
 

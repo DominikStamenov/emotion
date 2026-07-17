@@ -1,6 +1,7 @@
 import { Button } from "./button";
 import { Container } from "./container";
 import { HeroExperience } from "./hero-experience";
+import { LivingBrandField } from "./living-brand-field";
 import styles from "./hero.module.css";
 
 export function Hero() {
@@ -8,6 +9,7 @@ export function Hero() {
     <section className={styles.hero}>
       <div className={styles.heroAtmosphere} aria-hidden="true" />
       <div className={styles.heroGrid} aria-hidden="true" />
+      <LivingBrandField />
 
       <Container className={styles.heroContainer}>
         <div className={styles.heroCopy}>
