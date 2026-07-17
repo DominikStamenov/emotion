@@ -31,25 +31,26 @@
   pointer-events: none;
   background:
     radial-gradient(
-      ellipse 42% 38% at 75% 35%,
-      rgba(var(--color-brand-orange-rgb), 0.12),
-      rgba(var(--color-brand-red-rgb), 0.068) 30%,
-      rgba(var(--color-brand-pink-rgb), 0.027) 56%,
-      transparent 80%
+      ellipse 44% 40% at 75% 36%,
+      rgba(var(--color-brand-orange-rgb), 0.19),
+      rgba(var(--color-brand-red-rgb), 0.105) 30%,
+      rgba(var(--color-brand-pink-rgb), 0.044) 57%,
+      transparent 81%
     ),
     radial-gradient(
-      ellipse 48% 42% at 63% 50%,
-      rgba(var(--color-brand-pink-rgb), 0.058),
-      rgba(var(--color-brand-red-rgb), 0.022) 52%,
-      transparent 80%
-    ),
-    radial-gradient(
-      ellipse 36% 30% at 18% 17%,
-      rgba(var(--color-brand-pink-rgb), 0.025),
+      ellipse 54% 47% at 60% 52%,
+      rgba(var(--color-brand-pink-rgb), 0.105),
+      rgba(var(--color-brand-red-rgb), 0.046) 50%,
       transparent 82%
+    ),
+    radial-gradient(
+      ellipse 42% 34% at 25% 68%,
+      rgba(var(--color-brand-pink-rgb), 0.055),
+      rgba(var(--color-brand-red-rgb), 0.018) 54%,
+      transparent 84%
     );
-  filter: blur(34px);
-  opacity: 0.92;
+  filter: blur(28px);
+  opacity: 1;
   animation: heroAtmosphereDrift 20s ease-in-out infinite alternate;
   -webkit-mask-image: radial-gradient(
     ellipse 84% 78% at 69% 40%,
@@ -144,8 +145,11 @@
   color: transparent;
   font-weight: inherit;
   background: var(--gradient-brand);
+  background-size: 170% 100%;
   background-clip: text;
   -webkit-background-clip: text;
+  filter: drop-shadow(0 0 24px rgba(var(--color-brand-pink-rgb), 0.09));
+  animation: heroTitleShimmer 10s ease-in-out infinite alternate;
 }
 
 .heroDescription {
@@ -211,6 +215,16 @@
 
   100% {
     transform: translate3d(1.2%, -1%, 0) scale(1.025);
+  }
+}
+
+@keyframes heroTitleShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
   }
 }
 
@@ -394,6 +408,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .heroAtmosphere {
+    animation: none;
+  }
+
+  .heroTitle strong {
     animation: none;
   }
 

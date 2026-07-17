@@ -43,7 +43,7 @@ function createRandom(seed: number) {
 
 function createSparks(compact: boolean): FieldSpark[] {
   const random = createRandom(compact ? 703 : 1_109);
-  const count = compact ? 10 : 18;
+  const count = compact ? 12 : 24;
 
   return Array.from({ length: count }, (_, index) => ({
     lane: random() * 1.8 - 0.9,
@@ -64,8 +64,8 @@ function getMetrics(element: HTMLDivElement): FieldMetrics {
     width,
     height,
     dpr: Math.min(window.devicePixelRatio || 1, 1.5),
-    focusX: width * (compact ? 0.5 : 0.735),
-    focusY: height * (compact ? 0.42 : 0.425),
+    focusX: width * (compact ? 0.5 : 0.73),
+    focusY: height * (compact ? 0.44 : 0.48),
   };
 }
 
@@ -103,6 +103,107 @@ function getFieldPoint(
     x,
     y: lerp(baseY, gatheredY, convergence) + outerWave + curl + bypass,
   };
+}
+
+function drawLuminousAtmosphere(
+  context: CanvasRenderingContext2D,
+  metrics: FieldMetrics,
+  pointerX: number,
+  pointerY: number,
+) {
+  const compact = metrics.width < 700;
+  const intensity = compact ? 0.68 : 1;
+  const focusX = metrics.focusX + pointerX * 10;
+  const focusY = metrics.focusY + pointerY * 7;
+  const core = context.createRadialGradient(
+    focusX + metrics.width * 0.055,
+    focusY - metrics.height * 0.085,
+    metrics.width * 0.015,
+    focusX,
+    focusY,
+    metrics.width * (compact ? 0.62 : 0.42),
+  );
+
+  core.addColorStop(0, `rgba(255, 126, 12, ${0.16 * intensity})`);
+  core.addColorStop(0.22, `rgba(255, 44, 47, ${0.11 * intensity})`);
+  core.addColorStop(0.5, `rgba(237, 0, 116, ${0.052 * intensity})`);
+  core.addColorStop(1, "rgba(8, 8, 10, 0)");
+
+  context.fillStyle = core;
+  context.fillRect(0, 0, metrics.width, metrics.height);
+
+  const lowerBloom = context.createRadialGradient(
+    focusX - metrics.width * 0.17,
+    focusY + metrics.height * 0.2,
+    0,
+    focusX - metrics.width * 0.1,
+    focusY + metrics.height * 0.1,
+    metrics.width * (compact ? 0.5 : 0.34),
+  );
+
+  lowerBloom.addColorStop(0, `rgba(237, 0, 116, ${0.115 * intensity})`);
+  lowerBloom.addColorStop(0.42, `rgba(255, 23, 68, ${0.05 * intensity})`);
+  lowerBloom.addColorStop(1, "rgba(8, 8, 10, 0)");
+
+  context.fillStyle = lowerBloom;
+  context.fillRect(0, 0, metrics.width, metrics.height);
+}
+
+function drawSignatureStrands(
+  context: CanvasRenderingContext2D,
+  metrics: FieldMetrics,
+  elapsed: number,
+  pointerX: number,
+  pointerY: number,
+) {
+  const compact = metrics.width < 700;
+  const lanes = compact
+    ? [-0.62, -0.28, 0.26, 0.58]
+    : [-0.72, -0.48, -0.24, 0.2, 0.43, 0.7];
+  const pointCount = compact ? 58 : 86;
+  const time = elapsed * 0.000075;
+  const stroke = context.createLinearGradient(0, 0, metrics.width, 0);
+
+  stroke.addColorStop(0, "rgba(237, 0, 116, 0)");
+  stroke.addColorStop(0.22, "rgba(237, 0, 116, 0.46)");
+  stroke.addColorStop(0.52, "rgba(255, 38, 56, 0.78)");
+  stroke.addColorStop(0.77, "rgba(255, 122, 12, 0.7)");
+  stroke.addColorStop(1, "rgba(255, 122, 12, 0)");
+
+  context.save();
+  context.globalCompositeOperation = "lighter";
+  context.strokeStyle = stroke;
+  context.lineCap = "round";
+  context.shadowBlur = compact ? 8 : 18;
+  context.shadowColor = "rgba(255, 46, 54, 0.42)";
+
+  lanes.forEach((lane, index) => {
+    context.beginPath();
+
+    for (let pointIndex = 0; pointIndex <= pointCount; pointIndex += 1) {
+      const progress = pointIndex / pointCount;
+      const point = getFieldPoint(
+        metrics,
+        lane,
+        progress,
+        time + index * 0.19,
+        pointerX,
+        pointerY,
+      );
+
+      if (pointIndex === 0) {
+        context.moveTo(point.x, point.y);
+      } else {
+        context.lineTo(point.x, point.y);
+      }
+    }
+
+    context.globalAlpha = compact ? 0.12 : 0.21 + (index % 2) * 0.055;
+    context.lineWidth = compact ? 0.95 : 1.35 + (index % 3) * 0.32;
+    context.stroke();
+  });
+
+  context.restore();
 }
 
 function drawFieldLines(
@@ -235,19 +336,24 @@ function drawPulse(
   context.save();
   context.globalCompositeOperation = "lighter";
   context.strokeStyle = stroke;
-  context.globalAlpha = Math.pow(pulse, 1.35) * 0.24;
-  context.lineWidth = 1;
-  context.beginPath();
-  context.ellipse(
-    metrics.focusX,
-    metrics.focusY,
-    radius,
-    radius * 0.68,
-    0,
-    0,
-    Math.PI * 2,
-  );
-  context.stroke();
+  context.lineWidth = 1.2;
+
+  for (let ringIndex = 0; ringIndex < 2; ringIndex += 1) {
+    const ringRadius = radius * (1 + ringIndex * 0.07);
+
+    context.globalAlpha = Math.pow(pulse, 1.35) * (0.38 - ringIndex * 0.14);
+    context.beginPath();
+    context.ellipse(
+      metrics.focusX,
+      metrics.focusY,
+      ringRadius,
+      ringRadius * 0.68,
+      0,
+      0,
+      Math.PI * 2,
+    );
+    context.stroke();
+  }
   context.restore();
 }
 
@@ -314,6 +420,8 @@ export function LivingBrandField() {
 
       context.setTransform(metrics.dpr, 0, 0, metrics.dpr, 0, 0);
       context.clearRect(0, 0, metrics.width, metrics.height);
+      drawLuminousAtmosphere(context, metrics, pointerX, pointerY);
+      drawSignatureStrands(context, metrics, timestamp, pointerX, pointerY);
       drawFieldLines(context, metrics, timestamp, pointerX, pointerY);
       drawSparks(context, metrics, sparks, timestamp, pointerX, pointerY);
       drawPulse(context, metrics, pulse);

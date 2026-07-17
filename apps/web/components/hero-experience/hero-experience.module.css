@@ -43,7 +43,8 @@
   aspect-ratio: 1;
   object-fit: contain;
   image-rendering: auto;
-  filter: drop-shadow(0 0 46px rgba(255, 23, 68, 0.12));
+  filter: drop-shadow(-14px 18px 38px rgba(237, 0, 116, 0.16))
+    drop-shadow(16px -12px 44px rgba(255, 106, 0, 0.14));
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, -50%) translateZ(0);
