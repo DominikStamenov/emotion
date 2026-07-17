@@ -1,27 +1,39 @@
-import { type JSX } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
+
+import styles from "./card.module.css";
+
+export type CardProps = Omit<HTMLAttributes<HTMLElement>, "title"> & {
+  eyebrow?: string;
+  title?: ReactNode;
+  description?: ReactNode;
+  footer?: ReactNode;
+  accent?: "none" | "pink" | "violet" | "cyan";
+};
+
+function classNames(...values: Array<string | false | null | undefined>) {
+  return values.filter(Boolean).join(" ");
+}
 
 export function Card({
-  className,
+  eyebrow,
   title,
+  description,
+  footer,
+  accent = "none",
+  className,
   children,
-  href,
-}: {
-  className?: string;
-  title: string;
-  children: React.ReactNode;
-  href: string;
-}): JSX.Element {
+  ...props
+}: CardProps) {
   return (
-    <a
-      className={className}
-      href={`${href}?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo"`}
-      rel="noopener noreferrer"
-      target="_blank"
+    <article
+      {...props}
+      className={classNames(styles.card, styles[accent], className)}
     >
-      <h2>
-        {title} <span>-&gt;</span>
-      </h2>
-      <p>{children}</p>
-    </a>
+      {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
+      {title ? <h3 className={styles.title}>{title}</h3> : null}
+      {description ? <p className={styles.description}>{description}</p> : null}
+      {children ? <div className={styles.content}>{children}</div> : null}
+      {footer ? <div className={styles.footer}>{footer}</div> : null}
+    </article>
   );
 }

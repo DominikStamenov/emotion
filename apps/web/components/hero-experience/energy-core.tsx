@@ -33,56 +33,38 @@ type EnergyCoreProps = {
   compact?: boolean;
 };
 
-export function EnergyCore({
-  compact = false,
-}: EnergyCoreProps) {
+export function EnergyCore({ compact = false }: EnergyCoreProps) {
   const particleCount = compact
     ? COMPACT_CORE_PARTICLE_COUNT
     : FULL_CORE_PARTICLE_COUNT;
 
   const groupRef = useRef<Group>(null);
 
-  const materialRef =
-    useRef<PointsMaterial>(null);
+  const materialRef = useRef<PointsMaterial>(null);
 
-  const pinkLightRef =
-    useRef<PointLight>(null);
+  const pinkLightRef = useRef<PointLight>(null);
 
-  const violetLightRef =
-    useRef<PointLight>(null);
+  const violetLightRef = useRef<PointLight>(null);
 
-  const cyanLightRef =
-    useRef<PointLight>(null);
+  const cyanLightRef = useRef<PointLight>(null);
 
   const positions = useMemo(() => {
     const random = createRandom(918);
 
-    const values =
-      new Float32Array(
-        particleCount * 3,
-      );
+    const values = new Float32Array(particleCount * 3);
 
-    for (
-      let index = 0;
-      index < particleCount;
-      index += 1
-    ) {
+    for (let index = 0; index < particleCount; index += 1) {
       const offset = index * 3;
 
-      const angle =
-        random() * Math.PI * 2;
+      const angle = random() * Math.PI * 2;
 
-      const radius =
-        Math.pow(random(), 2.4) * 0.72;
+      const radius = Math.pow(random(), 2.4) * 0.72;
 
-      values[offset] =
-        Math.cos(angle) * radius;
+      values[offset] = Math.cos(angle) * radius;
 
-      values[offset + 1] =
-        Math.sin(angle) * radius;
+      values[offset + 1] = Math.sin(angle) * radius;
 
-      values[offset + 2] =
-        (random() - 0.5) * 0.5;
+      values[offset + 2] = (random() - 0.5) * 0.5;
     }
 
     return values;
@@ -95,31 +77,23 @@ export function EnergyCore({
       return;
     }
 
-    const time =
-      state.clock.elapsedTime;
+    const time = state.clock.elapsedTime;
 
-    const { revealAmount } =
-      getHeroTimeline(time);
+    const { revealAmount } = getHeroTimeline(time);
 
-    const interactionAmount =
-      1 - revealAmount * 0.94;
+    const interactionAmount = 1 - revealAmount * 0.48;
 
-    const easing =
-      1 - Math.exp(-delta * 2.6);
+    const easing = 1 - Math.exp(-delta * 2.6);
 
     group.position.x = MathUtils.lerp(
       group.position.x,
-      state.pointer.x *
-        0.06 *
-        interactionAmount,
+      state.pointer.x * 0.06 * interactionAmount,
       easing,
     );
 
     group.position.y = MathUtils.lerp(
       group.position.y,
-      state.pointer.y *
-        0.045 *
-        interactionAmount,
+      state.pointer.y * 0.045 * interactionAmount,
       easing,
     );
 
@@ -133,15 +107,9 @@ export function EnergyCore({
       easing,
     );
 
-    const targetRotationZ =
-      time *
-      0.055 *
-      interactionAmount;
+    const targetRotationZ = time * 0.055 * interactionAmount;
 
-    const targetRotationY =
-      Math.sin(time * 0.18) *
-      0.16 *
-      interactionAmount;
+    const targetRotationY = Math.sin(time * 0.18) * 0.16 * interactionAmount;
 
     group.rotation.z = MathUtils.lerp(
       group.rotation.z,
@@ -156,72 +124,39 @@ export function EnergyCore({
     );
 
     const pulse =
-      1 +
-      Math.sin(time * 0.68) * 0.08 +
-      Math.sin(time * 0.21) * 0.035;
+      1 + Math.sin(time * 0.68) * 0.08 + Math.sin(time * 0.21) * 0.035;
 
-    const revealScale =
-      MathUtils.lerp(
-        1,
-        0.34,
-        revealAmount,
-      );
+    const revealScale = MathUtils.lerp(1, 0.52, revealAmount);
 
-    const targetScale =
-      pulse * revealScale;
+    const targetScale = pulse * revealScale;
 
-    const nextScale =
-      MathUtils.lerp(
-        group.scale.x,
-        targetScale,
-        easing,
-      );
+    const nextScale = MathUtils.lerp(group.scale.x, targetScale, easing);
 
     group.scale.setScalar(nextScale);
 
     if (materialRef.current) {
-      materialRef.current.opacity =
-        MathUtils.lerp(
-          0.48,
-          0.035,
-          revealAmount,
-        );
+      materialRef.current.opacity = MathUtils.lerp(0.56, 0.13, revealAmount);
 
-      materialRef.current.size =
-        MathUtils.lerp(
-          0.028,
-          0.014,
-          revealAmount,
-        );
+      materialRef.current.size = MathUtils.lerp(0.028, 0.014, revealAmount);
     }
 
     /**
      * The lights retain a subtle glow behind the logo
      * instead of disappearing completely.
      */
-    const lightAvailability =
-      MathUtils.lerp(
-        1,
-        0.07,
-        revealAmount,
-      );
+    const lightAvailability = MathUtils.lerp(1, 0.24, revealAmount);
 
     if (pinkLightRef.current) {
-      pinkLightRef.current.intensity =
-        PINK_LIGHT_INTENSITY *
-        lightAvailability;
+      pinkLightRef.current.intensity = PINK_LIGHT_INTENSITY * lightAvailability;
     }
 
     if (violetLightRef.current) {
       violetLightRef.current.intensity =
-        VIOLET_LIGHT_INTENSITY *
-        lightAvailability;
+        VIOLET_LIGHT_INTENSITY * lightAvailability;
     }
 
     if (cyanLightRef.current) {
-      cyanLightRef.current.intensity =
-        CYAN_LIGHT_INTENSITY *
-        lightAvailability;
+      cyanLightRef.current.intensity = CYAN_LIGHT_INTENSITY * lightAvailability;
     }
   });
 
@@ -229,10 +164,7 @@ export function EnergyCore({
     <group ref={groupRef}>
       <points frustumCulled={false}>
         <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[positions, 3]}
-          />
+          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         </bufferGeometry>
 
         <pointsMaterial

@@ -1,0 +1,25 @@
+{
+  "name": "@emotion/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "emotion": "./src/index.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "node --check src/index.mjs",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

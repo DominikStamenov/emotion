@@ -1,0 +1,98 @@
+.funnel {
+  display: grid;
+  gap: 10px;
+}
+
+.funnelRow {
+  display: grid;
+  align-items: center;
+  gap: 16px;
+  grid-template-columns: 150px minmax(0, 1fr) 54px;
+}
+
+.funnelRow span,
+.funnelRow strong {
+  font-size: 12px;
+}
+
+.track {
+  height: 28px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: rgba(17, 16, 15, 0.08);
+}
+
+.track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1f1e1b, #8b5cf6 58%, #22d3ee);
+}
+
+.dailyChart {
+  display: flex;
+  height: 220px;
+  padding-top: 20px;
+  align-items: flex-end;
+  gap: 5px;
+  border-bottom: 1px solid rgba(17, 16, 15, 0.14);
+}
+
+.day {
+  position: relative;
+  min-width: 4px;
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, #8b5cf6, #24231f);
+}
+
+.day:hover::after {
+  position: absolute;
+  right: 50%;
+  bottom: calc(100% + 7px);
+  padding: 5px 7px;
+  border-radius: 5px;
+  content: attr(data-label);
+  color: white;
+  background: #11100f;
+  font-size: 9px;
+  white-space: nowrap;
+  transform: translateX(50%);
+}
+
+.sourceList {
+  display: grid;
+  gap: 12px;
+}
+
+.source {
+  display: grid;
+  align-items: center;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.source div {
+  height: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: rgba(17, 16, 15, 0.09);
+}
+
+.source i {
+  display: block;
+  height: 100%;
+  background: #11100f;
+}
+
+.source strong,
+.source span {
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .funnelRow {
+    grid-template-columns: 110px minmax(0, 1fr) 40px;
+  }
+}

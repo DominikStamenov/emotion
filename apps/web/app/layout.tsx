@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { MotionProvider } from "@repo/motion";
+
+import { AiConcierge } from "../components/ai-concierge";
+import { ConsentManager } from "../components/consent-manager";
 
 import "./globals.css";
 
@@ -13,13 +17,49 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
 });
 
+const organizationStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  email: "info@emotion.com",
+  logo: "https://emotion.com/brand/emotion-mark.svg",
+  name: "eMotion",
+  url: "https://emotion.com",
+};
+
+const websiteStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  description:
+    "Strategy, branding, digital design, development, motion and applied AI.",
+  name: "eMotion",
+  url: "https://emotion.com",
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://emotion.com"),
   title: {
     default: "eMotion — Digital Agency",
     template: "%s | eMotion",
   },
   description:
     "eMotion is a digital agency combining strategy, branding, design, development, motion and AI.",
+  applicationName: "eMotion",
+  alternates: { canonical: "/" },
+  openGraph: {
+    description:
+      "Strategy, branding, digital design, development, motion and applied AI — built as one connected agency.",
+    locale: "en_US",
+    siteName: "eMotion",
+    title: "eMotion — Digital Agency",
+    type: "website",
+    url: "/",
+  },
+  twitter: {
+    card: "summary_large_image",
+    description:
+      "Strategy, design, technology and motion for ambitious digital products.",
+    title: "eMotion — Digital Agency",
+  },
   icons: {
     icon: [
       {
@@ -50,10 +90,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable}`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              organizationStructuredData,
+              websiteStructuredData,
+            ]),
+          }}
+        />
+        <MotionProvider>
+          {children}
+          <AiConcierge />
+          <ConsentManager />
+        </MotionProvider>
       </body>
     </html>
   );

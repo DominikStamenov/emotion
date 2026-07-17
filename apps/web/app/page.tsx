@@ -8,7 +8,6 @@ import { TestimonialsSection } from "../components/sections/testimonials-section
 import { CtaSection } from "../components/sections/cta-section";
 import { Footer } from "../components/footer";
 
-
 export default function Home() {
   return (
     <>
@@ -22,10 +21,9 @@ export default function Home() {
         <ProjectsSection />
         <TestimonialsSection />
         <CtaSection />
-        <Footer /> 
-
-        
       </main>
+
+      <Footer />
     </>
   );
 }

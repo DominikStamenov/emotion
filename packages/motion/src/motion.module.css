@@ -1,0 +1,132 @@
+.reveal {
+  opacity: 0;
+  transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 0), 0);
+  transition:
+    opacity var(--emotion-reveal-duration, 700ms)
+      var(--emotion-ease-out, cubic-bezier(0.22, 1, 0.36, 1))
+      var(--emotion-reveal-delay, 0ms),
+    transform var(--emotion-reveal-duration, 700ms)
+      var(--emotion-ease-out, cubic-bezier(0.22, 1, 0.36, 1))
+      var(--emotion-reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+.up {
+  --reveal-y: var(--emotion-reveal-distance, 24px);
+}
+
+.down {
+  --reveal-y: calc(var(--emotion-reveal-distance, 24px) * -1);
+}
+
+.left {
+  --reveal-x: var(--emotion-reveal-distance, 24px);
+}
+
+.right {
+  --reveal-x: calc(var(--emotion-reveal-distance, 24px) * -1);
+}
+
+.none {
+  --reveal-x: 0;
+  --reveal-y: 0;
+}
+
+.magnetic {
+  transform: translate3d(
+    calc(var(--emotion-magnetic-x, 0) * var(--emotion-magnetic-strength, 14px)),
+    calc(var(--emotion-magnetic-y, 0) * var(--emotion-magnetic-strength, 14px)),
+    0
+  );
+  transition: transform 180ms
+    var(--emotion-ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  will-change: transform;
+}
+
+.impactLink {
+  position: relative;
+  isolation: isolate;
+}
+
+.impactLabel {
+  position: relative;
+  z-index: 2;
+}
+
+.impactField {
+  position: absolute;
+  z-index: 1;
+  inset: 50%;
+  pointer-events: none;
+}
+
+.impactParticle {
+  --particle-angle: calc(var(--particle-index) * 25.714deg);
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  opacity: 0;
+  background: hsl(calc(328deg - (var(--particle-index) * 9deg)) 92% 62%);
+  box-shadow: 0 0 12px currentColor;
+}
+
+.impactLink[data-impact="true"] .impactParticle {
+  animation: emotionImpact 520ms
+    var(--emotion-ease-out, cubic-bezier(0.22, 1, 0.36, 1)) forwards;
+}
+
+.impactLink[data-impact="true"] .impactLabel {
+  animation: emotionImpactLabel 520ms ease both;
+}
+
+@keyframes emotionImpact {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--particle-angle)) translateX(0) scale(0.4);
+  }
+
+  24% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--particle-angle)) translateX(74px) scale(0.08);
+  }
+}
+
+@keyframes emotionImpactLabel {
+  0%,
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  48% {
+    opacity: 0.72;
+    filter: blur(1px);
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .magnetic,
+  .impactParticle,
+  .impactLabel {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+}

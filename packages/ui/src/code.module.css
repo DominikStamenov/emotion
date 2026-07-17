@@ -1,0 +1,9 @@
+.code {
+  padding: 0.18rem 0.42rem;
+  border: 1px solid var(--emotion-color-border, rgba(255, 255, 255, 0.1));
+  border-radius: 0.42rem;
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.08);
+  font-family: var(--emotion-font-mono, ui-monospace, monospace);
+  font-size: 0.84em;
+}

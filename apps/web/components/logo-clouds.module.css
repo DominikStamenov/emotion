@@ -1,0 +1,91 @@
+.cloud {
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(
+    180deg,
+    var(--color-background),
+    rgba(255, 255, 255, 0.018)
+  );
+}
+
+.cloud::before,
+.cloud::after {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: min(12vw, 180px);
+  content: "";
+  pointer-events: none;
+}
+
+.cloud::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--color-background), transparent);
+}
+
+.cloud::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--color-background), transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: cloudMove 32s linear infinite;
+}
+
+.item {
+  display: inline-flex;
+  padding: 28px 44px;
+  align-items: center;
+  gap: 16px;
+  color: rgba(247, 245, 251, 0.36);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.item::before {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  content: "";
+  background: var(--gradient-brand);
+  box-shadow: 0 0 16px rgba(var(--color-brand-violet-rgb), 0.8);
+}
+
+@keyframes cloudMove {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 700px) {
+  .track {
+    animation-duration: 25s;
+  }
+
+  .item {
+    padding: 22px 28px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: none;
+  }
+
+  .item:nth-child(n + 9) {
+    display: none;
+  }
+}

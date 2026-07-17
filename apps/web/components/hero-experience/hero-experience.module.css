@@ -1,16 +1,16 @@
 .experience {
-    position: absolute;
-    z-index: 2;
-    inset: 0;
-    overflow: hidden;
-    border-radius: inherit;
-  }
-  
-  .experience canvas {
-    width: 100% !important;
-    height: 100% !important;
-  }
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
 
-  .experience[data-hero-unavailable="true"] {
-    visibility: hidden;
-  }
+.experience canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.experience[data-hero-unavailable="true"] {
+  visibility: hidden;
+}

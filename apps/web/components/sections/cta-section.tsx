@@ -1,32 +1,32 @@
 import { Button } from "../button";
+import { Container } from "../container";
+import styles from "./sections.module.css";
+
 export function CtaSection() {
-    return (
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="border border-white/10 px-8 py-16 md:px-12 md:py-20">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/50">
-              START A PROJECT
-            </p>
-  
-            <div className="mt-6 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-3xl">
-                <h2 className="text-4xl font-semibold tracking-tight text-white md:text-6xl">
-                  Let&apos;s build something people remember.
-                </h2>
-  
-                <p className="mt-6 max-w-2xl text-lg leading-8 text-white/60">
-                  Tell us what you are building, where you want to go and what is
-                  currently standing in the way.
-                </p>
-              </div>
-  
-              <Button href="/contact">
-  Start a conversation
-  <span aria-hidden="true">↗</span>
-</Button>
+  return (
+    <section id="contact" className={styles.ctaSection}>
+      <Container>
+        <div className={styles.ctaPanel}>
+          <p className={styles.eyebrow}>Start a project</p>
+
+          <div className={styles.ctaContent}>
+            <div>
+              <h2 className={styles.ctaTitle}>
+                Let&apos;s build something people remember.
+              </h2>
+              <p className={styles.ctaDescription}>
+                Tell us what you are building, where you want to go and what is
+                currently standing in the way.
+              </p>
             </div>
+
+            <Button href="/contact" className={styles.ctaAction} impact>
+              Start a conversation
+              <span aria-hidden="true">↗</span>
+            </Button>
           </div>
         </div>
-      </section>
-    );
-  }
+      </Container>
+    </section>
+  );
+}

@@ -1,0 +1,30 @@
+import type { Database } from "@repo/database";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+import { getPublicSupabaseConfig } from "./config";
+
+export async function createClient() {
+  const config = getPublicSupabaseConfig();
+
+  if (!config) {
+    throw new Error("Supabase public configuration is missing or invalid.");
+  }
+
+  const cookieStore = await cookies();
+
+  return createServerClient<Database>(config.url, config.publishableKey, {
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Public Server Components are read-only for auth cookies.
+        }
+      },
+    },
+  });
+}

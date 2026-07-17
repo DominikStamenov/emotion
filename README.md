@@ -1,159 +1,113 @@
-# Turborepo starter
+# eMotion
 
-This Turborepo starter is maintained by the Turborepo core team.
+eMotion is a first-party digital agency platform built as a Turborepo. It
+combines an Awwwards-level public experience with a custom CMS, Client Portal,
+agency OS, PostgreSQL data layer, AI concierge, internal copilot and reusable
+product tooling.
 
-## Using this example
+## Workspace
 
-Run the following command:
+- `apps/web` — public website and visitor experiences, port `3000`;
+- `apps/admin` — authenticated CMS/CRM/operations product, port `3001`;
+- `apps/portal` — authenticated client workspace, port `3002`;
+- `packages/domain` — validation, roles and business rules;
+- `packages/database` — typed PostgreSQL/Supabase contract;
+- `packages/ai` — public and internal AI provider policies;
+- `packages/email` — escaped transactional email templates;
+- `packages/ui` — shared accessible React components;
+- `packages/motion` — shared motion, interaction and timeline primitives;
+- `packages/cli` — guarded eMotion app and component generator;
+- `packages/eslint-config` — shared lint configuration;
+- `packages/typescript-config` — shared TypeScript configuration;
+- `supabase/migrations` — versioned database, functions, storage and RLS source
+  of truth.
 
-```sh
-npx create-turbo@latest
+The public application uses Next.js App Router, React 19, CSS Modules, local
+Geist fonts, Three.js and React Three Fiber.
+
+## Product source of truth
+
+- [Product blueprint](docs/product-blueprint.md)
+- [Recovered project history](docs/project-history.md)
+- [Production launch runbook](docs/launch-runbook.md)
+
+Confirmed launch identity:
+
+- domain: `emotion.com`;
+- email: `info@emotion.com`;
+- projects and testimonials: temporary seed content until verified replacements
+  are approved.
+
+## Local development
+
+Requirements: Node.js 20 or newer and pnpm 9.
+
+```bash
+pnpm install
+cp .env.example apps/web/.env.local
+cp .env.example apps/admin/.env.local
+cp .env.example apps/portal/.env.local
+pnpm dev
 ```
 
-## What's inside?
+Run only one application:
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+pnpm --filter @emotion/web dev
+pnpm --filter @emotion/admin dev
+pnpm --filter @emotion/portal dev
 ```
 
-Without global `turbo`, use your package manager:
+## Quality gates
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+```bash
+pnpm quality
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+This gate covers formatting, lint, types, unit tests, the Storybook production
+bundle and production builds for all three applications. Husky runs focused
+checks before commits and GitHub Actions repeats the independent full gate.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+The applications intentionally show safe setup states when credentials are
+absent. Live authentication, writes, email and AI require a dedicated Supabase
+project and the server-only values documented in `.env.example`.
 
-```sh
-turbo build --filter=docs
-```
+## Implemented platform
 
-Without global `turbo`:
+- full public agency site, CMS-backed routes, SEO, social assets and legal
+  routes;
+- full-viewport responsive Hero with reduced-motion and WebGL fallbacks;
+- custom role-based CMS with drafts, preview, publishing, revisions and media
+  upload;
+- contact intake, consent, attribution, transactional email and CRM pipeline;
+- inquiry qualification into leads and opportunities;
+- proposals, engagements, deliverables and task operations;
+- secure Client Portal projects, milestones, deliverables, decisions, feedback,
+  notifications and time-limited private file access;
+- first-party analytics for acquisition, conversion and pipeline;
+- grounded public AI concierge with citations, moderation, rate limits and
+  human handoff;
+- private permission-aware AI copilot that only prepares reviewed drafts;
+- PostgreSQL data model, RLS, storage policies, audit infrastructure and
+  privacy-aware first-party events;
+- shared eMotion UI, eMotion Motion and Storybook libraries;
+- guarded eMotion CLI app/component generation;
+- security headers, validation, Husky, CI/CD and Vercel configuration.
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+The code is launch-ready as a connected platform foundation, but it is not live
+until migrations are executed, secrets and domains are configured, legal text
+is approved and temporary content is replaced. The exact external steps and
+remaining owner inputs are tracked in the launch runbook.
 
-### Develop
+## Hero Engine
 
-To develop all apps and packages, run the following command:
+The WebGL experience lives in `apps/web/components/hero-experience` and is
+called **The Birth of Motion**. It uses the real eMotion vector mark, a central
+16-second motion timeline, responsive rendering profiles, reduced-motion
+fallback and visibility-aware WebGL lifecycle handling.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+The logo target geometry remains locked at 2,100 full-profile particles.
+Visual composition can evolve without replacing the verified mark geometry.
+The restored **Concept A — Emotion Flow** screenshot is the visual source of
+truth. The full-bleed desktop and mobile compositions were calibrated against
+it, including the horizontal energy flow and blended landing transition.

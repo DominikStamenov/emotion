@@ -1,36 +1,46 @@
 import Link from "next/link";
+import { Container } from "./container";
 import { Logo } from "./logo";
+import styles from "./footer.module.css";
 
 const footerLinks = [
   {
-    title: "Studio",
+    title: "Explore",
     links: [
-      { label: "About", href: "/about" },
-      { label: "Work", href: "/work" },
       { label: "Services", href: "/services" },
+      { label: "Work", href: "/work" },
+      { label: "Studio", href: "/studio" },
       { label: "Contact", href: "/contact" },
     ],
   },
   {
-    title: "Social",
+    title: "Capabilities",
     links: [
-      { label: "Instagram", href: "#" },
-      { label: "LinkedIn", href: "#" },
-      { label: "Behance", href: "#" },
-      { label: "Dribbble", href: "#" },
+      { label: "Brand strategy", href: "/services/brand-strategy" },
+      { label: "Web design", href: "/services/web-design" },
+      { label: "Development", href: "/services/development" },
+      { label: "Applied AI", href: "/services/ai-solutions" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy", href: "/privacy" },
+      { label: "Cookies", href: "/cookies" },
+      { label: "Terms", href: "/terms" },
+      { label: "info@emotion.com", href: "mailto:info@emotion.com" },
     ],
   },
 ] as const;
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 py-12">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr]">
-          <div>
+    <footer className={styles.footer}>
+      <Container>
+        <div className={styles.top}>
+          <div className={styles.intro}>
             <Logo />
-
-            <p className="mt-6 max-w-sm leading-7 text-white/60">
+            <p>
               Strategy, design, technology and motion for brands that want to
               create meaningful digital experiences.
             </p>
@@ -38,17 +48,12 @@ export function Footer() {
 
           {footerLinks.map((group) => (
             <div key={group.title}>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/40">
-                {group.title}
-              </p>
+              <p className={styles.groupTitle}>{group.title}</p>
 
-              <ul className="mt-5 space-y-3">
+              <ul className={styles.linkList}>
                 {group.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-white/70 transition-opacity hover:opacity-50"
-                    >
+                    <Link href={link.href} className={styles.link}>
                       {link.label}
                     </Link>
                   </li>
@@ -58,20 +63,11 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className={styles.bottom}>
           <p>© {new Date().getFullYear()} eMotion. All rights reserved.</p>
-
-          <div className="flex gap-6">
-            <Link href="/privacy" className="transition-opacity hover:opacity-50">
-              Privacy
-            </Link>
-
-            <Link href="/terms" className="transition-opacity hover:opacity-50">
-              Terms
-            </Link>
-          </div>
+          <p className={styles.status}>Available for selected projects</p>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

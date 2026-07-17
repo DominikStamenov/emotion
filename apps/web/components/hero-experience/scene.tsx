@@ -10,19 +10,20 @@ type HeroExperienceSceneProps = {
   profile: HeroRenderProfile;
 };
 
-export function HeroExperienceScene({
-  profile,
-}: HeroExperienceSceneProps) {
+export function HeroExperienceScene({ profile }: HeroExperienceSceneProps) {
   const compact = profile === "compact";
 
   return (
     <>
       <AtmosphereField compact={compact} />
-      <ParticleField compact={compact} />
-      <RibbonSystem compact={compact} />
-      <EnergyCore compact={compact} />
-      <LogoFormation compact={compact} />
-      <HeroParticles />
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <group position={compact ? [0.2, 0.32, 0] : [0.58, 0.2, 0]}>
+        <ParticleField compact={compact} />
+        <RibbonSystem compact={compact} />
+        <EnergyCore compact={compact} />
+        <LogoFormation compact={compact} />
+        <HeroParticles />
+      </group>
     </>
   );
 }

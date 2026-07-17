@@ -1,0 +1,26 @@
+html {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--emotion-color-text);
+  background:
+    radial-gradient(
+      circle at 15% 15%,
+      rgba(244, 63, 141, 0.12),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(139, 92, 246, 0.14),
+      transparent 38%
+    ),
+    var(--emotion-color-background);
+  font-family: var(--emotion-font-sans);
+}
+
+* {
+  box-sizing: border-box;
+}

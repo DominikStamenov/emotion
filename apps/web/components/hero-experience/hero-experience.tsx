@@ -9,20 +9,17 @@ import { HeroExperienceScene } from "./scene";
 import styles from "./hero-experience.module.css";
 
 export function HeroExperience() {
-  const { profile, reducedMotion } =
-    useHeroRenderProfile();
+  const { profile, reducedMotion } = useHeroRenderProfile();
 
-  const { containerRef, isActive } =
-    useHeroVisibility();
+  const { containerRef, isActive } = useHeroVisibility();
 
-  const [canvasElement, setCanvasElement] =
-    useState<HTMLCanvasElement | null>(null);
+  const [canvasElement, setCanvasElement] = useState<HTMLCanvasElement | null>(
+    null,
+  );
 
-  const [contextLost, setContextLost] =
-    useState(false);
+  const [contextLost, setContextLost] = useState(false);
 
-  const [initializationFailed, setInitializationFailed] =
-    useState(false);
+  const [initializationFailed, setInitializationFailed] = useState(false);
 
   useEffect(() => {
     if (reducedMotion || canvasElement) {
@@ -52,10 +49,7 @@ export function HeroExperience() {
       setContextLost(false);
     };
 
-    canvasElement.addEventListener(
-      "webglcontextlost",
-      handleContextLost,
-    );
+    canvasElement.addEventListener("webglcontextlost", handleContextLost);
 
     canvasElement.addEventListener(
       "webglcontextrestored",
@@ -63,10 +57,7 @@ export function HeroExperience() {
     );
 
     return () => {
-      canvasElement.removeEventListener(
-        "webglcontextlost",
-        handleContextLost,
-      );
+      canvasElement.removeEventListener("webglcontextlost", handleContextLost);
 
       canvasElement.removeEventListener(
         "webglcontextrestored",
@@ -80,8 +71,7 @@ export function HeroExperience() {
   }
 
   const compact = profile === "compact";
-  const unavailable =
-    contextLost || initializationFailed;
+  const unavailable = contextLost || initializationFailed;
 
   const renderActive = isActive && !unavailable;
 
@@ -89,12 +79,8 @@ export function HeroExperience() {
     <div
       ref={containerRef}
       className={styles.experience}
-      data-hero-rendering={
-        renderActive ? "active" : "paused"
-      }
-      data-hero-unavailable={
-        unavailable ? "true" : undefined
-      }
+      data-hero-rendering={renderActive ? "active" : "paused"}
+      data-hero-unavailable={unavailable ? "true" : undefined}
       aria-hidden="true"
     >
       <Canvas
@@ -109,9 +95,7 @@ export function HeroExperience() {
           powerPreference: "high-performance",
         }}
         performance={{ min: 0.5 }}
-        frameloop={
-          renderActive ? "always" : "demand"
-        }
+        frameloop={renderActive ? "always" : "demand"}
         fallback={null}
         onCreated={({ gl }) => {
           setCanvasElement(gl.domElement);

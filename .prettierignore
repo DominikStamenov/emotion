@@ -1,0 +1,11 @@
+node_modules
+.next
+.turbo
+.vercel
+coverage
+dist
+build
+out
+storybook-static
+pnpm-lock.yaml
+apps/**/next-env.d.ts

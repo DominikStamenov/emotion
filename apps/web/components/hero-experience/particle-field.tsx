@@ -17,22 +17,16 @@ type ParticleFieldProps = {
   compact?: boolean;
 };
 
-export function ParticleField({
-  compact = false,
-}: ParticleFieldProps) {
+export function ParticleField({ compact = false }: ParticleFieldProps) {
   const groupRef = useRef<Group>(null);
 
   const basePointsRef = useRef<Points>(null);
-  const basePositionAttributeRef =
-    useRef<BufferAttribute>(null);
-  const baseMaterialRef =
-    useRef<PointsMaterial>(null);
+  const basePositionAttributeRef = useRef<BufferAttribute>(null);
+  const baseMaterialRef = useRef<PointsMaterial>(null);
 
   const heroPointsRef = useRef<Points>(null);
-  const heroPositionAttributeRef =
-    useRef<BufferAttribute>(null);
-  const heroMaterialRef =
-    useRef<PointsMaterial>(null);
+  const heroPositionAttributeRef = useRef<BufferAttribute>(null);
+  const heroMaterialRef = useRef<PointsMaterial>(null);
 
   const baseEngine = useParticleEngine({
     count: compact ? 480 : 860,
@@ -58,19 +52,15 @@ export function ParticleField({
     const safeDelta = Math.min(delta, 0.033);
     const elapsedTime = state.clock.elapsedTime;
 
-    const {
-      revealAmount,
-      dissolveAmount,
-      freedomAmount,
-    } = getHeroTimeline(elapsedTime);
+    const { revealAmount, dissolveAmount, freedomAmount } =
+      getHeroTimeline(elapsedTime);
 
     /**
      * Mouse influence is reduced while the identity is
      * forming so surrounding particles stop competing
      * with the logo.
      */
-    const interactionAmount =
-      1 - revealAmount * 0.92;
+    const interactionAmount = 1 - revealAmount * 0.48;
 
     baseEngine.update(
       state.pointer.x * interactionAmount,
@@ -87,81 +77,49 @@ export function ParticleField({
     );
 
     if (basePositionAttributeRef.current) {
-      basePositionAttributeRef.current.needsUpdate =
-        true;
+      basePositionAttributeRef.current.needsUpdate = true;
     }
 
     if (heroPositionAttributeRef.current) {
-      heroPositionAttributeRef.current.needsUpdate =
-        true;
+      heroPositionAttributeRef.current.needsUpdate = true;
     }
 
-    const easing =
-      1 - Math.exp(-safeDelta * 2.4);
+    const easing = 1 - Math.exp(-safeDelta * 2.4);
 
     const group = groupRef.current;
 
     if (group) {
-      const breathingStrength =
-        MathUtils.lerp(
-          0.028,
-          0.006,
-          revealAmount,
-        );
+      const breathingStrength = MathUtils.lerp(0.038, 0.018, revealAmount);
 
-      const breathing =
-        1 +
-        Math.sin(elapsedTime * 0.68) *
-          breathingStrength;
+      const breathing = 1 + Math.sin(elapsedTime * 0.68) * breathingStrength;
 
       /**
        * A small scene contraction gives the impression
        * that environmental energy is being drawn toward
        * the forming eMotion identity.
        */
-      const revealContraction =
-        MathUtils.lerp(
-          1,
-          0.89,
-          revealAmount,
-        );
+      const revealContraction = MathUtils.lerp(1, 0.89, revealAmount);
 
       /**
        * Near the end of the cycle, the field expands
        * again and returns to free motion.
        */
       const freedomExpansion =
-        1 +
-        freedomAmount * 0.055 +
-        dissolveAmount *
-          (1 - revealAmount) *
-          0.018;
+        1 + freedomAmount * 0.055 + dissolveAmount * (1 - revealAmount) * 0.018;
 
-      const targetScale =
-        breathing *
-        revealContraction *
-        freedomExpansion;
+      const targetScale = breathing * revealContraction * freedomExpansion;
 
-      const nextScale = MathUtils.lerp(
-        group.scale.x,
-        targetScale,
-        easing,
-      );
+      const nextScale = MathUtils.lerp(group.scale.x, targetScale, easing);
 
       group.scale.setScalar(nextScale);
 
-      const rotationAvailability =
-        1 - revealAmount * 0.88;
+      const rotationAvailability = 1 - revealAmount * 0.42;
 
       const targetRotationY =
-        Math.sin(elapsedTime * 0.09) *
-        0.04 *
-        rotationAvailability;
+        Math.sin(elapsedTime * 0.09) * 0.04 * rotationAvailability;
 
       const targetRotationX =
-        Math.cos(elapsedTime * 0.075) *
-        0.018 *
-        rotationAvailability;
+        Math.cos(elapsedTime * 0.075) * 0.018 * rotationAvailability;
 
       group.rotation.y = MathUtils.lerp(
         group.rotation.y,
@@ -186,9 +144,7 @@ export function ParticleField({
 
     if (basePoints) {
       const targetRotation =
-        Math.sin(elapsedTime * 0.065) *
-        0.025 *
-        interactionAmount;
+        Math.sin(elapsedTime * 0.065) * 0.025 * interactionAmount;
 
       basePoints.rotation.z = MathUtils.lerp(
         basePoints.rotation.z,
@@ -201,9 +157,7 @@ export function ParticleField({
 
     if (heroPoints) {
       const targetRotation =
-        Math.cos(elapsedTime * 0.08) *
-        0.035 *
-        interactionAmount;
+        Math.cos(elapsedTime * 0.08) * 0.035 * interactionAmount;
 
       heroPoints.rotation.z = MathUtils.lerp(
         heroPoints.rotation.z,
@@ -218,44 +172,29 @@ export function ParticleField({
      * frame the logo.
      */
     if (baseMaterialRef.current) {
-      baseMaterialRef.current.opacity =
-        MathUtils.lerp(
-          0.68,
-          0.16,
-          revealAmount,
-        );
+      baseMaterialRef.current.opacity = MathUtils.lerp(
+        0.76,
+        0.52,
+        revealAmount,
+      );
 
-      baseMaterialRef.current.size =
-        MathUtils.lerp(
-          0.021,
-          0.013,
-          revealAmount,
-        );
+      baseMaterialRef.current.size = MathUtils.lerp(0.021, 0.013, revealAmount);
     }
 
     if (heroMaterialRef.current) {
-      heroMaterialRef.current.opacity =
-        MathUtils.lerp(
-          0.88,
-          0.34,
-          revealAmount,
-        );
+      heroMaterialRef.current.opacity = MathUtils.lerp(
+        0.94,
+        0.68,
+        revealAmount,
+      );
 
-      heroMaterialRef.current.size =
-        MathUtils.lerp(
-          0.052,
-          0.034,
-          revealAmount,
-        );
+      heroMaterialRef.current.size = MathUtils.lerp(0.052, 0.04, revealAmount);
     }
   });
 
   return (
     <group ref={groupRef}>
-      <points
-        ref={basePointsRef}
-        frustumCulled={false}
-      >
+      <points ref={basePointsRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute
             ref={basePositionAttributeRef}
@@ -281,10 +220,7 @@ export function ParticleField({
         />
       </points>
 
-      <points
-        ref={heroPointsRef}
-        frustumCulled={false}
-      >
+      <points ref={heroPointsRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute
             ref={heroPositionAttributeRef}

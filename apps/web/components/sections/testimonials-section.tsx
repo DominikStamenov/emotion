@@ -1,37 +1,42 @@
 import { TestimonialCard } from "../testimonial-card";
-import { testimonials } from "../../data/testimonials";
+import { Container } from "../container";
+import { getHomeTestimonials } from "../../lib/content";
+import styles from "./sections.module.css";
 
-export function TestimonialsSection() {
+export async function TestimonialsSection() {
+  const testimonials = await getHomeTestimonials();
+  const verified = testimonials.every((testimonial) => testimonial.verified);
   return (
-    <section className="py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="max-w-3xl">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-white/50">
-            CLIENT STORIES
+    <section className={`${styles.section} ${styles.sectionBorder}`}>
+      <Container>
+        <header className={styles.header}>
+          <p className={styles.eyebrow}>
+            {verified
+              ? "Client stories"
+              : "Editorial placeholders · not client claims"}
           </p>
-
-          <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">
+          <h2 className={styles.title}>
             Trusted by teams building meaningful digital products.
           </h2>
-
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/60">
+          <p className={styles.description}>
             We work closely with ambitious founders and teams to create
             experiences that feel clear, distinctive and built for long-term
             growth.
           </p>
-        </div>
+        </header>
 
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+        <div className={styles.testimonialGrid}>
           {testimonials.map((testimonial) => (
             <TestimonialCard
-              key={testimonial.name}
+              key={testimonial.id}
               quote={testimonial.quote}
               name={testimonial.name}
               role={testimonial.role}
+              verified={testimonial.verified}
             />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

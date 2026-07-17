@@ -1,0 +1,34 @@
+:root {
+  --emotion-color-background: #08080a;
+  --emotion-color-surface: #111116;
+  --emotion-color-surface-elevated: #17171d;
+  --emotion-color-text: #f7f5fb;
+  --emotion-color-text-muted: rgba(247, 245, 251, 0.62);
+  --emotion-color-text-subtle: rgba(247, 245, 251, 0.36);
+  --emotion-color-border: rgba(255, 255, 255, 0.1);
+  --emotion-color-border-strong: rgba(255, 255, 255, 0.2);
+  --emotion-color-pink: #f43f8d;
+  --emotion-color-violet: #8b5cf6;
+  --emotion-color-cyan: #22d3ee;
+  --emotion-gradient-brand: linear-gradient(
+    110deg,
+    var(--emotion-color-pink),
+    var(--emotion-color-violet) 52%,
+    var(--emotion-color-cyan)
+  );
+  --emotion-font-sans:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --emotion-font-display: var(--emotion-font-sans);
+  --emotion-font-mono: "SFMono-Regular", Consolas, monospace;
+  --emotion-radius-small: 0.75rem;
+  --emotion-radius-medium: 1.25rem;
+  --emotion-radius-large: 2rem;
+  --emotion-radius-pill: 999px;
+  --emotion-duration-fast: 180ms;
+  --emotion-duration-default: 320ms;
+  --emotion-duration-slow: 700ms;
+  --emotion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --emotion-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --emotion-shadow-panel: 0 32px 80px rgba(0, 0, 0, 0.28);
+  --emotion-shadow-focus: 0 0 0 3px rgba(34, 211, 238, 0.12);
+}

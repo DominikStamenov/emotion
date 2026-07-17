@@ -1,7 +1,5 @@
-import { MathUtils } from "three";  
-import {
-  getLogoFormationAmount,
-} from "./hero-timeline";
+import { MathUtils } from "three";
+import { getLogoFormationAmount } from "./hero-timeline";
 
 import type { LogoMaskTargets } from "./logo-mask";
 
@@ -15,14 +13,8 @@ type LogoSolverOptions = {
 export type LogoSolver = {
   positions: Float32Array;
   colors: Float32Array;
-  update: (
-    elapsedTime: number,
-    pointerX: number,
-    pointerY: number,
-  ) => number;
+  update: (elapsedTime: number, pointerX: number, pointerY: number) => number;
 };
-
-
 
 function createRandom(seed: number) {
   let value = seed;
@@ -33,16 +25,8 @@ function createRandom(seed: number) {
     return value - Math.floor(value);
   };
 }
-function smoothRange(
-  value: number,
-  start: number,
-  end: number,
-) {
-  return MathUtils.smoothstep(
-    value,
-    start,
-    end,
-  );
+function smoothRange(value: number, start: number, end: number) {
+  return MathUtils.smoothstep(value, start, end);
 }
 
 export function createLogoSolver({
@@ -58,76 +42,78 @@ export function createLogoSolver({
     mask.colors.length !== count * 3 ||
     mask.edgeStrengths.length !== count
   ) {
-    throw new Error(
-      "Logo mask data has invalid dimensions.",
-    );
+    throw new Error("Logo mask data has invalid dimensions.");
   }
 
   const random = createRandom(seed);
 
-  const positions =
-    new Float32Array(count * 3);
+  const positions = new Float32Array(count * 3);
 
-  const scatterPositions =
-    new Float32Array(count * 3);
+  const scatterPositions = new Float32Array(count * 3);
 
-  const targetPositions =
-    new Float32Array(count * 3);
+  const targetPositions = new Float32Array(count * 3);
 
-  const colors =
-    new Float32Array(mask.colors);
+  const colors = new Float32Array(count * 3);
 
-  const phases =
-    new Float32Array(count);
+  const phases = new Float32Array(count);
 
-  const formationDelays =
-    new Float32Array(count);
+  const formationDelays = new Float32Array(count);
 
-  const edgeStrengths =
-    new Float32Array(mask.edgeStrengths);
+  const edgeStrengths = new Float32Array(mask.edgeStrengths);
 
-  for (
-    let index = 0;
-    index < count;
-    index += 1
-  ) {
+  for (let index = 0; index < count; index += 1) {
     const offset = index * 3;
     const maskOffset = index * 2;
 
-    const edgeStrength =
-      edgeStrengths[index] ?? 0;
+    const edgeStrength = edgeStrengths[index] ?? 0;
 
-    targetPositions[offset] =
-      (mask.positions[maskOffset] ?? 0) *
-      scale;
+    targetPositions[offset] = (mask.positions[maskOffset] ?? 0) * scale;
 
-    targetPositions[offset + 1] =
-      (mask.positions[maskOffset + 1] ?? 0) *
-      scale;
+    targetPositions[offset + 1] = (mask.positions[maskOffset + 1] ?? 0) * scale;
 
-    targetPositions[offset + 2] =
-      (random() - 0.5) *
-      depth *
-      0.065;
+    targetPositions[offset + 2] = (random() - 0.5) * depth * 0.065;
 
-    const scatterAngle =
-      random() * Math.PI * 2;
+    /*
+     * The production mark keeps its warm brand gradient everywhere else.
+     * Inside the Hero it is born from the same pink-violet-cyan energy as the
+     * surrounding flow, matching the approved Emotion Flow concept.
+     */
+    const normalizedX = mask.positions[maskOffset] ?? 0;
+    const normalizedY = mask.positions[maskOffset + 1] ?? 0;
 
-    const scatterRadius =
-      1.35 +
-      Math.pow(random(), 0.68) * 2.4;
+    const colorProgress = MathUtils.clamp(
+      (0.72 - normalizedY) * 0.5 + (normalizedX + 0.8) * 0.14,
+      0,
+      1,
+    );
 
-    const scatterX =
-      Math.cos(scatterAngle) *
-      scatterRadius;
+    const pink = [0.98, 0.08, 0.55] as const;
+    const violet = [0.55, 0.2, 1] as const;
+    const cyan = [0.08, 0.78, 1] as const;
 
-    const scatterY =
-      Math.sin(scatterAngle) *
-      scatterRadius *
-      0.74;
+    if (colorProgress < 0.56) {
+      const mix = colorProgress / 0.56;
 
-    const scatterZ =
-      (random() - 0.5) * depth;
+      colors[offset] = MathUtils.lerp(pink[0], violet[0], mix);
+      colors[offset + 1] = MathUtils.lerp(pink[1], violet[1], mix);
+      colors[offset + 2] = MathUtils.lerp(pink[2], violet[2], mix);
+    } else {
+      const mix = (colorProgress - 0.56) / 0.44;
+
+      colors[offset] = MathUtils.lerp(violet[0], cyan[0], mix);
+      colors[offset + 1] = MathUtils.lerp(violet[1], cyan[1], mix);
+      colors[offset + 2] = MathUtils.lerp(violet[2], cyan[2], mix);
+    }
+
+    const scatterAngle = random() * Math.PI * 2;
+
+    const scatterRadius = 1.35 + Math.pow(random(), 0.68) * 2.4;
+
+    const scatterX = Math.cos(scatterAngle) * scatterRadius;
+
+    const scatterY = Math.sin(scatterAngle) * scatterRadius * 0.74;
+
+    const scatterZ = (random() - 0.5) * depth;
 
     scatterPositions[offset] = scatterX;
     scatterPositions[offset + 1] = scatterY;
@@ -137,190 +123,101 @@ export function createLogoSolver({
     positions[offset + 1] = scatterY;
     positions[offset + 2] = scatterZ;
 
-    phases[index] =
-      random() * Math.PI * 2;
+    phases[index] = random() * Math.PI * 2;
 
-    formationDelays[index] =
-      random() *
-      (edgeStrength > 0 ? 0.075 : 0.12);
+    formationDelays[index] = random() * (edgeStrength > 0 ? 0.075 : 0.12);
   }
 
-  function update(
-    elapsedTime: number,
-    pointerX: number,
-    pointerY: number,
-  ) {
-    const formationAmount =
-      getLogoFormationAmount(elapsedTime);
+  function update(elapsedTime: number, pointerX: number, pointerY: number) {
+    const formationAmount = getLogoFormationAmount(elapsedTime);
 
     const cursorX = pointerX * 2.8;
     const cursorY = pointerY * 2;
 
-    const pointerAvailability =
-      1 -
-      smoothRange(
-        formationAmount,
-        0.55,
-        0.88,
-      );
+    const pointerAvailability = 1 - smoothRange(formationAmount, 0.55, 0.88);
 
-    for (
-      let index = 0;
-      index < count;
-      index += 1
-    ) {
+    for (let index = 0; index < count; index += 1) {
       const offset = index * 3;
 
-      const phase =
-        phases[index] ?? 0;
+      const phase = phases[index] ?? 0;
 
-      const delay =
-        formationDelays[index] ?? 0;
+      const delay = formationDelays[index] ?? 0;
 
-      const edgeStrength =
-        edgeStrengths[index] ?? 0;
+      const edgeStrength = edgeStrengths[index] ?? 0;
 
-      const delayedFormation =
-        MathUtils.clamp(
-          (formationAmount - delay) /
-            (1 - delay),
-          0,
-          1,
-        );
+      const delayedFormation = MathUtils.clamp(
+        (formationAmount - delay) / (1 - delay),
+        0,
+        1,
+      );
 
-      const easedFormation =
-        1 -
-        Math.pow(
-          1 - delayedFormation,
-          3,
-        );
+      const easedFormation = 1 - Math.pow(1 - delayedFormation, 3);
 
-      const lockAmount =
-        smoothRange(
-          delayedFormation,
-          0.75,
-          0.97,
-        );
+      const lockAmount = smoothRange(delayedFormation, 0.75, 0.97);
 
       const scatterX =
         (scatterPositions[offset] ?? 0) +
-        Math.sin(
-          elapsedTime * 0.24 + phase,
-        ) *
-          0.1;
+        Math.sin(elapsedTime * 0.24 + phase) * 0.1;
 
       const scatterY =
         (scatterPositions[offset + 1] ?? 0) +
-        Math.cos(
-          elapsedTime * 0.21 + phase,
-        ) *
-          0.085;
+        Math.cos(elapsedTime * 0.21 + phase) * 0.085;
 
       const scatterZ =
         (scatterPositions[offset + 2] ?? 0) +
-        Math.sin(
-          elapsedTime * 0.18 + phase,
-        ) *
-          0.06;
+        Math.sin(elapsedTime * 0.18 + phase) * 0.06;
 
-      const unlockedMotion =
-        edgeStrength > 0
-          ? 0.01
-          : 0.016;
+      const unlockedMotion = edgeStrength > 0 ? 0.01 : 0.016;
 
-      const lockedMotion =
-        edgeStrength > 0
-          ? 0.001
-          : 0.0023;
+      const lockedMotion = edgeStrength > 0 ? 0.001 : 0.0023;
 
-      const residualMotion =
-        MathUtils.lerp(
-          unlockedMotion,
-          lockedMotion,
-          lockAmount,
-        );
+      const residualMotion = MathUtils.lerp(
+        unlockedMotion,
+        lockedMotion,
+        lockAmount,
+      );
 
       const targetX =
         (targetPositions[offset] ?? 0) +
-        Math.sin(
-          elapsedTime * 0.72 + phase,
-        ) *
-          residualMotion;
+        Math.sin(elapsedTime * 0.72 + phase) * residualMotion;
 
       const targetY =
         (targetPositions[offset + 1] ?? 0) +
-        Math.cos(
-          elapsedTime * 0.66 + phase,
-        ) *
-          residualMotion;
+        Math.cos(elapsedTime * 0.66 + phase) * residualMotion;
 
       const targetZ =
         (targetPositions[offset + 2] ?? 0) +
-        Math.sin(
-          elapsedTime * 0.84 + phase,
-        ) *
-          residualMotion *
-          0.55;
+        Math.sin(elapsedTime * 0.84 + phase) * residualMotion * 0.55;
 
-      let x = MathUtils.lerp(
-        scatterX,
-        targetX,
-        easedFormation,
-      );
+      let x = MathUtils.lerp(scatterX, targetX, easedFormation);
 
-      let y = MathUtils.lerp(
-        scatterY,
-        targetY,
-        easedFormation,
-      );
+      let y = MathUtils.lerp(scatterY, targetY, easedFormation);
 
-      let z = MathUtils.lerp(
-        scatterZ,
-        targetZ,
-        easedFormation,
-      );
+      let z = MathUtils.lerp(scatterZ, targetZ, easedFormation);
 
       const distanceX = x - cursorX;
       const distanceY = y - cursorY;
 
-      const distanceSquared =
-        distanceX * distanceX +
-        distanceY * distanceY;
+      const distanceSquared = distanceX * distanceX + distanceY * distanceY;
 
       const interactionRadius = 0.92;
 
       if (
         pointerAvailability > 0 &&
         distanceSquared > 0.0001 &&
-        distanceSquared <
-          interactionRadius *
-            interactionRadius
+        distanceSquared < interactionRadius * interactionRadius
       ) {
-        const distance =
-          Math.sqrt(distanceSquared);
+        const distance = Math.sqrt(distanceSquared);
 
-        const influence =
-          1 -
-          distance / interactionRadius;
+        const influence = 1 - distance / interactionRadius;
 
-        const repulsion =
-          influence *
-          influence *
-          0.2 *
-          pointerAvailability;
+        const repulsion = influence * influence * 0.2 * pointerAvailability;
 
-        x +=
-          (distanceX / distance) *
-          repulsion;
+        x += (distanceX / distance) * repulsion;
 
-        y +=
-          (distanceY / distance) *
-          repulsion;
+        y += (distanceY / distance) * repulsion;
 
-        z +=
-          influence *
-          0.08 *
-          pointerAvailability;
+        z += influence * 0.08 * pointerAvailability;
       }
 
       positions[offset] = x;

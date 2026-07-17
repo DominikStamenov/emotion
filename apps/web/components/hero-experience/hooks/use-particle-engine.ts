@@ -28,11 +28,7 @@ function createRandom(seed: number) {
   };
 }
 
-function mixColor(
-  start: RgbColor,
-  end: RgbColor,
-  amount: number,
-): RgbColor {
+function mixColor(start: RgbColor, end: RgbColor, amount: number): RgbColor {
   const t = Math.max(0, Math.min(1, amount));
 
   return [
@@ -42,24 +38,16 @@ function mixColor(
   ];
 }
 
-function getParticleColor(
-  normalizedRadius: number,
-  angle: number,
-): RgbColor {
+function getParticleColor(normalizedRadius: number, angle: number): RgbColor {
   if (normalizedRadius < 0.18) {
     return mixColor(WHITE, VIOLET, normalizedRadius / 0.18);
   }
 
   if (normalizedRadius < 0.55) {
-    return mixColor(
-      VIOLET,
-      PINK,
-      (normalizedRadius - 0.18) / 0.37,
-    );
+    return mixColor(VIOLET, PINK, (normalizedRadius - 0.18) / 0.37);
   }
 
-  const directionalAmount =
-    (Math.sin(angle + Math.PI * 0.25) + 1) * 0.5;
+  const directionalAmount = (Math.sin(angle + Math.PI * 0.25) + 1) * 0.5;
 
   return mixColor(PINK, CYAN, directionalAmount * 0.8);
 }
@@ -86,24 +74,15 @@ export function useParticleEngine({
       const offset = index * 3;
 
       const normalizedRadius = Math.pow(random(), clusterPower);
-      const radius =
-        radiusMin +
-        normalizedRadius * (radiusMax - radiusMin);
+      const radius = radiusMin + normalizedRadius * (radiusMax - radiusMin);
 
       const angle = random() * Math.PI * 2;
 
-      const x =
-        Math.cos(angle) * radius +
-        (random() - 0.5) * 0.55;
+      const x = Math.cos(angle) * radius + (random() - 0.5) * 0.55;
 
-      const y =
-        Math.sin(angle) * radius * 0.68 +
-        (random() - 0.5) * 0.5;
+      const y = Math.sin(angle) * radius * 0.68 + (random() - 0.5) * 0.5;
 
-      const z =
-        (random() - 0.5) *
-        depth *
-        (0.45 + normalizedRadius * 0.55);
+      const z = (random() - 0.5) * depth * (0.45 + normalizedRadius * 0.55);
 
       positions[offset] = x;
       positions[offset + 1] = y;
@@ -134,8 +113,7 @@ export function useParticleEngine({
       const springStrength = 2.15;
       const damping = Math.exp(-delta * 4.1);
       const interactionRadius = 1.35;
-      const interactionRadiusSquared =
-        interactionRadius * interactionRadius;
+      const interactionRadiusSquared = interactionRadius * interactionRadius;
 
       for (let index = 0; index < count; index += 1) {
         const offset = index * 3;
@@ -155,8 +133,7 @@ export function useParticleEngine({
         const distanceX = x - cursorX;
         const distanceY = y - cursorY;
 
-        const distanceSquared =
-          distanceX * distanceX + distanceY * distanceY;
+        const distanceSquared = distanceX * distanceX + distanceY * distanceY;
 
         let forceX = (baseX - x) * springStrength;
         let forceY = (baseY - y) * springStrength;
@@ -167,55 +144,40 @@ export function useParticleEngine({
           distanceSquared < interactionRadiusSquared
         ) {
           const distance = Math.sqrt(distanceSquared);
-          const normalizedDistance =
-            1 - distance / interactionRadius;
+          const normalizedDistance = 1 - distance / interactionRadius;
 
           const repulsion =
-            normalizedDistance *
-            normalizedDistance *
-            interactionStrength;
+            normalizedDistance * normalizedDistance * interactionStrength;
 
           forceX += (distanceX / distance) * repulsion;
           forceY += (distanceY / distance) * repulsion;
 
           const wave =
-            Math.sin(
-              elapsedTime * 5.5 -
-                distance * 5 +
-                (phases[index] ?? 0),
-            ) * normalizedDistance;
+            Math.sin(elapsedTime * 5.5 - distance * 5 + (phases[index] ?? 0)) *
+            normalizedDistance;
 
           forceZ += wave * 1.35;
         }
 
         const phase = phases[index] ?? 0;
 
-        forceX +=
-          Math.sin(elapsedTime * 0.3 + phase) * 0.014;
+        forceX += Math.sin(elapsedTime * 0.3 + phase) * 0.014;
 
-        forceY +=
-          Math.cos(elapsedTime * 0.26 + phase) * 0.014;
+        forceY += Math.cos(elapsedTime * 0.26 + phase) * 0.014;
 
-        forceZ +=
-          Math.sin(elapsedTime * 0.22 + phase) * 0.01;
+        forceZ += Math.sin(elapsedTime * 0.22 + phase) * 0.01;
 
-        velocities[offset] =
-          (velocityX + forceX * delta) * damping;
+        velocities[offset] = (velocityX + forceX * delta) * damping;
 
-        velocities[offset + 1] =
-          (velocityY + forceY * delta) * damping;
+        velocities[offset + 1] = (velocityY + forceY * delta) * damping;
 
-        velocities[offset + 2] =
-          (velocityZ + forceZ * delta) * damping;
+        velocities[offset + 2] = (velocityZ + forceZ * delta) * damping;
 
-        positions[offset] =
-          x + (velocities[offset] ?? 0) * delta;
+        positions[offset] = x + (velocities[offset] ?? 0) * delta;
 
-        positions[offset + 1] =
-          y + (velocities[offset + 1] ?? 0) * delta;
+        positions[offset + 1] = y + (velocities[offset + 1] ?? 0) * delta;
 
-        positions[offset + 2] =
-          z + (velocities[offset + 2] ?? 0) * delta;
+        positions[offset + 2] = z + (velocities[offset + 2] ?? 0) * delta;
       }
     }
 

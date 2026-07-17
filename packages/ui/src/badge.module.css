@@ -1,0 +1,55 @@
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 1.7rem;
+  padding: 0.36rem 0.65rem;
+  border: 1px solid var(--badge-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--emotion-radius-pill, 999px);
+  align-items: center;
+  gap: 0.42rem;
+  color: var(--badge-color, rgba(247, 245, 251, 0.72));
+  background: var(--badge-background, rgba(255, 255, 255, 0.045));
+  font-size: 0.68rem;
+  font-weight: 720;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.dot {
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0.8rem currentColor;
+}
+
+.pink {
+  --badge-border: rgba(244, 63, 141, 0.28);
+  --badge-color: #f9a8d4;
+  --badge-background: rgba(244, 63, 141, 0.08);
+}
+
+.violet {
+  --badge-border: rgba(139, 92, 246, 0.3);
+  --badge-color: #c4b5fd;
+  --badge-background: rgba(139, 92, 246, 0.09);
+}
+
+.cyan {
+  --badge-border: rgba(34, 211, 238, 0.28);
+  --badge-color: #a5f3fc;
+  --badge-background: rgba(34, 211, 238, 0.08);
+}
+
+.success {
+  --badge-border: rgba(52, 211, 153, 0.28);
+  --badge-color: #a7f3d0;
+  --badge-background: rgba(16, 185, 129, 0.08);
+}
+
+.warning {
+  --badge-border: rgba(251, 191, 36, 0.28);
+  --badge-color: #fde68a;
+  --badge-background: rgba(245, 158, 11, 0.08);
+}

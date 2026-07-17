@@ -1,0 +1,99 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--emotion-color-border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--emotion-radius-large, 2rem);
+  color: var(--emotion-color-text, #f7f5fb);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 54%),
+    var(--emotion-color-surface, #111116);
+  box-shadow: var(--emotion-shadow-panel, 0 32px 80px rgba(0, 0, 0, 0.28));
+}
+
+.card::before {
+  position: absolute;
+  top: 0;
+  right: 12%;
+  left: 12%;
+  height: 1px;
+  content: "";
+  opacity: 0;
+  background: var(--emotion-gradient-brand);
+  transition: opacity var(--emotion-duration-fast, 180ms) ease;
+}
+
+.pink::before,
+.violet::before,
+.cyan::before {
+  opacity: 0.9;
+}
+
+.pink {
+  --card-accent: var(--emotion-color-pink, #f43f8d);
+}
+
+.violet {
+  --card-accent: var(--emotion-color-violet, #8b5cf6);
+}
+
+.cyan {
+  --card-accent: var(--emotion-color-cyan, #22d3ee);
+}
+
+.pink::after,
+.violet::after,
+.cyan::after {
+  position: absolute;
+  top: -5rem;
+  right: -5rem;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 50%;
+  content: "";
+  opacity: 0.1;
+  background: var(--card-accent);
+  filter: blur(40px);
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  color: var(--card-accent, var(--emotion-color-text-subtle));
+  font-size: 0.68rem;
+  font-weight: 720;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  position: relative;
+  margin: 0;
+  font-family: var(--emotion-font-display, ui-sans-serif, sans-serif);
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.description {
+  position: relative;
+  max-width: 42rem;
+  margin: 0.85rem 0 0;
+  color: var(--emotion-color-text-muted, rgba(247, 245, 251, 0.62));
+  line-height: 1.65;
+}
+
+.content {
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+.footer {
+  position: relative;
+  display: flex;
+  margin-top: 1.75rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--emotion-color-border);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}

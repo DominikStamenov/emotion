@@ -1,0 +1,55 @@
+:root {
+  color-scheme: dark;
+  --portal-page-padding: clamp(24px, 5vw, 72px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--emotion-color-background);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100svh;
+  margin: 0;
+  color: var(--emotion-color-text);
+  background:
+    radial-gradient(
+      circle at 18% 0%,
+      rgba(244, 63, 141, 0.08),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 95% 12%,
+      rgba(34, 211, 238, 0.07),
+      transparent 34%
+    ),
+    var(--emotion-color-background);
+  font-family: var(--emotion-font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  color: #ffffff;
+  background: rgba(139, 92, 246, 0.48);
+}

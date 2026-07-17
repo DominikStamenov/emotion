@@ -54,44 +54,27 @@ function AtmosphereLayer({
 }: AtmosphereLayerProps) {
   const groupRef = useRef<Group>(null);
 
-  const materialRef =
-    useRef<PointsMaterial>(null);
+  const materialRef = useRef<PointsMaterial>(null);
 
   const [spreadX, spreadY, spreadZ] = spread;
 
   const positions = useMemo(() => {
     const random = createRandom(seed);
 
-    const values =
-      new Float32Array(count * 3);
+    const values = new Float32Array(count * 3);
 
-    for (
-      let index = 0;
-      index < count;
-      index += 1
-    ) {
+    for (let index = 0; index < count; index += 1) {
       const offset = index * 3;
 
-      values[offset] =
-        (random() - 0.5) * spreadX;
+      values[offset] = (random() - 0.5) * spreadX;
 
-      values[offset + 1] =
-        (random() - 0.5) * spreadY;
+      values[offset + 1] = (random() - 0.5) * spreadY;
 
-      values[offset + 2] =
-        (random() - 0.5) * spreadZ +
-        depth;
+      values[offset + 2] = (random() - 0.5) * spreadZ + depth;
     }
 
     return values;
-  }, [
-    count,
-    depth,
-    seed,
-    spreadX,
-    spreadY,
-    spreadZ,
-  ]);
+  }, [count, depth, seed, spreadX, spreadY, spreadZ]);
 
   useFrame((state, delta) => {
     const group = groupRef.current;
@@ -100,48 +83,33 @@ function AtmosphereLayer({
       return;
     }
 
-    const safeDelta =
-      Math.min(delta, 0.033);
+    const safeDelta = Math.min(delta, 0.033);
 
-    const easing =
-      1 - Math.exp(-safeDelta * 2);
+    const easing = 1 - Math.exp(-safeDelta * 2);
 
-    const time =
-      state.clock.elapsedTime;
+    const time = state.clock.elapsedTime;
 
-    const {
-      revealAmount,
-      freedomAmount,
-    } = getHeroTimeline(time);
+    const { revealAmount, freedomAmount } = getHeroTimeline(time);
 
-    const interactionAmount =
-      1 - revealAmount * 0.94;
+    const interactionAmount = 1 - revealAmount * 0.52;
 
-    const rotationAmount =
-      1 - revealAmount * 0.9;
+    const rotationAmount = 1 - revealAmount * 0.46;
+
+    const autonomousX =
+      Math.sin(time * (speed + 0.08) + seed * 0.01) * parallax * 0.32;
+
+    const autonomousY =
+      Math.cos(time * (speed + 0.06) + seed * 0.014) * parallax * 0.24;
 
     const targetX =
-      state.pointer.x *
-      parallax *
-      interactionAmount;
+      state.pointer.x * parallax * interactionAmount + autonomousX;
 
     const targetY =
-      state.pointer.y *
-      parallax *
-      0.72 *
-      interactionAmount;
+      state.pointer.y * parallax * 0.72 * interactionAmount + autonomousY;
 
-    group.position.x = MathUtils.lerp(
-      group.position.x,
-      targetX,
-      easing,
-    );
+    group.position.x = MathUtils.lerp(group.position.x, targetX, easing);
 
-    group.position.y = MathUtils.lerp(
-      group.position.y,
-      targetY,
-      easing,
-    );
+    group.position.y = MathUtils.lerp(group.position.y, targetY, easing);
 
     /**
      * Each depth layer retreats by a different amount,
@@ -149,15 +117,11 @@ function AtmosphereLayer({
      */
     group.position.z = MathUtils.lerp(
       group.position.z,
-      -revealDepthShift *
-        revealAmount,
+      -revealDepthShift * revealAmount,
       easing,
     );
 
-    const targetRotationZ =
-      Math.sin(time * speed) *
-      0.025 *
-      rotationAmount;
+    const targetRotationZ = Math.sin(time * speed) * 0.042 * rotationAmount;
 
     group.rotation.z = MathUtils.lerp(
       group.rotation.z,
@@ -166,20 +130,10 @@ function AtmosphereLayer({
     );
 
     const targetRotationX =
-      Math.cos(
-        time * speed * 0.72 +
-          seed * 0.01,
-      ) *
-      0.01 *
-      rotationAmount;
+      Math.cos(time * speed * 0.72 + seed * 0.01) * 0.01 * rotationAmount;
 
     const targetRotationY =
-      Math.sin(
-        time * speed * 0.58 +
-          seed * 0.015,
-      ) *
-      0.015 *
-      rotationAmount;
+      Math.sin(time * speed * 0.58 + seed * 0.015) * 0.015 * rotationAmount;
 
     group.rotation.x = MathUtils.lerp(
       group.rotation.x,
@@ -197,50 +151,24 @@ function AtmosphereLayer({
      * Atmosphere expands slightly away from the center
      * while the logo becomes readable.
      */
-    const revealExpansion =
-      MathUtils.lerp(
-        1,
-        revealScale,
-        revealAmount,
-      );
+    const revealExpansion = MathUtils.lerp(1, revealScale, revealAmount);
 
     const freedomPulse =
-      1 +
-      freedomAmount *
-        (0.018 +
-          Math.sin(time * 1.2) * 0.008);
+      1 + freedomAmount * (0.018 + Math.sin(time * 1.2) * 0.008);
 
-    const targetScale =
-      revealExpansion * freedomPulse;
+    const targetScale = revealExpansion * freedomPulse;
 
-    const nextScale =
-      MathUtils.lerp(
-        group.scale.x,
-        targetScale,
-        easing,
-      );
+    const nextScale = MathUtils.lerp(group.scale.x, targetScale, easing);
 
     group.scale.setScalar(nextScale);
 
-    const material =
-      materialRef.current;
+    const material = materialRef.current;
 
     if (material) {
       material.opacity =
-        opacity *
-        MathUtils.lerp(
-          1,
-          revealOpacity,
-          revealAmount,
-        );
+        opacity * MathUtils.lerp(1, revealOpacity, revealAmount);
 
-      material.size =
-        size *
-        MathUtils.lerp(
-          1,
-          revealSize,
-          revealAmount,
-        );
+      material.size = size * MathUtils.lerp(1, revealSize, revealAmount);
     }
   });
 
@@ -248,10 +176,7 @@ function AtmosphereLayer({
     <group ref={groupRef}>
       <points frustumCulled={false}>
         <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[positions, 3]}
-          />
+          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
         </bufferGeometry>
 
         <pointsMaterial
@@ -274,9 +199,7 @@ type AtmosphereFieldProps = {
   compact?: boolean;
 };
 
-export function AtmosphereField({
-  compact = false,
-}: AtmosphereFieldProps) {
+export function AtmosphereField({ compact = false }: AtmosphereFieldProps) {
   return (
     <>
       {/* Deep violet atmosphere remains subtly visible */}
@@ -289,8 +212,8 @@ export function AtmosphereField({
         color="#8b5cf6"
         depth={-1.8}
         parallax={0.035}
-        speed={0.045}
-        revealOpacity={0.52}
+        speed={0.14}
+        revealOpacity={0.72}
         revealSize={0.78}
         revealScale={1.025}
         revealDepthShift={0.08}
@@ -306,8 +229,8 @@ export function AtmosphereField({
         color="#f7f5fb"
         depth={-0.45}
         parallax={0.075}
-        speed={0.062}
-        revealOpacity={0.26}
+        speed={0.2}
+        revealOpacity={0.56}
         revealSize={0.66}
         revealScale={1.065}
         revealDepthShift={0.18}
@@ -323,8 +246,8 @@ export function AtmosphereField({
         color="#22d3ee"
         depth={0.75}
         parallax={0.13}
-        speed={0.08}
-        revealOpacity={0.1}
+        speed={0.28}
+        revealOpacity={0.42}
         revealSize={0.48}
         revealScale={1.12}
         revealDepthShift={0.34}

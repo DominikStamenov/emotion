@@ -5,13 +5,6 @@ type ContainerProps = {
   className?: string;
 };
 
-export function Container({
-  children,
-  className = "",
-}: ContainerProps) {
-  return (
-    <div className={`container ${className}`.trim()}>
-      {children}
-    </div>
-  );
+export function Container({ children, className = "" }: ContainerProps) {
+  return <div className={`container ${className}`.trim()}>{children}</div>;
 }

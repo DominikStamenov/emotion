@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+@theme inline {
+  --color-emotion-background: var(--emotion-color-background);
+  --color-emotion-surface: var(--emotion-color-surface);
+  --color-emotion-surface-elevated: var(--emotion-color-surface-elevated);
+  --color-emotion-text: var(--emotion-color-text);
+  --color-emotion-muted: var(--emotion-color-text-muted);
+  --color-emotion-pink: var(--emotion-color-pink);
+  --color-emotion-violet: var(--emotion-color-violet);
+  --color-emotion-cyan: var(--emotion-color-cyan);
+  --font-sans: var(--emotion-font-sans);
+  --font-display: var(--emotion-font-display);
+  --font-mono: var(--emotion-font-mono);
+  --radius-emotion-sm: var(--emotion-radius-small);
+  --radius-emotion-md: var(--emotion-radius-medium);
+  --radius-emotion-lg: var(--emotion-radius-large);
+}

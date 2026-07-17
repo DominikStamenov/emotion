@@ -1,73 +1,78 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 
-const HERO_ROOT_MARGIN = "160px 0px";
+const HERO_VIEWPORT_MARGIN = 160;
 
 export function useHeroVisibility() {
-  const [element, setElement] =
-    useState<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const [inViewport, setInViewport] =
-    useState(true);
+  const [inViewport, setInViewport] = useState(true);
 
-  const [pageVisible, setPageVisible] =
-    useState(true);
-
-  const containerRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      setElement(node);
-    },
-    [],
-  );
+  const [pageVisible, setPageVisible] = useState(true);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      setPageVisible(
-        document.visibilityState !== "hidden",
-      );
+      setPageVisible(document.visibilityState !== "hidden");
     };
 
     handleVisibilityChange();
 
-    document.addEventListener(
-      "visibilitychange",
-      handleVisibilityChange,
-    );
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      document.removeEventListener(
-        "visibilitychange",
-        handleVisibilityChange,
-      );
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
   useEffect(() => {
-    if (!element || !("IntersectionObserver" in window)) {
+    const element = containerRef.current;
+
+    if (!element) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInViewport(entry?.isIntersecting ?? true);
-      },
-      {
-        rootMargin: HERO_ROOT_MARGIN,
-        threshold: 0.01,
-      },
-    );
+    let animationFrame: number | null = null;
 
-    observer.observe(element);
+    const measureViewport = () => {
+      animationFrame = null;
+
+      const bounds = element.getBoundingClientRect();
+
+      setInViewport(
+        bounds.bottom >= -HERO_VIEWPORT_MARGIN &&
+          bounds.top <= window.innerHeight + HERO_VIEWPORT_MARGIN,
+      );
+    };
+
+    const scheduleMeasurement = () => {
+      if (animationFrame !== null) {
+        return;
+      }
+
+      animationFrame = window.requestAnimationFrame(measureViewport);
+    };
+
+    window.addEventListener("scroll", scheduleMeasurement, { passive: true });
+
+    window.addEventListener("resize", scheduleMeasurement);
+
+    const measurementInterval = window.setInterval(scheduleMeasurement, 750);
+
+    measureViewport();
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener("scroll", scheduleMeasurement);
+
+      window.removeEventListener("resize", scheduleMeasurement);
+
+      window.clearInterval(measurementInterval);
+
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame);
+      }
     };
-  }, [element]);
+  }, []);
 
   return {
     containerRef,

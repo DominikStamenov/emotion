@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ImpactLink } from "@repo/motion";
 
 import styles from "./button.module.css";
 
@@ -10,6 +11,7 @@ type ButtonProps = {
   children: ReactNode;
   variant?: ButtonVariant;
   external?: boolean;
+  impact?: boolean;
   className?: string;
 };
 
@@ -18,6 +20,7 @@ export function Button({
   children,
   variant = "primary",
   external = false,
+  impact = false,
   className = "",
 }: ButtonProps) {
   const variantClass = {
@@ -32,14 +35,17 @@ export function Button({
 
   if (external) {
     return (
-      <a
-        href={href}
-        className={classes}
-        target="_blank"
-        rel="noreferrer"
-      >
+      <a href={href} className={classes} target="_blank" rel="noreferrer">
         {children}
       </a>
+    );
+  }
+
+  if (impact) {
+    return (
+      <ImpactLink href={href} className={classes}>
+        {children}
+      </ImpactLink>
     );
   }
 

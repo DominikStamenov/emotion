@@ -1,0 +1,70 @@
+name: Deploy eMotion
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: production-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: web
+            project_secret: VERCEL_WEB_PROJECT_ID
+          - app: admin
+            project_secret: VERCEL_ADMIN_PROJECT_ID
+          - app: portal
+            project_secret: VERCEL_PORTAL_PROJECT_ID
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets[matrix.project_secret] }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.0
+          run_install: false
+
+      - name: Install Node.js
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
+        run: pnpm install --frozen-lockfile
+
+      - name: Pull Vercel environment
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
+        run: pnpm dlx vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+        working-directory: apps/${{ matrix.app }}
+
+      - name: Build Vercel output
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
+        run: pnpm dlx vercel@latest build --prod --token="$VERCEL_TOKEN"
+        working-directory: apps/${{ matrix.app }}
+
+      - name: Deploy prebuilt output
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
+        run: pnpm dlx vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        working-directory: apps/${{ matrix.app }}
+
+      - name: Deployment not configured
+        if: env.VERCEL_TOKEN == '' || env.VERCEL_PROJECT_ID == ''
+        run: echo "Vercel secrets for ${{ matrix.app }} are not configured; deployment was skipped."

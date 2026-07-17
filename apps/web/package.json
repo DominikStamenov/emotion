@@ -13,10 +13,18 @@
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
+    "@repo/ai": "workspace:^",
+    "@repo/database": "workspace:^",
+    "@repo/domain": "workspace:^",
+    "@repo/email": "workspace:^",
+    "@repo/motion": "workspace:^",
     "@repo/ui": "workspace:*",
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.7",
     "next": "16.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "resend": "^6.17.2",
     "three": "^0.185.1"
   },
   "devDependencies": {

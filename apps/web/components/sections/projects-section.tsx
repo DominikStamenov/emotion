@@ -1,47 +1,50 @@
 import { ProjectCard } from "../project-card";
-import { projects } from "../../data/projects";
+import { Container } from "../container";
+import { getHomeProjects } from "../../lib/content";
+import styles from "./sections.module.css";
 
-export function ProjectsSection() {
+export async function ProjectsSection() {
+  const projects = await getHomeProjects();
+  const usingSeed = projects.some((project) => project.seed);
   return (
-    <section className="py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-3xl">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-white/50">
-              SELECTED WORK
+    <section id="work" className={`${styles.section} ${styles.sectionBorder}`}>
+      <Container>
+        <div className={styles.headerRow}>
+          <header className={styles.header}>
+            <p className={styles.eyebrow}>
+              {usingSeed
+                ? "Concept portfolio · temporary content"
+                : "Selected work"}
             </p>
-
-            <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl">
+            <h2 className={styles.title}>
               Projects shaped by strategy, design and technology.
             </h2>
-
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/60">
+            <p className={styles.description}>
               A selection of brands, digital products and platforms created to
               communicate clearly, perform better and leave a lasting
               impression.
             </p>
-          </div>
+          </header>
 
-          <a
-            href="/work"
-            className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-white transition-opacity hover:opacity-60"
-          >
-            View all projects
+          <Link href="/contact" className={styles.sectionLink}>
+            Discuss your project
             <span aria-hidden="true">↗</span>
-          </a>
+          </Link>
         </div>
 
-        <div className="mt-16">
+        <div className={styles.projectList}>
           {projects.map((project) => (
             <ProjectCard
-              key={project.title}
+              key={project.id}
               title={project.title}
               category={project.category}
               year={project.year}
+              seed={project.seed}
             />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 }
+import Link from "next/link";

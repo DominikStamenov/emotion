@@ -5,10 +5,10 @@ import { Logo } from "./logo";
 import styles from "./navbar.module.css";
 
 const navigation = [
-  { label: "Services", href: "#services" },
-  { label: "Work", href: "#work" },
-  { label: "Studio", href: "#studio" },
-  { label: "Contact", href: "#contact" },
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "Studio", href: "/studio" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Navbar() {
@@ -17,10 +17,7 @@ export function Navbar() {
       <Container className={styles.siteHeaderContainer}>
         <Logo />
 
-        <nav
-          className={styles.siteNavigation}
-          aria-label="Primary navigation"
-        >
+        <nav className={styles.siteNavigation} aria-label="Primary navigation">
           {navigation.map((item) => (
             <Link key={item.href} href={item.href}>
               {item.label}
@@ -28,7 +25,7 @@ export function Navbar() {
           ))}
         </nav>
 
-        <Button href="#contact" className={styles.headerAction}>
+        <Button href="/contact" className={styles.headerAction}>
           Start a project
           <span aria-hidden="true">↗</span>
         </Button>

@@ -11,7 +11,13 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@repo/ai": "workspace:^",
+    "@repo/database": "workspace:^",
+    "@repo/domain": "workspace:^",
+    "@repo/motion": "workspace:^",
     "@repo/ui": "workspace:*",
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.7",
     "next": "16.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"

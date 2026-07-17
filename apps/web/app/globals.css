@@ -1,3 +1,5 @@
+@import "@repo/ui/tokens.css";
+
 :root {
   --color-background: #08080a;
   --color-surface: #111116;
@@ -18,34 +20,26 @@
     110deg,
     var(--color-pink),
     var(--color-violet) 52%,
-    var(--color-cyan) 
-     
-    --color-brand-pink-rgb: 244, 63, 141;
-    --color-brand-violet-rgb: 139, 92, 246;
-    --color-brand-cyan-rgb: 34, 211, 238;
+    var(--color-cyan)
   );
 
+  --color-brand-pink-rgb: 244, 63, 141;
+  --color-brand-violet-rgb: 139, 92, 246;
+  --color-brand-cyan-rgb: 34, 211, 238;
+
   --font-sans:
-  var(--font-geist-sans),
-  ui-sans-serif,
-  -apple-system,
-  BlinkMacSystemFont,
-  "Segoe UI",
-  sans-serif;
+    var(--font-geist-sans), ui-sans-serif, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
 
---font-mono:
-  var(--font-geist-mono),
-  "SFMono-Regular",
-  Consolas,
-  monospace;
+  --font-mono: var(--font-geist-mono), "SFMono-Regular", Consolas, monospace;
 
---font-display: var(--font-sans);
+  --font-display: var(--font-sans);
 
---font-size-body: 1rem;
---line-height-body: 1.7;
+  --font-size-body: 1rem;
+  --line-height-body: 1.7;
 
---letter-spacing-tight: -0.04em;
---letter-spacing-display: -0.065em;
+  --letter-spacing-tight: -0.04em;
+  --letter-spacing-display: -0.065em;
 
   --radius-small: 12px;
   --radius-medium: 20px;
@@ -72,38 +66,33 @@ html {
   color-scheme: dark;
 }
 
-body { 
-   
+body {
   position: relative;
   isolation: isolate;
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 
   background:
-  radial-gradient(
-    circle at 12% 8%,
-    rgba(var(--color-brand-pink-rgb), 0.1),
-    transparent 30%
-  ),
-  radial-gradient(
-    circle at 78% 16%,
-    rgba(var(--color-brand-violet-rgb), 0.16),
-    transparent 34%
-  ),
-  radial-gradient(
-    circle at 88% 72%,
-    rgba(var(--color-brand-cyan-rgb), 0.08),
-    transparent 32%
-  ),
-  linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.015),
-    transparent 24%
-  ),
-  var(--color-background); 
-  background-attachment: fixed; 
+    radial-gradient(
+      circle at 12% 8%,
+      rgba(var(--color-brand-pink-rgb), 0.1),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 78% 16%,
+      rgba(var(--color-brand-violet-rgb), 0.16),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 88% 72%,
+      rgba(var(--color-brand-cyan-rgb), 0.08),
+      transparent 32%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 24%),
+    var(--color-background);
+  background-attachment: fixed;
 
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -111,8 +100,8 @@ body {
   line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}  
- 
+}
+
 body::before {
   position: fixed;
   z-index: -1;
@@ -127,13 +116,9 @@ body::before {
       transparent 82%,
       rgba(0, 0, 0, 0.2)
     ),
-    linear-gradient(
-      180deg,
-      transparent 58%,
-      rgba(0, 0, 0, 0.22)
-    );
-} 
- 
+    linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.22));
+}
+
 body::after {
   position: fixed;
   z-index: -1;
@@ -146,7 +131,7 @@ body::after {
   background-size: 180px 180px;
   mix-blend-mode: soft-light;
 }
- 
+
 h1,
 h2,
 h3,
@@ -170,6 +155,11 @@ p {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 4px;
 }
 
 button,
@@ -212,72 +202,8 @@ svg {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-} 
+}
 .container {
-  width: min(
-    calc(100% - (var(--page-padding) * 2)),
-    var(--container-width)
-  );
+  width: min(calc(100% - (var(--page-padding) * 2)), var(--container-width));
   margin-inline: auto;
-} 
- 
-@media (max-width: 800px) {
-  .siteNavigation {
-    display: none;
-  }
 }
-
-@media (max-width: 560px) {
-  .siteHeader {
-    padding-top: 14px;
-  }
-
-  .siteHeaderContainer {
-    min-height: 64px;
-    padding: 0 12px 0 16px;
-  }
-
-  .headerAction {
-    min-height: 40px;
-    padding: 0 14px;
-    font-size: 11px;
-  }
-} 
- 
-.logoCloud {
-  overflow: hidden;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.015);
-}
-
-.logoCloudTrack {
-  display: flex;
-  width: max-content;
-  align-items: center;
-  animation: logoCloudMove 24s linear infinite;
-}
-
-.logoCloudTrack span {
-  padding: 28px 48px;
-  color: rgba(255, 255, 255, 0.22);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-@keyframes logoCloudMove {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (max-width: 700px) {
-  .logoCloudTrack span {
-    padding: 22px 32px;
-    font-size: 12px;
-  }
-} 
- 

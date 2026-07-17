@@ -5,16 +5,30 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,css,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,css,json,md,yml,yaml}\"",
+    "check-types": "turbo run check-types",
+    "test": "vitest run",
+    "quality": "pnpm format:check && pnpm lint && pnpm check-types && pnpm test && pnpm storybook:build && pnpm build",
+    "prepare": "husky",
+    "emotion": "node packages/cli/src/index.mjs",
+    "storybook": "pnpm --filter @repo/ui storybook",
+    "storybook:build": "pnpm --filter @repo/ui storybook:build"
   },
   "devDependencies": {
+    "@repo/motion": "workspace:^",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8",
     "prettier": "^3.7.4",
     "turbo": "^2.10.5",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "3.2.4"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,css,json,md,yml,yaml}": "prettier --write"
   }
 }
