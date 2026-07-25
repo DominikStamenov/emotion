@@ -44,6 +44,7 @@ Requirements: Node.js 20 or newer and pnpm 9.
 
 ```bash
 pnpm install
+pnpm exec playwright install chromium
 cp .env.example apps/web/.env.local
 cp .env.example apps/admin/.env.local
 cp .env.example apps/portal/.env.local
@@ -65,8 +66,9 @@ pnpm quality
 ```
 
 This gate covers formatting, lint, types, unit tests, the Storybook production
-bundle and production builds for all three applications. Husky runs focused
-checks before commits and GitHub Actions repeats the independent full gate.
+bundle, production builds and Playwright browser QA for all three applications
+at desktop and mobile widths. Husky runs focused checks before commits and
+GitHub Actions repeats the independent full gate.
 
 The applications intentionally show safe setup states when credentials are
 absent. Live authentication, writes, email and AI require a dedicated Supabase
@@ -88,11 +90,15 @@ project and the server-only values documented in `.env.example`.
 - grounded public AI concierge with citations, moderation, rate limits and
   human handoff;
 - private permission-aware AI copilot that only prepares reviewed drafts;
+- same-origin and request-size enforcement plus session, address and staff AI
+  cost limits;
 - PostgreSQL data model, RLS, storage policies, audit infrastructure and
   privacy-aware first-party events;
 - shared eMotion UI, eMotion Motion and Storybook libraries;
 - guarded eMotion CLI app/component generation;
-- security headers, validation, Husky, CI/CD and Vercel configuration.
+- security headers, validation, Husky, CI/CD and Vercel configuration;
+- production browser smoke coverage for Studio, CMS/OS and Client Portal at
+  desktop and mobile breakpoints.
 
 The code is launch-ready as a connected platform foundation, but it is not live
 until migrations are executed, secrets and domains are configured, legal text

@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install browser QA runtime
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Formatting
         run: pnpm format:check
 
@@ -52,3 +55,6 @@ jobs:
 
       - name: Production builds
         run: pnpm build
+
+      - name: Browser QA
+        run: pnpm test:e2e

@@ -83,13 +83,18 @@ gate.
 1. Create a dedicated OpenAI project and server-side API key.
 2. Set a monthly budget, usage alert and an approved model through
    `OPENAI_CHAT_MODEL`.
-3. Publish real CMS content, then use **Obnovi javno znanje** in AI centar.
-4. Ask the public concierge about a known service and verify its citations.
-5. Ask about an unknown client and verify it refuses to invent a claim.
-6. Trigger human handoff and verify the conversation links to the CRM inquiry.
-7. Test the internal copilot with editor and sales roles; confirm each sees
+3. Keep the default `gpt-5.6-luna` cost/latency tier unless representative
+   concierge and copilot evaluations justify a different GPT-5.6 family role.
+4. Publish real CMS content, then use **Obnovi javno znanje** in AI centar.
+5. Ask the public concierge about a known service and verify its citations.
+6. Ask about an unknown client and verify it refuses to invent a claim.
+7. Trigger human handoff and verify the conversation links to the CRM inquiry.
+8. Test the internal copilot with editor and sales roles; confirm each sees
    only the context allowed by its role.
-8. Confirm that all copilot output remains an unsent draft requiring review.
+9. Confirm that all copilot output remains an unsent draft requiring review.
+10. Exercise the public session/address limits and the internal staff limit;
+    confirm throttled requests return `429` with `Retry-After` and that raw IP
+    addresses are never persisted.
 
 ## 6. Content and legal release
 
@@ -124,6 +129,10 @@ gate.
    ```bash
    pnpm quality
    ```
+
+   The local machine must have the Chromium runtime installed with
+   `pnpm exec playwright install chromium`. CI installs Chromium and its Linux
+   dependencies automatically.
 
 9. Test Chrome, Safari and Firefox on desktop plus iOS/Android widths. Test
    keyboard navigation, reduced motion, contrast and WebGL failure fallback.

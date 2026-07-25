@@ -9,13 +9,15 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,css,json,md,yml,yaml}\"",
     "check-types": "turbo run check-types",
     "test": "vitest run",
-    "quality": "pnpm format:check && pnpm lint && pnpm check-types && pnpm test && pnpm storybook:build && pnpm build",
+    "test:e2e": "playwright test",
+    "quality": "pnpm format:check && pnpm lint && pnpm check-types && pnpm test && pnpm storybook:build && pnpm build && pnpm test:e2e",
     "prepare": "husky",
     "emotion": "node packages/cli/src/index.mjs",
     "storybook": "pnpm --filter @repo/ui storybook",
     "storybook:build": "pnpm --filter @repo/ui storybook:build"
   },
   "devDependencies": {
+    "@playwright/test": "1.61.1",
     "@repo/motion": "workspace:^",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",

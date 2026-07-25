@@ -277,7 +277,7 @@ The project is complete only when:
 - `emotion.com` metadata, email, legal content and monitoring are live;
 - temporary portfolio and testimonial content cannot be published as verified.
 
-## Implementation status — 17 July 2026
+## Implementation status — 25 July 2026
 
 Implemented in the repository:
 
@@ -298,6 +298,8 @@ Implemented in the repository:
   telemetry and human handoff;
 - private permission-aware AI copilot with approved-context retrieval and
   mandatory human review;
+- public and internal AI request hardening with same-origin checks, bounded
+  payloads and session/address/staff rate limits;
 - database migrations, RLS, storage, audit, privacy event and automation job
   foundations;
 - reusable eMotion UI design tokens, accessible components and production
@@ -309,6 +311,9 @@ Implemented in the repository:
   Vercel project configurations;
 - security headers plus format, lint, type, unit, Storybook, production-build
   and responsive browser checks;
+- automated production smoke coverage for all three applications at desktop
+  and mobile widths, including critical routes, overflow and private-surface
+  headers;
 - investor-ready Studio and Portal demo states when external services are not
   connected.
 

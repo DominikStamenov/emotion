@@ -4,7 +4,12 @@ import {
   type PublicKnowledgeSource,
 } from "@repo/ai";
 import type { Json } from "@repo/database";
-import { aiChatRequestSchema } from "@repo/domain";
+import {
+  aiChatRequestSchema,
+  getForwardedClientAddress,
+  hasInvalidRequestOrigin,
+  hasOversizedRequestBody,
+} from "@repo/domain";
 import { createHmac, randomBytes } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -38,6 +43,20 @@ function jsonToText(value: Json) {
 }
 
 export async function POST(request: NextRequest) {
+  if (hasOversizedRequestBody(request, 20_000)) {
+    return NextResponse.json(
+      { error: "Request is too large." },
+      { status: 413 },
+    );
+  }
+
+  if (hasInvalidRequestOrigin(request)) {
+    return NextResponse.json(
+      { error: "Invalid request origin." },
+      { status: 403 },
+    );
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
   const hashSecret = process.env.IP_HASH_SECRET;
 
@@ -72,21 +91,37 @@ export async function POST(request: NextRequest) {
     request.cookies.get(SESSION_COOKIE)?.value ||
     randomBytes(24).toString("hex");
   const sessionHash = hashValue(sessionValue, hashSecret);
+  const sessionRateLimitKey = hashValue("session:" + sessionValue, hashSecret);
+  const addressRateLimitKey = hashValue(
+    "address:" + getForwardedClientAddress(request),
+    hashSecret,
+  );
   const supabase = createAdminClient();
-  const { data: allowed, error: rateLimitError } = await supabase.rpc(
-    "consume_rate_limit",
-    {
+  const [sessionLimit, addressLimit] = await Promise.all([
+    supabase.rpc("consume_rate_limit", {
       p_action: "public_ai_chat",
-      p_key_hash: sessionHash,
+      p_key_hash: sessionRateLimitKey,
       p_max_requests: 30,
       p_window_seconds: 3600,
-    },
-  );
+    }),
+    supabase.rpc("consume_rate_limit", {
+      p_action: "public_ai_chat",
+      p_key_hash: addressRateLimitKey,
+      p_max_requests: 120,
+      p_window_seconds: 3600,
+    }),
+  ]);
+
+  const rateLimitError = sessionLimit.error || addressLimit.error;
+  const allowed = sessionLimit.data && addressLimit.data;
 
   if (rateLimitError || !allowed) {
     return NextResponse.json(
       { error: "The concierge needs a short pause. Please try again later." },
-      { status: rateLimitError ? 503 : 429 },
+      {
+        headers: rateLimitError ? undefined : { "Retry-After": "3600" },
+        status: rateLimitError ? 503 : 429,
+      },
     );
   }
 

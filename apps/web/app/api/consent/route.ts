@@ -1,4 +1,8 @@
-import { consentPreferenceSchema } from "@repo/domain";
+import {
+  consentPreferenceSchema,
+  hasInvalidRequestOrigin,
+  hasOversizedRequestBody,
+} from "@repo/domain";
 import { createHmac, randomBytes } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -12,6 +16,20 @@ function hashValue(value: string, secret: string) {
 }
 
 export async function POST(request: NextRequest) {
+  if (hasOversizedRequestBody(request, 5_000)) {
+    return NextResponse.json(
+      { error: "Request is too large." },
+      { status: 413 },
+    );
+  }
+
+  if (hasInvalidRequestOrigin(request)) {
+    return NextResponse.json(
+      { error: "Invalid request origin." },
+      { status: 403 },
+    );
+  }
+
   const secret = process.env.IP_HASH_SECRET;
 
   if (!secret || secret.length < 32) {

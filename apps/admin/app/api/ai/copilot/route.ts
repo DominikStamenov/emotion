@@ -1,13 +1,18 @@
 import { EmotionAiProvider, type PublicKnowledgeSource } from "@repo/ai";
 import type { Json } from "@repo/database";
 import {
+  getForwardedClientAddress,
   hasPermission,
+  hasInvalidRequestOrigin,
+  hasOversizedRequestBody,
   internalCopilotRequestSchema,
   type AppRole,
 } from "@repo/domain";
+import { createHmac } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
 import { getPublicSupabaseConfig } from "../../../../lib/supabase/config";
+import { createAdminClient } from "../../../../lib/supabase/admin";
 import { createClient } from "../../../../lib/supabase/server";
 
 export const runtime = "nodejs";
@@ -16,9 +21,33 @@ function vectorLiteral(vector: number[]) {
   return "[" + vector.join(",") + "]";
 }
 
+function hashValue(value: string, secret: string) {
+  return createHmac("sha256", secret).update(value).digest("hex");
+}
+
 export async function POST(request: NextRequest) {
+  if (hasOversizedRequestBody(request, 25_000)) {
+    return NextResponse.json(
+      { error: "Request is too large." },
+      { status: 413 },
+    );
+  }
+
+  if (hasInvalidRequestOrigin(request)) {
+    return NextResponse.json(
+      { error: "Invalid request origin." },
+      { status: 403 },
+    );
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey || !getPublicSupabaseConfig()) {
+  const hashSecret = process.env.IP_HASH_SECRET;
+  if (
+    !apiKey ||
+    !hashSecret ||
+    hashSecret.length < 32 ||
+    !getPublicSupabaseConfig()
+  ) {
     return NextResponse.json(
       { error: "Internal copilot is not configured yet." },
       { status: 503 },
@@ -62,6 +91,30 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: "Copilot access denied." },
       { status: 403 },
+    );
+  }
+
+  const rateLimiter = createAdminClient();
+  const { data: allowed, error: rateLimitError } = await rateLimiter.rpc(
+    "consume_rate_limit",
+    {
+      p_action: "internal_ai_copilot",
+      p_key_hash: hashValue(
+        profile.id + ":" + getForwardedClientAddress(request),
+        hashSecret,
+      ),
+      p_max_requests: 60,
+      p_window_seconds: 3600,
+    },
+  );
+
+  if (rateLimitError || !allowed) {
+    return NextResponse.json(
+      { error: "The copilot needs a short pause. Please try again later." },
+      {
+        headers: rateLimitError ? undefined : { "Retry-After": "3600" },
+        status: rateLimitError ? 503 : 429,
+      },
     );
   }
 

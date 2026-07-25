@@ -36,5 +36,7 @@ pnpm quality
 ```
 
 It verifies formatting, lint, types, unit tests, Storybook and all production
-application builds. Husky runs `lint-staged` before local commits; GitHub runs
-the full gate independently, so bypassing a local hook cannot bypass CI.
+application builds, then starts those builds on isolated ports and runs the
+desktop/mobile Playwright smoke suite. Husky runs `lint-staged` before local
+commits; GitHub installs the matching Chromium runtime and runs the full gate
+independently, so bypassing a local hook cannot bypass CI.

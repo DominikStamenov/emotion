@@ -1,4 +1,8 @@
-import { webEventSchema } from "@repo/domain";
+import {
+  hasInvalidRequestOrigin,
+  hasOversizedRequestBody,
+  webEventSchema,
+} from "@repo/domain";
 import { createHmac } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,6 +13,20 @@ function hashValue(value: string, secret: string) {
 }
 
 export async function POST(request: NextRequest) {
+  if (hasOversizedRequestBody(request, 10_000)) {
+    return NextResponse.json(
+      { error: "Request is too large." },
+      { status: 413 },
+    );
+  }
+
+  if (hasInvalidRequestOrigin(request)) {
+    return NextResponse.json(
+      { error: "Invalid request origin." },
+      { status: 403 },
+    );
+  }
+
   if (request.cookies.get("emotion_consent")?.value !== "analytics") {
     return NextResponse.json({ ok: true }, { status: 202 });
   }

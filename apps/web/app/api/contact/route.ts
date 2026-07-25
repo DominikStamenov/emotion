@@ -1,5 +1,11 @@
 import type { Json } from "@repo/database";
-import { contactInquirySchema, type ContactInquiry } from "@repo/domain";
+import {
+  contactInquirySchema,
+  getForwardedClientAddress,
+  hasInvalidRequestOrigin,
+  hasOversizedRequestBody,
+  type ContactInquiry,
+} from "@repo/domain";
 import {
   renderContactConfirmation,
   renderContactNotification,
@@ -16,14 +22,6 @@ const AI_SESSION_COOKIE = "emotion_ai_session";
 
 function hashValue(value: string, secret: string) {
   return createHmac("sha256", secret).update(value).digest("hex");
-}
-
-function getClientAddress(request: NextRequest) {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown"
-  );
 }
 
 function cleanAttribution(attribution: ContactInquiry["attribution"]): Json {
@@ -87,17 +85,14 @@ async function sendTrackedEmail({
 }
 
 export async function POST(request: NextRequest) {
-  const contentLength = Number(request.headers.get("content-length") || 0);
-  const origin = request.headers.get("origin");
-
-  if (contentLength > 50_000) {
+  if (hasOversizedRequestBody(request, 50_000)) {
     return NextResponse.json(
       { error: "Request is too large." },
       { status: 413 },
     );
   }
 
-  if (origin && origin !== request.nextUrl.origin) {
+  if (hasInvalidRequestOrigin(request)) {
     return NextResponse.json(
       { error: "Invalid request origin." },
       { status: 403 },
@@ -138,7 +133,7 @@ export async function POST(request: NextRequest) {
   }
 
   const userAgent = request.headers.get("user-agent")?.slice(0, 500) || "";
-  const ipHash = hashValue(getClientAddress(request), hashSecret);
+  const ipHash = hashValue(getForwardedClientAddress(request), hashSecret);
   const fingerprint = hashValue(ipHash + userAgent.slice(0, 160), hashSecret);
   const requestId = randomUUID();
 
