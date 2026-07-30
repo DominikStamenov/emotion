@@ -2,7 +2,13 @@
 
 import { Button, Field, Input } from "@repo/ui";
 import Image from "next/image";
-import { type FormEvent, useCallback, useEffect, useState } from "react";
+import {
+  type FormEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { createClient } from "../../lib/supabase/client";
 import styles from "./security-settings.module.css";
@@ -20,6 +26,7 @@ function qrSource(value: string) {
 }
 
 export function SecuritySettings({ email }: { email: string }) {
+  const enrollmentRef = useRef<HTMLDivElement>(null);
   const [mfaEnabled, setMfaEnabled] = useState(false);
   const [factorId, setFactorId] = useState<string | null>(null);
   const [enrollment, setEnrollment] = useState<Enrollment | null>(null);
@@ -44,6 +51,21 @@ export function SecuritySettings({ email }: { email: string }) {
   useEffect(() => {
     void refreshMfa();
   }, [refreshMfa]);
+
+  useEffect(() => {
+    if (!enrollment) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      enrollmentRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [enrollment]);
 
   async function changePassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -106,24 +128,54 @@ export function SecuritySettings({ email }: { email: string }) {
     setError(null);
     setMessage(null);
 
-    const supabase = createClient();
-    const { data, error: enrollmentError } = await supabase.auth.mfa.enroll({
-      factorType: "totp",
-      friendlyName: "eMotion Admin",
-    });
+    try {
+      const supabase = createClient();
+      const { data: factors, error: factorsError } =
+        await supabase.auth.mfa.listFactors();
 
-    if (enrollmentError || !data.totp) {
-      setError("MFA postavljanje nije moguće pokrenuti.");
+      if (factorsError) {
+        setError("MFA status trenutno nije dostupan. Pokušaj ponovno.");
+        return;
+      }
+
+      const abandonedFactors = factors.all.filter(
+        (factor) =>
+          factor.factor_type === "totp" && factor.status === "unverified",
+      );
+      const cleanupResults = await Promise.all(
+        abandonedFactors.map((factor) =>
+          supabase.auth.mfa.unenroll({ factorId: factor.id }),
+        ),
+      );
+
+      if (cleanupResults.some((result) => result.error)) {
+        setError(
+          "Prethodni MFA pokušaj nije moguće očistiti. Osvježi stranicu.",
+        );
+        return;
+      }
+
+      const { data, error: enrollmentError } = await supabase.auth.mfa.enroll({
+        factorType: "totp",
+        friendlyName: "eMotion Admin",
+      });
+
+      if (enrollmentError || !data.totp) {
+        setError("MFA postavljanje nije moguće pokrenuti.");
+        return;
+      }
+
+      setEnrollment({
+        factorId: data.id,
+        qrCode: data.totp.qr_code,
+        secret: data.totp.secret,
+      });
+      setMessage("QR kod je spreman. Skeniraj ga i unesi kod za potvrdu.");
+    } catch {
+      setError("Veza sa servisom za prijavu je prekinuta. Pokušaj ponovno.");
+    } finally {
       setBusy(false);
-      return;
     }
-
-    setEnrollment({
-      factorId: data.id,
-      qrCode: data.totp.qr_code,
-      secret: data.totp.secret,
-    });
-    setBusy(false);
   }
 
   async function verifyEnrollment(event: FormEvent<HTMLFormElement>) {
@@ -274,7 +326,7 @@ export function SecuritySettings({ email }: { email: string }) {
           </div>
 
           {enrollment ? (
-            <div className={styles.enrollment}>
+            <div ref={enrollmentRef} className={styles.enrollment}>
               <Image
                 className={styles.qr}
                 src={qrSource(enrollment.qrCode)}
@@ -288,7 +340,11 @@ export function SecuritySettings({ email }: { email: string }) {
               </p>
               <code className={styles.secret}>{enrollment.secret}</code>
               <form className={styles.form} onSubmit={verifyEnrollment}>
-                <Field htmlFor="verification-code" label="Kod za potvrdu">
+                <Field
+                  htmlFor="verification-code"
+                  label="Kod za potvrdu"
+                  hint="Točno 6 znamenki iz authenticator aplikacije."
+                >
                   <Input
                     id="verification-code"
                     name="verificationCode"
@@ -298,6 +354,11 @@ export function SecuritySettings({ email }: { email: string }) {
                     pattern="[0-9]{6}"
                     minLength={6}
                     maxLength={6}
+                    onInput={(event) => {
+                      event.currentTarget.value = event.currentTarget.value
+                        .replace(/\D/g, "")
+                        .slice(0, 6);
+                    }}
                     required
                   />
                 </Field>
@@ -345,7 +406,11 @@ export function SecuritySettings({ email }: { email: string }) {
         </article>
       </div>
 
-      {message ? <p className={styles.message}>{message}</p> : null}
+      {message ? (
+        <p className={styles.message} role="status">
+          {message}
+        </p>
+      ) : null}
       {error ? (
         <p className={styles.error} role="alert">
           {error}
