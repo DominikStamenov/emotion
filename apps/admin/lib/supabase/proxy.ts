@@ -32,16 +32,36 @@ export async function updateSession(request: NextRequest) {
   );
 
   const { data } = await supabase.auth.getClaims();
-  const isLoginRoute = request.nextUrl.pathname.startsWith("/login");
+  const isLoginRoute = request.nextUrl.pathname === "/login";
+  const isMfaRoute = request.nextUrl.pathname.startsWith("/login/mfa");
+  const isAuthRoute = isLoginRoute || isMfaRoute;
 
-  if (!data?.claims && !isLoginRoute) {
+  if (!data?.claims && !isAuthRoute) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     loginUrl.searchParams.set("next", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  if (data?.claims && isLoginRoute) {
+  if (!data?.claims) {
+    return response;
+  }
+
+  const { data: assurance, error: assuranceError } =
+    await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  const requiresMfa =
+    Boolean(assuranceError) ||
+    (assurance?.currentLevel === "aal1" && assurance.nextLevel === "aal2");
+
+  if (requiresMfa && !isMfaRoute) {
+    const mfaUrl = request.nextUrl.clone();
+    mfaUrl.pathname = "/login/mfa";
+    mfaUrl.search = "";
+    mfaUrl.searchParams.set("next", request.nextUrl.pathname);
+    return NextResponse.redirect(mfaUrl);
+  }
+
+  if (!requiresMfa && isAuthRoute) {
     const dashboardUrl = request.nextUrl.clone();
     dashboardUrl.pathname = "/";
     dashboardUrl.search = "";

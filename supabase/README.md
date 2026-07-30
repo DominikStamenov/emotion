@@ -12,6 +12,7 @@ Current order:
 5. `0005_agency_operations.sql`;
 6. `0006_client_portal.sql`.
 7. `0007_runtime_identity.sql`.
+8. `0008_mfa_enforcement.sql`.
 
 Use separate staging and production projects. Do not paste a secret key into a
 browser environment variable or commit a local `.env` file.
@@ -29,6 +30,10 @@ Confirm that the profile is active before opening the administration app. New
 users default to client accounts after the Portal migration. Internal users
 remain inactive viewers until an owner or administrator explicitly grants staff
 access. Never reuse an internal staff identity for Client Portal access.
+
+After a staff user verifies a TOTP factor, `current_app_role()` requires an AAL2
+session before role-based data access is granted. Users without an enrolled
+factor can reach the Admin security settings to complete first-time enrollment.
 
 Public forms and AI chat must write through validated server routes using a
 server-only secret key. The publishable key is used for public reads and

@@ -51,7 +51,7 @@ manager, not through Git.
 ## 3. Database, Auth and Storage
 
 1. Create staging and production Supabase projects in the intended EU region.
-2. Apply the six SQL migrations in filename order.
+2. Apply all SQL migrations in filename order.
 3. Regenerate TypeScript database types from staging and compare them with the
    checked-in contract.
 4. Create the first Supabase Auth user with the owner email.
@@ -62,10 +62,9 @@ manager, not through Git.
    anonymous user cannot read private objects.
 8. Test editor, sales and viewer accounts against the permission matrix.
 
-The migrations are written and statically reviewed, but have not been executed
-in this workspace because no Supabase project or local PostgreSQL runtime is
-connected. A successful staging migration is therefore a mandatory launch
-gate.
+All eight tracked migrations are applied to the connected staging and
+production projects. Migration `0008_mfa_enforcement.sql` makes role-based
+database access require AAL2 after a staff user verifies a TOTP factor.
 
 ## 4. Email
 
@@ -173,8 +172,10 @@ the affected records.
 
 ## Current launch blockers
 
-- staging and production Supabase projects exist and migrations are tracked;
-- no production secrets or verified sending domain are available;
+- staging and production Supabase projects exist and all tracked migrations are
+  applied;
+- production secrets are configured; a verified sending domain is still
+  unavailable;
 - legal entity data and approved legal documents are missing;
 - real projects and testimonials have not replaced temporary seed content;
 - deployment, backups, monitoring and restore drills require external

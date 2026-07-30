@@ -1,6 +1,7 @@
 import { AdminShell } from "../../components/admin-shell";
 import { requireAdminProfile } from "../../lib/auth";
 import { createClient } from "../../lib/supabase/server";
+import { SecuritySettings } from "./security-settings";
 import styles from "../workspace.module.css";
 
 export default async function SettingsPage() {
@@ -11,6 +12,7 @@ export default async function SettingsPage() {
     { data: users },
     { data: redirects },
     { data: legal },
+    { data: authData },
   ] = await Promise.all([
     supabase
       .from("site_settings")
@@ -29,6 +31,7 @@ export default async function SettingsPage() {
       .from("legal_documents")
       .select("id, document_type, locale, version, status")
       .order("document_type"),
+    supabase.auth.getUser(),
   ]);
 
   return (
@@ -62,6 +65,8 @@ export default async function SettingsPage() {
           <strong>{legal?.length || 0}</strong>
         </article>
       </section>
+
+      <SecuritySettings email={authData.user?.email || ""} />
 
       <section className={styles.grid}>
         <article className={styles.panel}>
