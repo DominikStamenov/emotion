@@ -19,13 +19,22 @@ export const runtime = "nodejs";
 
 const SESSION_COOKIE = "emotion_ai_session";
 
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+const configuredContactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
 const coreKnowledge: PublicKnowledgeSource = {
   content: [
     "eMotion is a digital agency combining strategy, branding, digital design, development, motion and applied AI.",
-    "The public contact address is info@emotion.com and the official domain is emotion.com.",
+    configuredSiteUrl
+      ? "The current public website is " + configuredSiteUrl + "."
+      : "",
+    configuredContactEmail
+      ? "The public contact address is " + configuredContactEmail + "."
+      : "",
     "Project examples and testimonials currently shown on the website are temporary seed content and must not be presented as verified client claims.",
     "A project conversation can be started through the structured brief at /contact.",
-  ].join(" "),
+  ]
+    .filter(Boolean)
+    .join(" "),
   id: "emotion-core",
   title: "eMotion approved public facts",
 };
@@ -291,7 +300,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "The concierge is temporarily unavailable. Try info@emotion.com.",
+          "The concierge is temporarily unavailable. Please use the project contact form.",
       },
       { status: 503 },
     );

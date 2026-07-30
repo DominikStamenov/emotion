@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+import { siteUrl } from "../lib/site";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
@@ -7,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/api/", "/admin/"],
       userAgent: "*",
     },
-    sitemap: "https://emotion.com/sitemap.xml",
+    sitemap: siteUrl + "/sitemap.xml",
   };
 }

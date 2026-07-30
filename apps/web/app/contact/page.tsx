@@ -4,6 +4,7 @@ import { ContactForm } from "../../components/contact-form";
 import { Container } from "../../components/container";
 import { Footer } from "../../components/footer";
 import { Navbar } from "../../components/navbar";
+import { publicContactEmail } from "../../lib/site";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -29,7 +30,11 @@ export default function ContactPage() {
                 brief enters our private CRM, is reviewed by a person and stays
                 connected to the project journey.
               </p>
-              <a href="mailto:info@emotion.com">info@emotion.com ↗</a>
+              {publicContactEmail ? (
+                <a href={"mailto:" + publicContactEmail}>
+                  {publicContactEmail} ↗
+                </a>
+              ) : null}
             </div>
           </header>
 

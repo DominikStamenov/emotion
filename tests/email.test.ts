@@ -28,6 +28,6 @@ describe("transactional contact email", () => {
 
     expect(email.html).toContain("Ada &lt;Admin&gt;");
     expect(email.subject).toContain("project brief");
-    expect(email.text).toContain("info@emotion.com");
+    expect(email.text).toContain("e-mail address you provided");
   });
 });

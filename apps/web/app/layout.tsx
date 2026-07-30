@@ -4,6 +4,7 @@ import { MotionProvider } from "@repo/motion";
 
 import { AiConcierge } from "../components/ai-concierge";
 import { ConsentManager } from "../components/consent-manager";
+import { publicContactEmail, siteUrl } from "../lib/site";
 
 import "./globals.css";
 
@@ -20,10 +21,10 @@ const geistMono = localFont({
 const organizationStructuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  email: "info@emotion.com",
-  logo: "https://emotion.com/brand/emotion-mark-transparent-1024.png",
+  ...(publicContactEmail ? { email: publicContactEmail } : {}),
+  logo: siteUrl + "/brand/emotion-mark-transparent-1024.png",
   name: "eMotion",
-  url: "https://emotion.com",
+  url: siteUrl,
 };
 
 const websiteStructuredData = {
@@ -32,11 +33,11 @@ const websiteStructuredData = {
   description:
     "Strategy, branding, digital design, development, motion and applied AI.",
   name: "eMotion",
-  url: "https://emotion.com",
+  url: siteUrl,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://emotion.com"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "eMotion — Digital Agency",
     template: "%s | eMotion",

@@ -274,7 +274,7 @@ The project is complete only when:
 - mobile, accessibility, reduced-motion and performance budgets pass;
 - Studio, CMS, Client Portal and OS work as one permission-aware platform;
 - UI, Motion and CLI are documented, tested and used by the applications;
-- `emotion.com` metadata, email, legal content and monitoring are live;
+- configured production-URL metadata, legal content and monitoring are live;
 - temporary portfolio and testimonial content cannot be published as verified.
 
 ## Implementation status — 25 July 2026
@@ -326,7 +326,7 @@ off:
 
 - execute and verify migrations against staging and production Supabase;
 - configure Auth, owner accounts, secret rotation, backups and restore drill;
-- verify the `emotion.com` sending domain and live transactional email;
+- acquire and verify an owned sending domain before live transactional email;
 - add production OpenAI credentials, budgets and monitoring;
 - replace temporary projects/testimonials and approve final legal documents;
 - deploy, connect DNS, run final accessibility/performance/security regression

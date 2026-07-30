@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 
 import { createPublicClient } from "../lib/supabase/public";
+import { siteUrl } from "../lib/site";
 
-const baseUrl = "https://emotion.com";
+const baseUrl = siteUrl;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = ["", "/contact", "/privacy", "/cookies", "/terms"].map(

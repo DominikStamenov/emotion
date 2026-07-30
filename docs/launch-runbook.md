@@ -9,11 +9,11 @@ launch.
 
 Production surfaces:
 
-- `https://emotion.com` — public agency experience;
-- `https://admin.emotion.com` — private Agency OS;
-- `https://portal.emotion.com` — private Client Portal;
-- `info@emotion.com` — public contact and reply address;
-- `website@emotion.com` — transactional sender displayed as eMotion.
+- assigned Vercel production URL — public agency experience;
+- assigned Vercel production URL — private Agency OS;
+- assigned Vercel production URL — private Client Portal;
+- project contact form — public contact channel until an address is confirmed;
+- transactional email remains disabled until a sending domain is verified.
 
 ## 1. Required owner inputs
 
@@ -28,7 +28,7 @@ launch:
 - real projects, outcomes, credits, imagery and client permission;
 - verified testimonials and explicit permission to publish each one;
 - production Supabase organization/project ownership;
-- Resend account and DNS access for `emotion.com`;
+- a future owned domain plus Resend and DNS access;
 - OpenAI project ownership, budget and data-processing settings;
 - deployment/DNS ownership for all three application surfaces.
 
@@ -57,7 +57,7 @@ manager, not through Git.
 4. Create the first Supabase Auth user with the owner email.
 5. Promote that profile with the SQL in `supabase/README.md`.
 6. Enable MFA for owner/admin accounts and configure the allowed redirect URLs
-   for `admin.emotion.com` and `portal.emotion.com`.
+   for the assigned admin and portal production URLs.
 7. Confirm both `public-media` and `private-media` buckets and test that an
    anonymous user cannot read private objects.
 8. Test editor, sales and viewer accounts against the permission matrix.
@@ -69,10 +69,11 @@ gate.
 
 ## 4. Email
 
-1. Add and verify the `emotion.com` sending domain in Resend.
+1. Acquire an owned domain, then add and verify its sending domain in Resend.
 2. Publish the required SPF and DKIM records; confirm DMARC alignment.
-3. Set `CONTACT_FROM_EMAIL` to `eMotion <website@emotion.com>`.
-4. Keep `CONTACT_NOTIFICATION_EMAIL=info@emotion.com`.
+3. Set `CONTACT_FROM_EMAIL` to an approved sender on that domain.
+4. Set `CONTACT_NOTIFICATION_EMAIL` and `NEXT_PUBLIC_CONTACT_EMAIL` to approved
+   addresses.
 5. Submit a staging brief and verify CRM persistence happens even if email
    delivery is temporarily unavailable.
 6. Verify the internal notification and visitor confirmation in major clients.
@@ -114,11 +115,10 @@ gate.
 1. Deploy `apps/web`, `apps/admin` and `apps/portal` as separate Next.js
    applications from the same repository.
 2. Configure the correct encrypted environment values for each application.
-3. Map `emotion.com` and `www.emotion.com` to the public application; redirect
-   the non-canonical host permanently.
-4. Map `admin.emotion.com` to the private application and retain its `noindex`
-   headers.
-5. Map `portal.emotion.com` to the Client Portal and retain its `noindex`
+3. Use Vercel project URLs until an owned domain is ready.
+4. When a domain is acquired, map the public host and redirect its
+   non-canonical variant permanently.
+5. Map future admin and portal subdomains while retaining their `noindex`
    headers.
 6. Confirm TLS, HSTS, CSP, frame protection and the expected Supabase network
    origins.
@@ -173,11 +173,11 @@ the affected records.
 
 ## Current launch blockers
 
-- no staging or production Supabase project is connected;
+- staging and production Supabase projects exist and migrations are tracked;
 - no production secrets or verified sending domain are available;
 - legal entity data and approved legal documents are missing;
 - real projects and testimonials have not replaced temporary seed content;
-- DNS, deployment, backups, monitoring and restore drills require external
+- deployment, backups, monitoring and restore drills require external
   account access.
 
 These are the only remaining categories that prevent claiming a live,

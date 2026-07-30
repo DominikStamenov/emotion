@@ -2,11 +2,16 @@
 
 eMotion is deployed as three Vercel projects connected to the same monorepo:
 
-| Product               | Root directory | Production domain    |
-| --------------------- | -------------- | -------------------- |
-| eMotion Studio        | `apps/web`     | `emotion.com`        |
-| eMotion CMS + OS      | `apps/admin`   | `admin.emotion.com`  |
-| eMotion Client Portal | `apps/portal`  | `portal.emotion.com` |
+| Product               | Root directory | Initial production address |
+| --------------------- | -------------- | -------------------------- |
+| eMotion Studio        | `apps/web`     | Vercel project URL         |
+| eMotion CMS + OS      | `apps/admin`   | Vercel project URL         |
+| eMotion Client Portal | `apps/portal`  | Vercel project URL         |
+
+Custom domains are intentionally deferred until eMotion owns a domain and DNS
+access is confirmed. `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_ADMIN_URL` and
+`NEXT_PUBLIC_PORTAL_URL` make the temporary Vercel addresses the canonical
+runtime values without hard-coding a domain claim.
 
 ## Vercel project setup
 

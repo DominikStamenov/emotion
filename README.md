@@ -31,10 +31,10 @@ Geist fonts, Three.js and React Three Fiber.
 - [Recovered project history](docs/project-history.md)
 - [Production launch runbook](docs/launch-runbook.md)
 
-Confirmed launch identity:
+Current launch identity:
 
-- domain: `emotion.com`;
-- email: `info@emotion.com`;
+- domain: deferred; Vercel project URLs are used until a real domain is owned;
+- public email: deferred; the project contact form remains the primary channel;
 - projects and testimonials: temporary seed content until verified replacements
   are approved.
 
@@ -100,10 +100,11 @@ project and the server-only values documented in `.env.example`.
 - production browser smoke coverage for Studio, CMS/OS and Client Portal at
   desktop and mobile breakpoints.
 
-The code is launch-ready as a connected platform foundation, but it is not live
-until migrations are executed, secrets and domains are configured, legal text
-is approved and temporary content is replaced. The exact external steps and
-remaining owner inputs are tracked in the launch runbook.
+The code is launch-ready as a connected platform foundation, but public launch
+still requires hosting credentials, approved legal text and verified content.
+A custom domain and transactional email can be connected later without
+hard-coded production claims. The exact external steps and remaining owner
+inputs are tracked in the launch runbook.
 
 ## Hero Engine
 

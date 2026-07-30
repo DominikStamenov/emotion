@@ -53,7 +53,7 @@ export async function invitePortalClient(formData: FormData) {
       {
         data: { display_name: parsed.data.displayName },
         redirectTo:
-          process.env.NEXT_PUBLIC_PORTAL_URL || "https://portal.emotion.com",
+          process.env.NEXT_PUBLIC_PORTAL_URL || "http://localhost:3002",
       },
     );
 

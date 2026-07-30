@@ -14,18 +14,21 @@ export default async function LoginPage({
   }
 
   const params = await searchParams;
+  const publicSiteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const publicSiteHost = new URL(publicSiteUrl).host;
 
   return (
     <main className={styles.page}>
       <section className={styles.intro}>
-        <a href="https://emotion.com" className={styles.brand}>
+        <a href={publicSiteUrl} className={styles.brand}>
           <span>e</span> eMotion
         </a>
         <div>
           <span className={styles.eyebrow}>Private workspace</span>
           <h1>Ideje, odnosi i izvedba. Jedan sustav.</h1>
         </div>
-        <small>emotion.com · agency operating system</small>
+        <small>{publicSiteHost} · agency operating system</small>
       </section>
 
       <section className={styles.formSide}>

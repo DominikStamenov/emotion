@@ -200,28 +200,33 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const notificationRecipient =
-      process.env.CONTACT_NOTIFICATION_EMAIL || "info@emotion.com";
-
-    await Promise.allSettled([
-      sendTrackedEmail({
-        inquiryId,
-        recipient: notificationRecipient,
-        template: renderContactNotification(inquiry),
-        templateKey: "contact_notification",
-      }),
+    const notificationRecipient = process.env.CONTACT_NOTIFICATION_EMAIL;
+    const emailTasks = [
       sendTrackedEmail({
         inquiryId,
         recipient: inquiry.email,
         template: renderContactConfirmation(inquiry),
         templateKey: "contact_confirmation",
       }),
-    ]);
+    ];
+
+    if (notificationRecipient) {
+      emailTasks.push(
+        sendTrackedEmail({
+          inquiryId,
+          recipient: notificationRecipient,
+          template: renderContactNotification(inquiry),
+          templateKey: "contact_notification",
+        }),
+      );
+    }
+
+    await Promise.allSettled(emailTasks);
 
     return NextResponse.json({ ok: true, requestId }, { status: 201 });
   } catch {
     return NextResponse.json(
-      { error: "We could not save your brief. Please email info@emotion.com." },
+      { error: "We could not save your brief. Please try again shortly." },
       { status: 503 },
     );
   }

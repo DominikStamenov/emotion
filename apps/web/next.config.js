@@ -5,10 +5,10 @@ function createSecurityHeaders(production) {
     "default-src 'self'",
     `script-src 'self' 'unsafe-inline'${production ? "" : " 'unsafe-eval'"}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https://*.supabase.co https://api.emotion.com",
+    "img-src 'self' data: blob: https://*.supabase.co",
     "font-src 'self' data:",
-    "media-src 'self' blob: https://*.supabase.co https://api.emotion.com",
-    `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.emotion.com wss://api.emotion.com${
+    "media-src 'self' blob: https://*.supabase.co",
+    `connect-src 'self' https://*.supabase.co wss://*.supabase.co${
       production
         ? ""
         : " http://localhost:* ws://localhost:* http://127.0.0.1:* ws://127.0.0.1:*"

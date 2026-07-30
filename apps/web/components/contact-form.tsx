@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 
+import { publicContactEmail } from "../lib/site";
 import styles from "./contact-form.module.css";
 
 const serviceOptions = [
@@ -97,7 +98,7 @@ export function ContactForm() {
         <h2>Thank you. The conversation has started.</h2>
         <p>
           Your context is safely in our workspace. We will review it and reply
-          from info@emotion.com.
+          to the e-mail address you provided.
         </p>
         <small>Reference · {state.requestId.slice(0, 8)}</small>
         <button type="button" onClick={() => setState({ kind: "idle" })}>
@@ -208,8 +209,16 @@ export function ContactForm() {
 
       {state.kind === "error" ? (
         <p className={styles.error} role="alert">
-          {state.message} You can also write to{" "}
-          <a href="mailto:info@emotion.com">info@emotion.com</a>.
+          {state.message}
+          {publicContactEmail ? (
+            <>
+              {" "}
+              You can also write to{" "}
+              <a href={"mailto:" + publicContactEmail}>{publicContactEmail}</a>.
+            </>
+          ) : (
+            " Please try again shortly."
+          )}
         </p>
       ) : null}
 

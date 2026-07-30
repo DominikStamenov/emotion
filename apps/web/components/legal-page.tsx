@@ -14,7 +14,7 @@ const fallbackContent: Record<
 > = {
   privacy: {
     intro:
-      "This pre-launch privacy notice explains how eMotion intends to handle information submitted through emotion.com. Final controller details and legal review are required before production launch.",
+      "This pre-launch privacy notice explains how eMotion intends to handle information submitted through this website. Final controller details and legal review are required before production launch.",
     sections: [
       {
         title: "Information we collect",
@@ -34,14 +34,14 @@ const fallbackContent: Record<
       },
       {
         title: "Your rights",
-        body: "Depending on applicable law, you may request access, correction, deletion, restriction, portability or withdrawal of consent by contacting info@emotion.com.",
+        body: "Depending on applicable law, you may request access, correction, deletion, restriction, portability or withdrawal of consent through the project contact form.",
       },
     ],
     title: "Privacy notice",
   },
   cookies: {
     intro:
-      "This pre-launch notice describes the storage used by emotion.com. A production consent configuration will be finalized with the analytics stack.",
+      "This pre-launch notice describes the storage used by this website. A production consent configuration will be finalized with the analytics stack.",
     sections: [
       {
         title: "Necessary storage",
@@ -64,7 +64,7 @@ const fallbackContent: Record<
   },
   terms: {
     intro:
-      "These pre-launch website terms describe general use of emotion.com. Final company identification, governing law and legal review are required before launch.",
+      "These pre-launch website terms describe general use of this website. Final company identification, governing law and legal review are required before launch.",
     sections: [
       {
         title: "Website use",
@@ -84,7 +84,7 @@ const fallbackContent: Record<
       },
       {
         title: "Contact",
-        body: "Questions about these terms can be sent to info@emotion.com.",
+        body: "Questions about these terms can be sent through the project contact form.",
       },
     ],
     title: "Website terms",

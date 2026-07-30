@@ -11,6 +11,7 @@ Current order:
 4. `0004_ai.sql`;
 5. `0005_agency_operations.sql`;
 6. `0006_client_portal.sql`.
+7. `0007_runtime_identity.sql`.
 
 Use separate staging and production projects. Do not paste a secret key into a
 browser environment variable or commit a local `.env` file.

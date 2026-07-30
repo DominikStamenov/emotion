@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "./container";
 import { Logo } from "./logo";
+import { publicContactEmail } from "../lib/site";
 import styles from "./footer.module.css";
 
 const footerLinks = [
@@ -28,12 +29,26 @@ const footerLinks = [
       { label: "Privacy", href: "/privacy" },
       { label: "Cookies", href: "/cookies" },
       { label: "Terms", href: "/terms" },
-      { label: "info@emotion.com", href: "mailto:info@emotion.com" },
     ],
   },
 ] as const;
 
 export function Footer() {
+  const links = footerLinks.map((group) =>
+    group.title === "Legal" && publicContactEmail
+      ? {
+          ...group,
+          links: [
+            ...group.links,
+            {
+              href: "mailto:" + publicContactEmail,
+              label: publicContactEmail,
+            },
+          ],
+        }
+      : group,
+  );
+
   return (
     <footer className={styles.footer}>
       <Container>
@@ -46,7 +61,7 @@ export function Footer() {
             </p>
           </div>
 
-          {footerLinks.map((group) => (
+          {links.map((group) => (
             <div key={group.title}>
               <p className={styles.groupTitle}>{group.title}</p>
 

@@ -15,18 +15,21 @@ export default async function LoginPage({
   }
 
   const params = await searchParams;
+  const publicSiteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const publicSiteHost = new URL(publicSiteUrl).host;
 
   return (
     <main className={styles.page}>
       <section className={styles.intro}>
-        <a href="https://emotion.com" className={styles.brand}>
+        <a href={publicSiteUrl} className={styles.brand}>
           <span>e</span> eMotion
         </a>
         <div>
           <p>Client Portal</p>
           <h1>Your work. Your feedback. One shared rhythm.</h1>
         </div>
-        <small>Private workspace · emotion.com</small>
+        <small>Private workspace · {publicSiteHost}</small>
       </section>
 
       <section className={styles.formSide}>

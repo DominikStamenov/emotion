@@ -88,7 +88,7 @@ export function ConsentManager() {
         <strong>Your experience, your choice.</strong>
         <p>
           Necessary storage keeps forms and AI sessions secure. Optional
-          first-party analytics helps us improve emotion.com.{" "}
+          first-party analytics helps us improve this website.{" "}
           <Link href="/cookies">Details</Link>
         </p>
         {error ? <p role="status">{error}</p> : null}
