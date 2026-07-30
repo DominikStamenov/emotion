@@ -279,6 +279,7 @@ export function SecuritySettings({ email }: { email: string }) {
           <form className={styles.form} onSubmit={changePassword}>
             <Field htmlFor="current-password" label="Trenutačna lozinka">
               <Input
+                className={styles.securityInput}
                 id="current-password"
                 name="currentPassword"
                 type="password"
@@ -292,6 +293,7 @@ export function SecuritySettings({ email }: { email: string }) {
               hint="Najmanje 12 znakova; koristi jedinstvenu lozinku."
             >
               <Input
+                className={styles.securityInput}
                 id="next-password"
                 name="nextPassword"
                 type="password"
@@ -302,6 +304,7 @@ export function SecuritySettings({ email }: { email: string }) {
             </Field>
             <Field htmlFor="password-confirmation" label="Potvrdi novu lozinku">
               <Input
+                className={styles.securityInput}
                 id="password-confirmation"
                 name="confirmation"
                 type="password"
@@ -346,6 +349,7 @@ export function SecuritySettings({ email }: { email: string }) {
                   hint="Točno 6 znamenki iz authenticator aplikacije."
                 >
                   <Input
+                    className={styles.securityInput}
                     id="verification-code"
                     name="verificationCode"
                     type="text"
