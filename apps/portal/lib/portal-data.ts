@@ -222,6 +222,7 @@ export async function getPortalDashboard(): Promise<PortalDashboard> {
     ]);
 
   if (!profile || profile.account_type !== "client") {
+    await supabase.auth.signOut();
     redirect("/login?error=Ovaj%20račun%20nema%20pristup%20Client%20Portalu.");
   }
 
