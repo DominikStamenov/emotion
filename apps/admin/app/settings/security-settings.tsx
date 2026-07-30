@@ -47,14 +47,15 @@ export function SecuritySettings({ email }: { email: string }) {
 
   async function changePassword(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setBusy(true);
     setError(null);
     setMessage(null);
 
-    const form = new FormData(event.currentTarget);
-    const currentPassword = String(form.get("currentPassword") || "");
-    const nextPassword = String(form.get("nextPassword") || "");
-    const confirmation = String(form.get("confirmation") || "");
+    const formData = new FormData(formElement);
+    const currentPassword = String(formData.get("currentPassword") || "");
+    const nextPassword = String(formData.get("nextPassword") || "");
+    const confirmation = String(formData.get("confirmation") || "");
 
     if (nextPassword.length < 12) {
       setError("Nova lozinka mora imati najmanje 12 znakova.");
@@ -68,31 +69,36 @@ export function SecuritySettings({ email }: { email: string }) {
       return;
     }
 
-    const supabase = createClient();
-    const { error: reauthError } = await supabase.auth.signInWithPassword({
-      email,
-      password: currentPassword,
-    });
+    try {
+      const supabase = createClient();
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email,
+        password: currentPassword,
+      });
 
-    if (reauthError) {
-      setError("Trenutačna lozinka nije ispravna.");
+      if (reauthError) {
+        setError("Trenutačna lozinka nije ispravna.");
+        return;
+      }
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: nextPassword,
+      });
+
+      if (updateError) {
+        setError("Lozinku nije moguće promijeniti. Pokušaj ponovno.");
+        return;
+      }
+
+      formElement.reset();
+      setMessage("Lozinka je uspješno promijenjena.");
+    } catch {
+      setError(
+        "Veza sa servisom za prijavu je prekinuta. Osvježi stranicu i pokušaj ponovno.",
+      );
+    } finally {
       setBusy(false);
-      return;
     }
-
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: nextPassword,
-    });
-
-    if (updateError) {
-      setError("Lozinku nije moguće promijeniti. Pokušaj ponovno.");
-      setBusy(false);
-      return;
-    }
-
-    event.currentTarget.reset();
-    setMessage("Lozinka je uspješno promijenjena.");
-    setBusy(false);
   }
 
   async function startEnrollment() {
