@@ -53,17 +53,14 @@ jobs:
       - name: Pull Vercel environment
         if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
         run: pnpm dlx vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
-        working-directory: apps/${{ matrix.app }}
 
       - name: Build Vercel output
         if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
         run: pnpm dlx vercel@latest build --prod --token="$VERCEL_TOKEN"
-        working-directory: apps/${{ matrix.app }}
 
       - name: Deploy prebuilt output
         if: env.VERCEL_TOKEN != '' && env.VERCEL_PROJECT_ID != ''
         run: pnpm dlx vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
-        working-directory: apps/${{ matrix.app }}
 
       - name: Deployment not configured
         if: env.VERCEL_TOKEN == '' || env.VERCEL_PROJECT_ID == ''
