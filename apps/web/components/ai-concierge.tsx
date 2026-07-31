@@ -185,9 +185,10 @@ export function AiConcierge() {
         className={styles.trigger}
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
+        aria-label="Ask eMotion"
       >
         <span className={styles.spark}>✦</span>
-        <span>Ask eMotion</span>
+        <span className={styles.triggerLabel}>Ask eMotion</span>
       </button>
     </div>
   );

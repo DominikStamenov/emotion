@@ -651,6 +651,18 @@
     width: 100%;
   }
 
+  .uploadForm input:not([type="file"]),
+  .uploadForm select,
+  .miniForm input,
+  .miniForm select,
+  .copilot select,
+  .copilot textarea,
+  .form input,
+  .form textarea,
+  .form select {
+    font-size: 16px;
+  }
+
   .card {
     align-items: flex-start;
     flex-direction: column;

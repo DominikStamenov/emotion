@@ -263,9 +263,24 @@
     bottom: 12px;
   }
 
+  .trigger {
+    width: 50px;
+    min-height: 50px;
+    padding: 7px;
+    gap: 0;
+  }
+
+  .triggerLabel {
+    display: none;
+  }
+
   .panel {
     width: calc(100vw - 24px);
     height: calc(100svh - 82px);
+  }
+
+  .form input {
+    font-size: 16px;
   }
 }
 
