@@ -38,6 +38,16 @@ select {
   font: inherit;
 }
 
+select option,
+select optgroup {
+  color: #11100f;
+  background: #ffffff;
+}
+
+select option:disabled {
+  color: #77746d;
+}
+
 ::selection {
   color: #11110f;
   background: #e8ff49;

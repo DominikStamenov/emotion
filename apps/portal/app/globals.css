@@ -49,6 +49,16 @@ button {
   cursor: pointer;
 }
 
+select option,
+select optgroup {
+  color: #111116;
+  background: #ffffff;
+}
+
+select option:disabled {
+  color: #68686f;
+}
+
 ::selection {
   color: #ffffff;
   background: rgba(139, 92, 246, 0.48);

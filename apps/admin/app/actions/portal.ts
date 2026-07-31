@@ -13,6 +13,17 @@ function refreshPortalOperations() {
   revalidatePath("/operations");
 }
 
+function getPortalUrl() {
+  const configuredUrl =
+    process.env.NEXT_PUBLIC_PORTAL_URL || "http://localhost:3002";
+
+  if (configuredUrl.includes("emotion-admin.vercel.app")) {
+    return "https://emotion-portal-nine.vercel.app";
+  }
+
+  return configuredUrl;
+}
+
 async function requirePortalAdmin() {
   const profile = await requireAdminProfile();
 
@@ -53,8 +64,7 @@ export async function invitePortalClient(formData: FormData) {
       parsed.data.email,
       {
         data: { display_name: parsed.data.displayName },
-        redirectTo:
-          process.env.NEXT_PUBLIC_PORTAL_URL || "http://localhost:3002",
+        redirectTo: getPortalUrl(),
       },
     );
 
@@ -182,11 +192,9 @@ export async function openPortalPasswordSetup(formData: FormData) {
     throw new Error("Email klijentskog računa nije pronađen.");
   }
 
-  const portalUrl =
-    process.env.NEXT_PUBLIC_PORTAL_URL || "http://localhost:3002";
   const { data, error } = await admin.auth.admin.generateLink({
     email,
-    options: { redirectTo: portalUrl },
+    options: { redirectTo: getPortalUrl() },
     type: "recovery",
   });
 
