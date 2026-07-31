@@ -2,6 +2,7 @@
 
 import { createMilestoneSchema, portalInviteSchema } from "@repo/domain";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { requireAdminProfile } from "../../lib/auth";
 import { createAdminClient } from "../../lib/supabase/admin";
@@ -149,6 +150,54 @@ export async function createMilestone(formData: FormData) {
   }
 
   refreshPortalOperations();
+}
+
+export async function openPortalPasswordSetup(formData: FormData) {
+  await requirePortalAdmin();
+  const userId = String(formData.get("userId") || "");
+
+  if (!userId) {
+    throw new Error("Klijentski račun nije odabran.");
+  }
+
+  const supabase = await createClient();
+  const { data: access, error: accessError } = await supabase
+    .from("client_portal_access")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("active", true)
+    .limit(1)
+    .maybeSingle();
+
+  if (accessError || !access) {
+    throw new Error("Aktivni Portal pristup nije pronađen.");
+  }
+
+  const admin = createAdminClient();
+  const { data: userData, error: userError } =
+    await admin.auth.admin.getUserById(userId);
+  const email = userData.user?.email;
+
+  if (userError || !email) {
+    throw new Error("Email klijentskog računa nije pronađen.");
+  }
+
+  const portalUrl =
+    process.env.NEXT_PUBLIC_PORTAL_URL || "http://localhost:3002";
+  const { data, error } = await admin.auth.admin.generateLink({
+    email,
+    options: { redirectTo: portalUrl },
+    type: "recovery",
+  });
+
+  if (error || !data.properties?.action_link) {
+    throw new Error(
+      "Jednokratni link nije moguće kreirati: " +
+        (error?.message || "unknown error"),
+    );
+  }
+
+  redirect(data.properties.action_link);
 }
 
 export async function publishDeliverableForReview(formData: FormData) {

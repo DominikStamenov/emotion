@@ -4,6 +4,7 @@ import { createClient } from "../../lib/supabase/server";
 import {
   createMilestone,
   invitePortalClient,
+  openPortalPasswordSetup,
   publishDeliverableForReview,
   resolvePortalFeedback,
 } from "../actions/portal";
@@ -166,6 +167,17 @@ export default async function ClientsPage() {
                     {access.access_role} ·{" "}
                     {access.active ? "active" : "disabled"}
                   </span>
+                  {access.active &&
+                  (profile.role === "owner" || profile.role === "admin") ? (
+                    <form action={openPortalPasswordSetup}>
+                      <input
+                        type="hidden"
+                        name="userId"
+                        value={access.user_id}
+                      />
+                      <button type="submit">Postavi lozinku</button>
+                    </form>
+                  ) : null}
                 </div>
               );
             })}
