@@ -63,7 +63,35 @@ export function AdminShell({
         </div>
       </aside>
 
-      <main className={styles.main}>{children}</main>
+      <div className={styles.workspace}>
+        <header className={styles.mobileHeader}>
+          <Link
+            href="/"
+            className={styles.mobileBrand}
+            aria-label="eMotion admin"
+          >
+            <span className={styles.brandMark}>e</span>
+            <span>
+              <strong>eMotion</strong>
+              <small>agency OS</small>
+            </span>
+          </Link>
+          <form action={signOut}>
+            <button type="submit">Odjava</button>
+          </form>
+        </header>
+
+        <main className={styles.main}>{children}</main>
+
+        <nav className={styles.mobileNav} aria-label="Mobilna navigacija">
+          {navigation.map((item) => (
+            <Link href={item.href} key={item.href}>
+              <span>{item.mark}</span>
+              <small>{item.label}</small>
+            </Link>
+          ))}
+        </nav>
+      </div>
     </div>
   );
 }

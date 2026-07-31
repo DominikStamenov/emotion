@@ -17,6 +17,12 @@ test("portal demo communicates project state", async ({ page }) => {
     page.getByRole("link", { name: /Aurelia digital platform/ }),
   ).toBeVisible();
   await expectNoHorizontalOverflow(page);
+
+  if ((page.viewportSize()?.width || 0) <= 820) {
+    await expect(
+      page.getByRole("navigation", { name: "Mobile client portal" }),
+    ).toBeVisible();
+  }
 });
 
 test("portal demo project is reviewable", async ({ page }) => {

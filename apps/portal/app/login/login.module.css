@@ -118,3 +118,20 @@
     border-left: 0;
   }
 }
+
+@media (max-width: 520px) {
+  .intro {
+    min-height: 38svh;
+    padding: 24px 20px;
+    gap: 48px;
+  }
+
+  .intro h1 {
+    font-size: clamp(2.7rem, 15vw, 4.2rem);
+  }
+
+  .formSide {
+    min-height: 62svh;
+    padding: 32px 20px;
+  }
+}

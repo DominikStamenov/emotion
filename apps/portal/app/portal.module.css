@@ -423,4 +423,55 @@
     min-height: auto;
     border-left: 1px solid var(--emotion-color-border);
   }
+
+  .fileRow,
+  .deliverableMeta {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+
+  .deliverableMeta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fileActions {
+    width: 100%;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+
+  .fileActions a,
+  .fileActions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding-top: 26px;
+  }
+
+  .header h1,
+  .projectHero h1 {
+    overflow-wrap: anywhere;
+    font-size: clamp(2.35rem, 14vw, 4rem);
+  }
+
+  .metrics {
+    margin-top: 34px;
+  }
+
+  .metric,
+  .projectCard,
+  .milestone,
+  .feedbackItem {
+    padding: 18px;
+  }
+
+  .sectionHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

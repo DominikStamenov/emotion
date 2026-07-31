@@ -164,7 +164,7 @@
     position: fixed;
     z-index: 30;
     right: 14px;
-    bottom: 14px;
+    bottom: max(14px, env(safe-area-inset-bottom));
     left: 14px;
     display: grid;
     min-height: 66px;
@@ -197,5 +197,23 @@
   .mobileNavigation a span {
     color: var(--emotion-color-cyan);
     font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .mobileHeader {
+    min-height: 66px;
+    padding: 12px 14px;
+  }
+
+  .mobileNavigation {
+    right: 8px;
+    left: 8px;
+    min-height: 62px;
+    padding: 6px;
+  }
+
+  .mobileNavigation a {
+    font-size: 0.52rem;
   }
 }

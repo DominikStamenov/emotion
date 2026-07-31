@@ -25,6 +25,18 @@ export function Navbar() {
           ))}
         </nav>
 
+        <details className={styles.mobileMenu}>
+          <summary>Menu</summary>
+          <nav aria-label="Mobile navigation">
+            {navigation.map((item) => (
+              <Link key={item.href} href={item.href}>
+                {item.label}
+                <span aria-hidden="true">↗</span>
+              </Link>
+            ))}
+          </nav>
+        </details>
+
         <Button href="/contact" className={styles.headerAction}>
           Start a project
           <span aria-hidden="true">↗</span>

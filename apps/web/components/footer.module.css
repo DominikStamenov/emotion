@@ -102,3 +102,13 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 420px) {
+  .top {
+    grid-template-columns: 1fr;
+  }
+
+  .intro {
+    grid-column: auto;
+  }
+}

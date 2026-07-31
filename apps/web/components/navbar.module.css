@@ -71,9 +71,69 @@
   box-shadow: 0 8px 30px rgba(255, 255, 255, 0.08);
 }
 
+.mobileMenu {
+  position: relative;
+  display: none;
+  margin-left: auto;
+}
+
+.mobileMenu summary {
+  min-height: 42px;
+  display: flex;
+  padding: 0 16px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  font-size: 12px;
+  list-style: none;
+}
+
+.mobileMenu summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobileMenu nav {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(260px, calc(100vw - 40px));
+  display: grid;
+  padding: 10px;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background: rgba(8, 8, 10, 0.98);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(24px);
+}
+
+.mobileMenu nav a {
+  min-height: 46px;
+  display: flex;
+  padding: 0 13px;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 11px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.mobileMenu nav a:hover,
+.mobileMenu nav a:focus-visible {
+  color: var(--color-text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
 @media (max-width: 800px) {
   .siteNavigation {
     display: none;
+  }
+
+  .mobileMenu {
+    display: block;
   }
 }
 
@@ -88,8 +148,6 @@
   }
 
   .headerAction {
-    min-height: 40px;
-    padding: 0 14px;
-    font-size: 11px;
+    display: none;
   }
 }

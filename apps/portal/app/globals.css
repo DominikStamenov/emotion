@@ -53,3 +53,9 @@ button {
   color: #ffffff;
   background: rgba(139, 92, 246, 0.48);
 }
+
+@media (max-width: 480px) {
+  :root {
+    --portal-page-padding: 16px;
+  }
+}

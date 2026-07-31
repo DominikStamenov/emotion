@@ -21,6 +21,15 @@ test("homepage preserves the conversion journey", async ({ page }) => {
   ).toBeVisible();
   await expectNoHorizontalOverflow(page);
 
+  if ((page.viewportSize()?.width || 0) <= 800) {
+    const menu = page.getByText("Menu", { exact: true });
+    await expect(menu).toBeVisible();
+    await menu.click();
+    await expect(
+      page.getByRole("navigation", { name: "Mobile navigation" }),
+    ).toBeVisible();
+  }
+
   const headers = response?.headers() || {};
   expect(headers["x-frame-options"]).toBe("DENY");
   expect(headers["content-security-policy"]).toContain(
