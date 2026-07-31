@@ -43,3 +43,39 @@ export async function signOut() {
   await supabase.auth.signOut();
   redirect("/login");
 }
+
+export async function setPassword(formData: FormData) {
+  const password = String(formData.get("password") || "");
+  const confirmation = String(formData.get("confirmation") || "");
+
+  if (password.length < 8) {
+    redirect(
+      `/set-password?error=${encodeURIComponent("Password must contain at least 8 characters.")}`,
+    );
+  }
+
+  if (password !== confirmation) {
+    redirect(
+      `/set-password?error=${encodeURIComponent("Passwords do not match.")}`,
+    );
+  }
+
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+
+  if (!data?.claims) {
+    redirect(
+      `/login?error=${encodeURIComponent("Your invitation has expired. Ask eMotion for a new invitation.")}`,
+    );
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    redirect(
+      `/set-password?error=${encodeURIComponent("Password could not be saved. Open the newest invitation and try again.")}`,
+    );
+  }
+
+  redirect("/");
+}

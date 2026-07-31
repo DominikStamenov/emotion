@@ -31,7 +31,7 @@ export function AdminShell({
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.brand} aria-label="eMotion admin">
-          <span className={styles.brandMark}>e</span>
+          <span className={styles.brandMark} aria-hidden="true" />
           <span>
             <strong>eMotion</strong>
             <small>agency OS</small>
@@ -70,7 +70,7 @@ export function AdminShell({
             className={styles.mobileBrand}
             aria-label="eMotion admin"
           >
-            <span className={styles.brandMark}>e</span>
+            <span className={styles.brandMark} aria-hidden="true" />
             <span>
               <strong>eMotion</strong>
               <small>agency OS</small>

@@ -37,14 +37,13 @@
 }
 
 .brand span {
-  display: grid;
-  place-items: center;
   width: 31px;
   height: 31px;
-  color: #11110f;
-  background: #e8ff49;
-  border-radius: 50%;
-  font-size: 20px;
+  flex: 0 0 31px;
+  background-image: url("https://emotion-studio-three.vercel.app/brand/emotion-mark.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .intro h1 {

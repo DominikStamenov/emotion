@@ -26,17 +26,13 @@
 }
 
 .brand span {
-  display: grid;
   width: 34px;
   height: 34px;
-  place-items: center;
-  border-radius: 50%;
-  color: #08080a;
-  background: var(--emotion-gradient-brand);
-  font-family: Georgia, serif;
-  font-size: 1.25rem;
-  font-style: italic;
-  font-weight: 700;
+  flex: 0 0 34px;
+  background-image: url("https://emotion-studio-three.vercel.app/brand/emotion-mark.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .navigation {

@@ -32,15 +32,13 @@
 }
 
 .brandMark {
-  display: grid;
-  place-items: center;
   width: 35px;
   height: 35px;
-  border-radius: 50%;
-  color: #121210;
-  background: #e8ff49;
-  font-size: 22px;
-  font-weight: 750;
+  flex: 0 0 35px;
+  background-image: url("https://emotion-studio-three.vercel.app/brand/emotion-mark.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .brand strong,

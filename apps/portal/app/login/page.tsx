@@ -23,7 +23,7 @@ export default async function LoginPage({
     <main className={styles.page}>
       <section className={styles.intro}>
         <a href={publicSiteUrl} className={styles.brand}>
-          <span>e</span> eMotion
+          <span aria-hidden="true" /> eMotion
         </a>
         <div>
           <p>Client Portal</p>

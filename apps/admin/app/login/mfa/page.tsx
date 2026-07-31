@@ -22,7 +22,7 @@ export default async function MfaPage({
     <main className={styles.page}>
       <section className={styles.intro}>
         <Link href="/" className={styles.brand}>
-          <span>e</span> eMotion
+          <span aria-hidden="true" /> eMotion
         </Link>
         <div>
           <span className={styles.eyebrow}>Multi-factor authentication</span>

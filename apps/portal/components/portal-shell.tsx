@@ -24,7 +24,7 @@ export function PortalShell({
     <div className={styles.shell}>
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.brand}>
-          <span>e</span>
+          <span aria-hidden="true" />
           <strong>eMotion</strong>
         </Link>
 
@@ -56,7 +56,7 @@ export function PortalShell({
       <div className={styles.workspace}>
         <header className={styles.mobileHeader}>
           <Link href="/" className={styles.brand}>
-            <span>e</span>
+            <span aria-hidden="true" />
             <strong>eMotion</strong>
           </Link>
           <small>Client Portal</small>
