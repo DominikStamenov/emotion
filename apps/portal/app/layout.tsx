@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { MotionProvider } from "@repo/motion";
 
+import { AuthHashHandler } from "../components/auth-hash-handler";
 import "@repo/ui/tokens.css";
 import "./globals.css";
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <AuthHashHandler />
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
